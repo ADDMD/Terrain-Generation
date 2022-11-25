@@ -1,0 +1,43 @@
+{
+	"folders":
+	[
+		{
+			"path": "."
+		}
+	],
+
+	"build_systems":
+	[
+		{
+			"name": "cmake",
+			"working_dir": "$folder/build",
+			"cmd": "cmake ..",
+			"shell": true,
+		},
+		{
+			"name": "clean",
+			"working_dir": "$folder/build",
+			"cmd": "cmake --build . --target clean",
+			"shell": true,
+		},
+		{
+			"name": "build",
+			"working_dir": "$folder/build",
+			"cmd": "make",
+			"shell": true,
+		},
+		{
+			"name": "run",
+			"working_dir": "$folder/bin",
+			"cmd": "./terrain_generation",
+			"shell": true,
+		},
+		{
+			"name": "test",
+			"working_dir": "$folder/bin",
+			"cmd": "./test_terrain_generation",
+			"shell": true,
+		}
+	],
+
+}
