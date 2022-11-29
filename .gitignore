@@ -38,9 +38,11 @@ build/*
 bin/*
 
 !README.md
+!PerlinNoise
 
 *.jpg
 *.jpeg
 *.obj
 *.ply
 *.sublime-workspace
+.DS_Store
