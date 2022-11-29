@@ -1,27 +1,22 @@
+#include <iostream>
+#include "PerlinNoise.hpp"
 #include <fmt/format.h>
-// #include <FastNoise/FastNoise.h>
-// #include <vector>
 
-int main(int argc, char const *argv[])
+int main()
 {
-	auto fnSimplex = FastNoise::New<FastNoise::Simplex>();
-	auto fnFractal = FastNoise::New<FastNoise::FractalFBm>();
+	const siv::PerlinNoise::seed_type seed = 123456u;
 
-	fnFractal->SetSource( fnSimplex );
-	fnFractal->SetOctaveCount( 5 );
-
-	std::vector<float> noiseOutput(50 * 50);
-
-	fnFractal->GenUniformGrid2D(noiseOutput.data(),  0, 0, 50, 50, 0.2f, 1337);
-	int index = 0;
-	float map[50][50];
-
-	for(int i = 0; i < 50; i++){
-		for(int j = 0; j < 50; j++){
-			map[i][j] = noiseOutput[index++];	
-			fmt::print("{}", map[i][j]);
+	const siv::PerlinNoise perlin{ seed };
+	
+	for (int y = 0; y < 100; ++y)
+	{
+		for (int x = 0; x < 100; ++x)
+		{
+			const double noise = perlin.octave2D_01((x * 0.01), (y * 0.01), 4);
+			
+			fmt::print("{}\t", noise);
 		}
+
+		fmt::print("\n");
 	}
-	fmt::print("Ciao mondo!\n");
-	return 0;
 }

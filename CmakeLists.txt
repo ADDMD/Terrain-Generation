@@ -6,7 +6,7 @@ project(terrain_generation)
 # Ricerca delle librerie
 find_package(fmt REQUIRED)
 
-find_package(CGAL REQUIRED)
+#find_package(CGAL REQUIRED)
 
 # Percorsi delle varie cartelle
 set(SOURCE_DIR "${terrain_generation_SOURCE_DIR}/src")
@@ -19,10 +19,6 @@ include_directories(
 
 # Set delle performance per CGAL
 set(CMAKE_BUILD_TYPE Build) 
-
-# Set per FastNoise
-# set(FASTNOISE_OPTION ON/OFF CACHE BOOL "Description of option" FORCE)
-add_subdirectory(deps/FastNoise2)
 
 # Specifiche del C++ 
 set(CMAKE_CXX_STANDARD 17)
@@ -41,10 +37,16 @@ file(GLOB TESTS CONFIGURE_DEPENDS "${TEST_DIR}/*.cpp")
 add_executable(terrain_generation "${SOURCES}")
 add_executable(test_terrain_generation "${TESTS}")
 
+# Aggiungiamo header only
+add_library(PerlinNoise INTERFACE)
+
+# Including delle directories
+target_include_directories(PerlinNoise INTERFACE "${terrain_generation_SOURCE_DIR}/include/PerlinNoise")
+
 # Linking delle librerie
 target_link_libraries(terrain_generation 
   fmt::fmt
-  CGAL::CGAL
-  FastNoise
+  #CGAL::CGAL
+  PerlinNoise
 )
 target_link_libraries(test_terrain_generation fmt::fmt)
