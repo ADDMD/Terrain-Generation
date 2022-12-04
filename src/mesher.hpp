@@ -2,7 +2,8 @@
 #define MESHER_H value
 
 class mesher {
-
+public:
+	mesher();
 };
 
 
