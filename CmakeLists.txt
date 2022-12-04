@@ -6,7 +6,7 @@ project(terrain_generation)
 # Ricerca delle librerie
 find_package(fmt REQUIRED)
 
-#find_package(CGAL REQUIRED)
+find_package(CGAL REQUIRED)
 
 # Percorsi delle varie cartelle
 set(SOURCE_DIR "${terrain_generation_SOURCE_DIR}/src")
@@ -39,14 +39,17 @@ add_executable(test_terrain_generation "${TESTS}")
 
 # Aggiungiamo header only
 add_library(PerlinNoise INTERFACE)
+add_library(fbm INTERFACE)
 
 # Including delle directories
 target_include_directories(PerlinNoise INTERFACE "${terrain_generation_SOURCE_DIR}/include/PerlinNoise")
+target_include_directories(fbm INTERFACE "${terrain_generation_SOURCE_DIR}/include/fbm")
 
 # Linking delle librerie
 target_link_libraries(terrain_generation 
   fmt::fmt
-  #CGAL::CGAL
+  CGAL::CGAL
   PerlinNoise
+  fbm
 )
 target_link_libraries(test_terrain_generation fmt::fmt)
