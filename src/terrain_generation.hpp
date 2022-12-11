@@ -19,6 +19,7 @@ namespace tgen {
 	typedef CGAL::Surface_mesh<Point> Mesh;
 	
 	class Mesher;
+	class PerlinGenerator;
 
 }
 

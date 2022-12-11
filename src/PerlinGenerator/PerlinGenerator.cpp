@@ -1,17 +1,19 @@
 #include "PerlinGenerator.hpp"
 
-PerlinGenerator::PerlinGenerator(){}
+tgen::PerlinGenerator::PerlinGenerator(){}
 
-std::vector<point> PerlinGenerator::GenerateTerrain(int width, int heigth, unsigned int seed, int octaves, int amplitude, double frequency){
+std::vector<tgen::Point> tgen::PerlinGenerator::GenerateTerrain(int width, int heigth, 
+	unsigned int seed, int octaves, int amplitude, double frequency) {
 
 	const siv::PerlinNoise perlin{ seed };
 
-	std::vector<point> points;
-	for( int x = 0 ; x < width ; x++){
+	std::vector<Point> points;
+	for( int x = 0 ; x < width; x++){
 		for ( int y = 0 ; y < heigth ; y++){
 			double noise = perlin.octave2D_01((x * frequency), (y * frequency), octaves) * amplitude;
-			points.push_back(point(x, y, noise));
+			points.push_back(Point(x, y, noise));
 		}
 	}
+
 	return points;
 }

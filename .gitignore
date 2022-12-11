@@ -36,14 +36,20 @@
 # Project
 build/*
 bin/*
+
+# Data folders
+data/*
 test/data/*
 
+# README and libraries
 !README.md
 !PerlinNoise
 
+#
 *.jpg
 *.jpeg
 *.obj
 *.ply
+*.off
 *.sublime-workspace
 .DS_Store

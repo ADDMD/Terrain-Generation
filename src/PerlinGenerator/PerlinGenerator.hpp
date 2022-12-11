@@ -5,14 +5,15 @@
 #include <CGAL/Point_3.h>
 #include <CGAL/Cartesian.h>
 #include "../../include/PerlinNoise/PerlinNoise.hpp"
+#include "../terrain_generation.hpp"
 
-typedef CGAL::Cartesian<double> kernel;
-typedef CGAL::Point_3<kernel> point;
 
-class PerlinGenerator{
+class tgen::PerlinGenerator{
 public:
 	PerlinGenerator();
-	std::vector<point> GenerateTerrain(int width, int height, unsigned int seed, int octaves, int amplitude, double frequency);
+	std::vector<Point> GenerateTerrain(int width, int height, 
+		unsigned int seed, int octaves, int amplitude, double frequency);
 };
+
 
 #endif

@@ -1,31 +1,33 @@
-#include <fmt/format.h>
-#include "../src/PerlinGenerator/PerlinGenerator.hpp"
-#include <vector>
+#include "./PerlinGenerator/PerlinGenerator.hpp"
+#include "./mesher/mesher.hpp"
+
 #include <fstream>
+#include <chrono>
+#include <string>
+
+#include <fmt/format.h>
+
 
 int main(int argc, char const *argv[])
 {
-	int width = 1000;
-	int height = 1000;
+	int width = 100;
+	int height = 100;
 
-	PerlinGenerator pg;
-	std::vector<point> points = pg.GenerateTerrain(width, height, 0u, 4, 10, 0.1);
+	tgen::PerlinGenerator pg;
+	auto points = pg.GenerateTerrain(width, height, 0u, 4, 10, 0.1);
 
-	std::ofstream out("../test/data/points.txt");
-	if(!out){
-		exit(1);
-	}
-	int counter = 0;
-	for(auto p: points){
-		if(counter >= width){
-			counter = 0;
-			out << "\n";
-		}
-		out << fmt::format("{} ",p.z());
-		counter++;
-	}
-	fmt::print("{}", points.size());
-	out.close();
-	fmt::print("Test\n");
+	const auto ts = std::chrono::duration_cast<std::chrono::seconds>(
+		std::chrono::system_clock::now().time_since_epoch()).count();
+
+	tgen::Mesher mr;
+	tgen::Mesh m = mr.triangulate(points);
+
+	std::string filename = fmt::format("../data/{}.off", ts);
+	
+	std::ofstream out(filename);
+	fmt::print("{} created\n", filename);
+
+	out << m;
+
 	return 0;
 }
