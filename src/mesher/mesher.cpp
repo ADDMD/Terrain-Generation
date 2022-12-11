@@ -5,18 +5,18 @@
 
 #include <CGAL/Polygon_mesh_processing/remesh.h>
 
-tgen::Mesher::Mesher(){
-	fmt::print("init mesher\n");
-}
+tgen::Mesher::Mesher() {}
 
 tgen::Mesh tgen::Mesher::triangulate(std::vector<Point> points) {
 	Mesh m;
 	Construct construct(m, points.begin(), points.end());
 	CGAL::advancing_front_surface_reconstruction(points.begin(), points.end(), construct);
 
-	fmt::print("vertices: {}\n", m.number_of_vertices());
-	fmt::print("edges: {}\n", m.number_of_edges());
-	fmt::print("faces: {}\n", m.number_of_faces());
+
+	fmt::print("[{}] mesh created:\n", this->name, m.number_of_vertices());
+	fmt::print("[{}] \tvertices: {}\n", this->name, m.number_of_vertices());
+	fmt::print("[{}] \tedges: {}\n", this->name, m.number_of_edges());
+	fmt::print("[{}] \ttfaces: {}\n", this->name, m.number_of_faces());
 
 
 	return m;

@@ -7,14 +7,25 @@
 
 #include <fmt/format.h>
 
+#include "./config.hpp"
+
 int main(int argc, char const *argv[])
 {
-	int width = 100;
-	int height = 100;
+	config conf("../config.yaml");
+
+	std::string w = conf["width"];
+	std::string h = conf["height"];
+
+	if(w == "" || h == "") return -1;
+
+	int width = std::stoi(w);
+	int height = std::stoi(h);
 
 
 	const auto seed = std::chrono::duration_cast<std::chrono::seconds>(
 		std::chrono::system_clock::now().time_since_epoch()).count();
+
+	fmt::print("[main] seed: {}\n", seed);
 
 	tgen::PerlinGenerator pg;
 	auto points = pg.GenerateTerrain(width, height, seed, 4, 10, 0.1);
@@ -22,12 +33,15 @@ int main(int argc, char const *argv[])
 	tgen::Mesher mr;
 	tgen::Mesh m = mr.triangulate(points);
 
-	std::string filename = fmt::format("../data/{}.obj", seed);
+	std::string filename_path = fmt::format("{}{}.{}",conf["data.path"], seed, conf["data.extension"]);
 	
-	std::ofstream out(filename);
-	fmt::print("{} created\n", filename);
+	std::ofstream out(filename_path);
+	fmt::print("[main] {} created\n", filename_path);
 
 	CGAL::IO::write_OBJ(out, m);
+	
+	conf.close();
+	out.close();
 
 	return 0;
 }

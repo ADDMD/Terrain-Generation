@@ -28,6 +28,8 @@ class tgen::Mesher {
 		Construct operator++(int) { return *this; }
 	};
 
+	std::string name = "mesher";
+
 public:
 	Mesher();
 
