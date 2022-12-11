@@ -29,7 +29,7 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++17")
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${terrain_generation_SOURCE_DIR}/bin")
 
 # Selezione dei file da compilare
-file(GLOB SOURCES CONFIGURE_DEPENDS "${SOURCE_DIR}/*.hpp" "${SOURCE_DIR}/*.cpp")
+file(GLOB SOURCES CONFIGURE_DEPENDS "${SOURCE_DIR}/*.hpp" "${SOURCE_DIR}/*.cpp" "${SOURCE_DIR}/*/*.hpp" "${SOURCE_DIR}/*/*.cpp" )
 file(GLOB TESTS CONFIGURE_DEPENDS "${TEST_DIR}/*.cpp")
 
 
