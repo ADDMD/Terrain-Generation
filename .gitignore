@@ -36,6 +36,8 @@
 # Project
 build/*
 bin/*
+.vs/*
+out/*
 
 !README.md
 
