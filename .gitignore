@@ -36,6 +36,7 @@
 # Project
 build/*
 bin/*
+test/data/*
 
 !README.md
 !PerlinNoise

@@ -1,22 +1,31 @@
-#include <iostream>
-#include "PerlinNoise.hpp"
 #include <fmt/format.h>
+#include "../src/PerlinGenerator/PerlinGenerator.hpp"
+#include <vector>
+#include <fstream>
 
-int main()
+int main(int argc, char const *argv[])
 {
-	const siv::PerlinNoise::seed_type seed = 123456u;
+	int width = 1000;
+	int height = 1000;
 
-	const siv::PerlinNoise perlin{ seed };
-	
-	for (int y = 0; y < 100; ++y)
-	{
-		for (int x = 0; x < 100; ++x)
-		{
-			const double noise = perlin.octave2D_01((x * 0.01), (y * 0.01), 4);
-			
-			fmt::print("{}\t", noise);
-		}
+	PerlinGenerator pg;
+	std::vector<point> points = pg.GenerateTerrain(width, height, 0u, 4, 10, 0.1);
 
-		fmt::print("\n");
+	std::ofstream out("../test/data/points.txt");
+	if(!out){
+		exit(1);
 	}
+	int counter = 0;
+	for(auto p: points){
+		if(counter >= width){
+			counter = 0;
+			out << "\n";
+		}
+		out << fmt::format("{} ",p.z());
+		counter++;
+	}
+	fmt::print("{}", points.size());
+	out.close();
+	fmt::print("Test\n");
+	return 0;
 }
