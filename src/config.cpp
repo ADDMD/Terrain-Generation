@@ -116,3 +116,7 @@ int config::open(){
 void config::close(){
 	configFile.close();
 }
+
+config::~config(){
+	close();
+}

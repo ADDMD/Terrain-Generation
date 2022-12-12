@@ -27,7 +27,7 @@
 #include <chrono>
 #include "fmt/format.h"
 
-int main(int argc, char** argv) {
+int generate_fbm(int argc, char** argv) {
     if (argc != 5) {
         std::cout << "Usage\n\n\t" << argv[0] << " <dim> <nx> <H> <outfile.txt>\n\n"
                   << "\t\t - dim==3 for now\n"

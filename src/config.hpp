@@ -25,7 +25,7 @@ public:
 	bool is_open();
 	/// Close the file
 	void close();
-	// ~config();
+	~config();
 };
 
 
