@@ -15,11 +15,17 @@ int main(int argc, char const *argv[])
 
 	std::string w = conf["width"];
 	std::string h = conf["height"];
+	std::string a = conf["amplitude"];
+	std::string o = conf["octaves"];
+	std::string f = conf["frequency"];
 
 	if(w == "" || h == "") return -1;
 
 	int width = std::stoi(w);
 	int height = std::stoi(h);
+	int amplitude = std::stoi(a);
+	int octaves = std::stoi(o);
+	double frequency = std::stod(f);
 
 
 	const auto seed = std::chrono::duration_cast<std::chrono::seconds>(
@@ -28,7 +34,7 @@ int main(int argc, char const *argv[])
 	fmt::print("[main] seed: {}\n", seed);
 
 	tgen::PerlinGenerator pg;
-	auto points = pg.GenerateTerrain(width, height, seed, 4, 10, 0.1);
+	auto points = pg.generateTerrain(width, height, seed, octaves, amplitude, frequency);
 
 	tgen::Mesher mr;
 	tgen::Mesh m = mr.triangulate(points);
