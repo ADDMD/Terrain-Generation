@@ -38,6 +38,7 @@ build/*
 bin/*
 .vs/*
 out/*
+.vscode/*
 
 !README.md
 
@@ -46,3 +47,4 @@ out/*
 *.obj
 *.ply
 *.sublime-workspace
+*.json

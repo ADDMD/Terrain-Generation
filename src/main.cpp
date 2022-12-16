@@ -1,6 +1,5 @@
-//#include <fmt/format.h>
-#include "../../../../../librerie/fmt-9.0.0/include/fmt/format.h"
-#include "../../../../../librerie/cgal-5.5.1/include/CGAL/Point_3.h"
+#include <fmt/format.h>
+#include <CGAL/Point_3.h>
 #include <vector>
 #include <iostream>
 #define DB_PERLIN_IMPL
@@ -12,11 +11,11 @@
 int main() {   
     // Rumore
     std::vector<double> noise;
-    
+
     // Dimensioni terreno
     int heigth = 10;
     int width = 10;
-
+    
     // Generazione rumore
     for (int i = 0; i < heigth; i++) {
         for (int j = 0; j < width; j++) {
