@@ -12,8 +12,16 @@ config::config(std::string path) {
 	configFile.open(configFilePath);
 }
 
+// void config::updateAttribute(std::string attrName, std::string attrValue){
+
+// }
+
 //TODO: update attribute already present and add new one if not 
 // void config::setAttribute(std::string attrName, std::string attrValue){
+// 	// pulisci gli error flags
+// 	configFile.clear();
+// 	// ritorna all'inizio del file
+// 	configFile.seekg(0);
 // 	std::string toWrite = attrName;
 // 	toWrite.append(" : ").append(attrValue);
 	
@@ -30,6 +38,8 @@ config::config(std::string path) {
 // 		std::string attrNameRetrieved = line.substr(0,pos);
 // 		boost::erase_all(attrNameRetrieved, " ");
 // 		if(attrNameRetrieved.compare(attrName) == 0){
+// 			// richiama updateAttribute
+
 // 			// mi posiziono a inizio riga
 // 			configFile.seekg(startCurrentLine);
 // 			// scrivo la riga
@@ -64,10 +74,26 @@ config::config(std::string path) {
 // 		}
 // 		startCurrentLine = configFile.tellg();
 // 	}
+
+// 	// se la fine del file -1 è lo /n allora scrivo dopo lo /n 
+// 	// altrimenti scrivo \n e il toWrite
+// 	// if (configFile.eof()){
+// 	// 	fmt::print("[{}] Sono a fine file in pos {}\n", this->getName(), configFile.tellg());
+// 	// 	configFile.unget();
+// 	// 	fmt::print("[{}] Sono a fine file dopo essere tornato indietro? {}\n", this->getName(), configFile.eof() ? "Si" : "No");
+// 	// 	if (configFile.unget().unget().get() == '\n'){
+// 	// 		toWrite.append("\n");
+// 	// 		configFile.write(toWrite.c_str(), toWrite.length());
+// 	// 	}
+// 	// }
+
+
+// 	// non trovato, devo aggiungerlo alla fine del file
+// 	configFile << toWrite.append("\n");
 // }
 
 std::string config::getAttribute(std::string attrName){
-	fmt::print("[{}] Searching for {}\n",this->getName() , attrName);
+	// fmt::print("[{}] Searching for {}\n",this->getName() , attrName);
 	// pulisci gli error flags
 	configFile.clear();
 	// ritorna all'inizio del file
@@ -83,13 +109,15 @@ std::string config::getAttribute(std::string attrName){
 		}
 		std::string attrNameRetrieved = line.substr(0,pos);
 		boost::erase_all(attrNameRetrieved, " ");
+		// fmt::print("[{}] Found attribute {}\n", this->getName(), attrNameRetrieved);
 		if(attrNameRetrieved.compare(attrName) == 0){
+			// fmt::print("[{}] Found\n", this->getName());
 			std::string attrValue = line.substr(pos+1,line.length());
 			boost::erase_all(attrValue, " ");
 			return attrValue;
 		}
 	}
-	fmt::print("[{}] {} not found\n",this->getName() , attrName);
+	fmt::print("[{}] {} not found\n", this->getName(), attrName);
 	return "";
 }
 
