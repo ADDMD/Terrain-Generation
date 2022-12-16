@@ -1,4 +1,4 @@
-/*#ifndef OPENSIMPLEXGENERATOR_H
+#ifndef OPENSIMPLEXGENERATOR_H
 #define OPENSIMPLEXGENERATOR_H
 
 #include <vector>
@@ -16,4 +16,4 @@ public:
 };
 
 
-#endif*/
+#endif

@@ -1,4 +1,5 @@
-/*#include "./PerlinGenerator/PerlinGenerator.hpp"
+#include "./PerlinGenerator/PerlinGenerator.hpp"
+#include "./OpenSimplexGenerator/OpenSimplexGenerator.hpp"
 #include "./mesher/mesher.hpp"
 
 #include <fstream>
@@ -27,9 +28,20 @@ int main(int argc, char const *argv[])
 
 	fmt::print("[main] seed: {}\n", seed);
 
-	tgen::PerlinGenerator pg;
-	auto points = pg.GenerateTerrain(width, height, seed, 4, 10, 0.1);
+	int choose_noise = 2;
+	
+	if(choose_noise == 1){
+		tgen::PerlinGenerator pg;
+		auto points = pg.GenerateTerrain(width, height, seed, 4, 10, 0.1);
+	}
+	else{
+		//per ora vuoto
+	}
+	
+	tgen::OpenSimplexGenerator osg;
+	auto points = osg.GenerateTerrain(width, height, seed, 4, 10, 0.1);
 
+	
 	tgen::Mesher mr;
 	tgen::Mesh m = mr.triangulate(points);
 
@@ -44,7 +56,7 @@ int main(int argc, char const *argv[])
 	out.close();
 
 	return 0;
-}*/
+}
 
 /* This is free and unencumbered software released into the public domain.
  *
@@ -72,6 +84,7 @@ int main(int argc, char const *argv[])
  * For more information, please refer to <http://unlicense.org>
  */
 
+/*
 #include <vector>
 #include <fstream>
 #include <memory.h>
@@ -133,7 +146,7 @@ int main(int argc, char* argv[])
 #if defined(SINGLE_OCTAVE)
             value = openSimplex.noise4((float) x / featureSize, (float) y / featureSize, 0.0, 0.0);
 #else
-            /* Use three octaves: frequency N, N/2 and N/4 with relative amplitudes 4:2:1. */
+            // Use three octaves: frequency N, N/2 and N/4 with relative amplitudes 4:2:1. 
             float v0 = OpenSimplex::Noise::noise4(context, (float) x / featureSize / 4,
                         (float) y / featureSize / 4, 0.0, 0.0);
             float v1 = OpenSimplex::Noise::noise4(context, (float) x / featureSize / 2,
@@ -164,3 +177,4 @@ int main(int argc, char* argv[])
 
     return 0;
 }
+*/

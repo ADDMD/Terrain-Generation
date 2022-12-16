@@ -20,6 +20,7 @@ namespace tgen {
 	
 	class Mesher;
 	class PerlinGenerator;
+	class OpenSimplexGenerator;
 
 }
 
