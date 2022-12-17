@@ -6,6 +6,9 @@
 #include <string>
 
 #include <fmt/format.h>
+#include <CGAL/Point_3.h>
+#include <vector>
+#include <iostream>
 
 #include "./config.hpp"
 

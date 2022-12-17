@@ -36,6 +36,9 @@
 # Project
 build/*
 bin/*
+.vs/*
+out/*
+.vscode/*
 
 # Data folders
 data/*
@@ -50,6 +53,8 @@ test/data/*
 *.jpeg
 *.obj
 *.ply
+*.sublime-workspace
+*.json
 *.off
 *.sublime-workspace
 .DS_Store
