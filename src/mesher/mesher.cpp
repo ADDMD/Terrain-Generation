@@ -1,9 +1,13 @@
 #include "mesher.hpp"
 
-#include <CGAL/Advancing_front_surface_reconstruction.h>
 #include <fmt/format.h>
 
+#include <CGAL/Advancing_front_surface_reconstruction.h>
+
 #include <CGAL/Polygon_mesh_processing/remesh.h>
+
+#include <map>
+
 
 tgen::Mesher::Mesher() {}
 
@@ -21,6 +25,33 @@ tgen::Mesh tgen::Mesher::triangulate(std::vector<Point> points) {
 
 	return m;
 }
+
+tgen::Mesh tgen::Mesher::triangulate(Point** points, int width, int height) {
+	Mesh m;
+
+	std::map<Point, Mesh::vertex_index> pnt2idx;
+
+	for(int x = 0; x < width; x++) {
+		for(int y = 0; y < height; y++) {
+			Point p = points[x][y];
+			pnt2idx.insert({p, m.add_vertex(p)});
+		}
+	}
+
+	for(int x0 = 0, x1 = 1; x1 < width - 1; x0++, x1++) {
+		for(int y0 = 0, y1 = 1; y1 < height - 1; y0++, y1++){
+
+		}
+	}
+
+
+
+	return m;
+}
+
+
+
+
 
 void tgen::Mesher::refine(Mesh& mesh) {
 	CGAL::Polygon_mesh_processing::isotropic_remeshing(mesh.faces(), 0.5, mesh);

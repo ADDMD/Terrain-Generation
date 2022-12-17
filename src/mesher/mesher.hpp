@@ -44,6 +44,8 @@ public:
 	 */
 	Mesh triangulate(std::vector<Point> points);
 
+	Mesh triangulate(Point** points, int width, int height);
+
 	/// raffina una mesh triangolare
 	void refine(Mesh& mesh);
 
