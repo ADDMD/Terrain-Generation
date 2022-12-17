@@ -1,3 +1,10 @@
+#include "./PerlinGenerator/PerlinGenerator.hpp"
+#include "./mesher/mesher.hpp"
+
+#include <fstream>
+#include <chrono>
+#include <string>
+
 #include <fmt/format.h>
 #include <CGAL/Point_3.h>
 #include <vector>
@@ -7,25 +14,41 @@
 #define STB_PERLIN_IMPLEMENTATION
 #include "../include/stb_perlin.h"
 
+#include "./config.hpp"
 
-int main() {   
-    // Rumore
-    std::vector<double> noise;
+int main(int argc, char const *argv[])
+{
+	config conf("../config.yaml");
 
-    // Dimensioni terreno
-    int heigth = 10;
-    int width = 10;
-    
-    // Generazione rumore
-    for (int i = 0; i < heigth; i++) {
-        for (int j = 0; j < width; j++) {
-            noise.push_back(stb_perlin_noise3(i,j,0.9f,256,256,256));
-        }
-    }
+	std::string w = conf["width"];
+	std::string h = conf["height"];
 
-    for (int i = 0; i < noise.size(); i++) {
-        fmt::print("{:f}\n", noise.at(i));
-    }
-    fmt::print("\n");
-    return 0;
+	if(w == "" || h == "") return -1;
+
+	int width = std::stoi(w);
+	int height = std::stoi(h);
+
+
+	const auto seed = std::chrono::duration_cast<std::chrono::seconds>(
+		std::chrono::system_clock::now().time_since_epoch()).count();
+
+	fmt::print("[main] seed: {}\n", seed);
+
+	tgen::PerlinGenerator pg;
+	auto points = pg.GenerateTerrain(width, height, seed, 4, 10, 0.1);
+
+	tgen::Mesher mr;
+	tgen::Mesh m = mr.triangulate(points);
+
+	std::string filename_path = fmt::format("{}{}.{}",conf["data.path"], seed, conf["data.extension"]);
+	
+	std::ofstream out(filename_path);
+	fmt::print("[main] {} created\n", filename_path);
+
+	CGAL::IO::write_OBJ(out, m);
+	
+	conf.close();
+	out.close();
+
+	return 0;
 }

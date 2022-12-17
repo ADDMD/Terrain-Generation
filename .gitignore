@@ -40,11 +40,21 @@ bin/*
 out/*
 .vscode/*
 
-!README.md
+# Data folders
+data/*
+test/data/*
 
+# README and libraries
+!README.md
+!PerlinNoise
+
+#
 *.jpg
 *.jpeg
 *.obj
 *.ply
 *.sublime-workspace
 *.json
+*.off
+*.sublime-workspace
+.DS_Store
