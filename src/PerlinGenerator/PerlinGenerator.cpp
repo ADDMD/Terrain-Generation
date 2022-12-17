@@ -1,4 +1,6 @@
 #include "PerlinGenerator.hpp"
+#define STB_PERLIN_IMPLEMENTATION
+#include "./stb_perlin.h"
 
 tgen::PerlinGenerator::PerlinGenerator(){}
 

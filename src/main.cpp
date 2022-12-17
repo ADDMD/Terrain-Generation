@@ -9,10 +9,6 @@
 #include <CGAL/Point_3.h>
 #include <vector>
 #include <iostream>
-#define DB_PERLIN_IMPL
-#include "../include/db_perlin.hpp"
-#define STB_PERLIN_IMPLEMENTATION
-#include "../include/stb_perlin.h"
 
 #include "./config.hpp"
 

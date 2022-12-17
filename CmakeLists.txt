@@ -25,7 +25,7 @@ set(CMAKE_BUILD_TYPE Build)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 # set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wextra -pedantic -Werror -std=c++17 -O3 -fPIC")
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++17")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
 
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${terrain_generation_SOURCE_DIR}/bin")
 
@@ -39,12 +39,10 @@ add_executable(terrain_generation "${SOURCES}")
 add_executable(test_terrain_generation "${TESTS}")
 
 # Aggiungiamo header only
-add_library(db_perlin INTERFACE)
 add_library(stb_perlin INTERFACE)
 
 # Including delle directories
-target_include_directories(db_perlin INTERFACE "${terrain_generation_SOURCE_DIR}/include/db_perlin")
-target_include_directories(db_perlin INTERFACE "${terrain_generation_SOURCE_DIR}/include/stb_perlin")
+target_include_directories(stb_perlin INTERFACE "${terrain_generation_SOURCE_DIR}/include/stb_perlin")
 add_library(PerlinNoise INTERFACE)
 add_library(fbm INTERFACE)
 
@@ -56,7 +54,6 @@ target_include_directories(fbm INTERFACE "${terrain_generation_SOURCE_DIR}/inclu
 target_link_libraries(terrain_generation 
   fmt::fmt-header-only
   CGAL::CGAL
-  db_perlin
   stb_perlin
   PerlinNoise
   fbm
