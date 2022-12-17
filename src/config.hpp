@@ -9,9 +9,8 @@ class config
 {
 	std::string configFilePath;
 	std::fstream configFile;
-	
-
 	std::string getName();
+	// void updateAttribute(std::string attrName, std::string attrVal);
 public:
 	config(std::string configFilePath);
 	// void setAttribute(std::string attrName, std::string attrValue);
@@ -25,7 +24,7 @@ public:
 	bool is_open();
 	/// Close the file
 	void close();
-	// ~config();
+	~config();
 };
 
 

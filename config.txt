@@ -1,0 +1,3 @@
+dimension : 3
+index : 200000
+value : 20

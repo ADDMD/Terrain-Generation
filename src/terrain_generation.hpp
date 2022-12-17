@@ -22,6 +22,7 @@ namespace tgen {
 	class PerlinGenerator;
 	class SimplexGenerator;
 	class OpenSimplexGenerator;
+	class fbmGenerator;
 
 }
 
