@@ -13,6 +13,8 @@ public:
 	PerlinGenerator();
 	std::vector<Point> generateTerrain(int width, int height, 
 		unsigned int seed, int octaves, int amplitude, double frequency);
+	Point** generateTerrainMatrix(int width, int heigth, 
+	unsigned int seed, int octaves, int amplitude, double frequency); 
 };
 
 
