@@ -1,5 +1,5 @@
 #include "./SimplexGenerator/SimplexGenerator.hpp"
-#include "./mesher/mesher.hpp"
+#include "./Mesher/Mesher.hpp"
 
 #include <fstream>
 #include <chrono>
@@ -41,6 +41,9 @@ int main(int argc, char const *argv[])
 	tgen::Mesher mr;
 	mr.triangulate(points, width, height);
 	tgen::Mesh m = *mr.getMesh();
+
+	// il refine allunga i tempi (circa 30s in più per una 100x100)
+	// mr.refine(); 
 
 	std::string filename_path = fmt::format("{}{}.{}",conf["data.path"], seed, conf["data.extension"]);
 	

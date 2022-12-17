@@ -56,8 +56,8 @@ public:
 
 	Mesh* getMesh();
 
-	/// raffina una mesh triangolare
-	void refine(Mesh& mesh);
+	/// raffina l'ultima mesh triangolare creata
+	void refine();
 
 
 };

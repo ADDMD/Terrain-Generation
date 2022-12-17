@@ -1,4 +1,4 @@
-#include "mesher.hpp"
+#include "Mesher.hpp"
 
 #include <CGAL/Advancing_front_surface_reconstruction.h>
 
@@ -18,11 +18,26 @@ void tgen::Mesher::triangulate(std::vector<Point> points) {
 	printSummary();
 }
 
+
+/** Metodo che genera una mesh triangolare a partire da una griglia di punti 
+ *
+ *	Triangolazione:
+ *
+ *  p0       p1           v0       v1
+ *	*--------*            *--------*
+ *	|        |   Triang.  |\__  f1 |
+ *	|        |     ->     |   \__  |
+ *	|        |            | f2   \_|
+ *	*--------*            *--------*
+ *	p2       p3           v2       v3
+ *
+ *	I vertici delle facce sono definiti in senso antiorario
+ */
 void tgen::Mesher::triangulate(Point** points, int width, int height) {
 	mesh = new Mesh();
-
 	std::map<Point, Mesh::vertex_index> pnt2idx;
 
+	// aggiungo tutti i punti alla mesh come vertici
 	for(int x = 0; x < width; x++) {
 		for(int y = 0; y < height; y++) {
 			Point p = points[x][y];
@@ -30,18 +45,7 @@ void tgen::Mesher::triangulate(Point** points, int width, int height) {
 		}
 	}
 
-	/// metodo che genera una mesh triangolare a partire da una griglia di punti 
-	//
-	//	Metodo utilizzato
-	//
-	//  p0       p1           v0       v1
-	//	*--------*            *--------*
-	//	|        |   Triang.  |\__  f1 |
-	//	|        |     ->     |   \__  |
-	//	|        |            | f2   \_|
-	//	*--------*            *--------*
-	//	p2       p3           v2       v3
-	//
+	// triangolo le facce
 	for(int x0 = 0, x1 = 1; x1 < width; x0++, x1++) {
 		for(int y0 = 0, y1 = 1; y1 < height; y0++, y1++) {
 			
@@ -60,7 +64,7 @@ void tgen::Mesher::triangulate(Point** points, int width, int height) {
 
 		}
 	}
-	
+
 	printSummary();
 }
 
@@ -78,8 +82,8 @@ void tgen::Mesher::printSummary() {
 
 
 
-void tgen::Mesher::refine(Mesh& mesh) {
-	CGAL::Polygon_mesh_processing::isotropic_remeshing(mesh.faces(), 0.5, mesh);
+void tgen::Mesher::refine() {
+	CGAL::Polygon_mesh_processing::isotropic_remeshing(mesh->faces(), 0.5, *mesh);
 
 }
 
