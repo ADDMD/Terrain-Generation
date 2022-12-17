@@ -69,5 +69,5 @@ int generate_fbm(int argc, char** argv) {
         output_file << d << "\n";
     }
 
-
+    return 0;
 }

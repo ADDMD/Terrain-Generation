@@ -1,4 +1,4 @@
-#include "./SimplexGenerator/SimplexGenerator.hpp"
+#include "./NoiseGenerator/NoiseGenerator.hpp"
 #include "./Mesher/Mesher.hpp"
 
 #include <fstream>
@@ -20,6 +20,7 @@ int main(int argc, char const *argv[])
 	std::string a = conf["amplitude"];
 	std::string o = conf["octaves"];
 	std::string f = conf["frequency"];
+	std::string n = conf["noise"];
 
 	if(w == "" || h == "") return -1;
 
@@ -28,15 +29,15 @@ int main(int argc, char const *argv[])
 	int amplitude = std::stoi(a);
 	int octaves = std::stoi(o);
 	double frequency = std::stod(f);
-
+	int noise = std::stoi(n);
 
 	const auto seed = std::chrono::duration_cast<std::chrono::seconds>(
 		std::chrono::system_clock::now().time_since_epoch()).count();
 
 	fmt::print("[main] seed: {}\n", seed);
 	
-	tgen::SimplexGenerator pg;
-	auto points = pg.generateTerrainMatrix(width, height, seed, octaves, amplitude, frequency);
+	tgen::NoiseGenerator ng(noise, seed);
+	auto points = ng.generatePointsMatrix(width, height, octaves, amplitude, frequency);
 	
 	tgen::Mesher mr;
 	mr.triangulate(points, width, height);

@@ -39,23 +39,19 @@ add_executable(terrain_generation "${SOURCES}")
 add_executable(test_terrain_generation "${TESTS}")
 
 # Aggiungiamo header only
-add_library(stb_perlin INTERFACE)
-
-# Including delle directories
-target_include_directories(stb_perlin INTERFACE "${terrain_generation_SOURCE_DIR}/include/stb_perlin")
-add_library(PerlinNoise INTERFACE)
+# add_library(stb_perlin INTERFACE)
+# add_library(PerlinNoise INTERFACE)
 add_library(fbm INTERFACE)
 
 # Including delle directories
-target_include_directories(PerlinNoise INTERFACE "${terrain_generation_SOURCE_DIR}/include/PerlinNoise")
+# target_include_directories(stb_perlin INTERFACE "${terrain_generation_SOURCE_DIR}/include/stb_perlin")
+# target_include_directories(PerlinNoise INTERFACE "${terrain_generation_SOURCE_DIR}/include/PerlinNoise")
 target_include_directories(fbm INTERFACE "${terrain_generation_SOURCE_DIR}/include/fbm")
 
 # Linking delle librerie
 target_link_libraries(terrain_generation 
   fmt::fmt-header-only
   CGAL::CGAL
-  stb_perlin
-  PerlinNoise
   fbm
 )
 target_link_libraries(test_terrain_generation fmt::fmt)
