@@ -59,8 +59,13 @@ void tgen::Mesher::triangulate(Point** points, int width, int height) {
 			Mesh::vertex_index v2 = pnt2idx.find(p2)->second;
 			Mesh::vertex_index v3 = pnt2idx.find(p3)->second;
 
-			mesh->add_face(v0, v3, v1); // f1
-			mesh->add_face(v0, v2, v3); // f2
+			//counterclockwise orientation
+			//mesh->add_face(v0, v3, v1); // f1
+			//mesh->add_face(v0, v2, v3); // f2
+
+			//clockwise orientation
+			mesh->add_face(v0, v1, v3); // f1
+			mesh->add_face(v0, v3, v2); // f2
 
 		}
 	}

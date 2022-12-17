@@ -19,11 +19,15 @@ namespace tgen {
 	typedef CGAL::Surface_mesh<Point> Mesh;
 	
 	class Mesher;
+	class NoiseGenerator;
 	
 	class Noise;
 	class PerlinNoise;
-	class PerlinGenerator;
-	class SimplexGenerator;
+	class CellularNoise;
+	class OpenSimplexNoise;
+	class FBMNoise;
+	
+	//class SimplexGenerator;
 	class OpenSimplexGenerator;
 	class fbmGenerator;
 

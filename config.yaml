@@ -1,7 +1,8 @@
-width: 100
-height: 100
-amplitude: 12
+width: 200
+height: 200
+amplitude: 15
 octaves: 5
-frequency: 0.1
+frequency: 1
+noise: 1
 data.path: ../data/
 data.extension: obj
