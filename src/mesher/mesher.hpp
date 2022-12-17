@@ -3,7 +3,10 @@
 
 #include "../terrain_generation.hpp"
 
+#include <fmt/format.h>
+
 #include <array>
+
 #include <CGAL/Advancing_front_surface_reconstruction.h>
 
 /// Mesher
@@ -29,12 +32,15 @@ class tgen::Mesher {
 	};
 
 	std::string name = "mesher";
+	
+	Mesh* mesh;
+
 
 public:
 	Mesher();
 
 	/**
-	 * Triangola una nuvola di punti e restituisce una mesh triangolare
+	 * Triangola una nuvola di punti
 	 * 
 	 * tre alternative possibili per "points -> mesh" con CGAL
 	 * - Scale-Space Surface Reconstruction
@@ -42,9 +48,13 @@ public:
 	 * - Poisson Surface Reconstruction
 	 * fonte: https://stackoverflow.com/questions/34887019/surface-mesh-from-point-cloud
 	 */
-	Mesh triangulate(std::vector<Point> points);
+	void triangulate(std::vector<Point> points);
 
-	Mesh triangulate(Point** points, int width, int height);
+	void triangulate(Point** points, int width, int height);
+
+	void printSummary();
+
+	Mesh* getMesh();
 
 	/// raffina una mesh triangolare
 	void refine(Mesh& mesh);

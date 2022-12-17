@@ -1,7 +1,6 @@
 #ifndef PERLINGENERATOR_H
 #define PERLINGENERATOR_H
 
-#include "SimplexGenerator.hpp"
 #include "../terrain_generation.hpp"
 
 #include <vector>

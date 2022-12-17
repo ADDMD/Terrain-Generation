@@ -1,5 +1,4 @@
-#include "./PerlinGenerator/PerlinGenerator.hpp"
-#include "./OpenSimplexGenerator/OpenSimplexGenerator.hpp"
+#include "./SimplexGenerator/SimplexGenerator.hpp"
 #include "./mesher/mesher.hpp"
 
 #include <fstream>
@@ -7,7 +6,6 @@
 #include <string>
 
 #include <fmt/format.h>
-#include <CGAL/Point_3.h>
 #include <vector>
 #include <iostream>
 
@@ -37,11 +35,12 @@ int main(int argc, char const *argv[])
 
 	fmt::print("[main] seed: {}\n", seed);
 	
-	tgen::PerlinGenerator pg;
-	auto points = pg.generateTerrain(width, height, seed, octaves, amplitude, frequency);
+	tgen::SimplexGenerator pg;
+	auto points = pg.generateTerrainMatrix(width, height, seed, octaves, amplitude, frequency);
 	
 	tgen::Mesher mr;
-	tgen::Mesh m = mr.triangulate(points);
+	mr.triangulate(points, width, height);
+	tgen::Mesh m = *mr.getMesh();
 
 	std::string filename_path = fmt::format("{}{}.{}",conf["data.path"], seed, conf["data.extension"]);
 	
