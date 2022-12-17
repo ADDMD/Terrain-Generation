@@ -9,9 +9,12 @@
 class tgen::SimplexGenerator{
 public:
 	SimplexGenerator();
-	std::vector<Point> GenerateTerrain(int width, int height, 
+	std::vector<Point> generateTerrain(int width, int height, 
+		unsigned int seed, int octaves, int amplitude, double frequency);
+	double** generateTerrainMatrix(int width, int height, 
 		unsigned int seed, int octaves, int amplitude, double frequency);
 };
+
 
 
 #endif
