@@ -26,24 +26,24 @@
 			"cmd": "make",
 			"shell": true,
 		},
-		{
-			"name": "build w",
-			"working_dir": "$folder/build",
-			"cmd": "cmake --build $folder/build",
-			"shell": true,
-		},
+		// {
+		// 	"name": "build w",
+		// 	"working_dir": "$folder/build",
+		// 	"cmd": "cmake --build $folder/build",
+		// 	"shell": true,
+		// },
 		{
 			"name": "run",
 			"working_dir": "$folder/bin",
 			"cmd": "./terrain_generation",
 			"shell": true,
 		},
-		{
-			"name": "run w",
-			"working_dir": "$folder/bin",
-			"cmd": "$folder/bin/Debug/terrain_generation",
-			"shell": true,
-		},
+		// {
+		// 	"name": "run w",
+		// 	"working_dir": "$folder/bin",
+		// 	"cmd": "$folder/bin/Debug/terrain_generation",
+		// 	"shell": true,
+		// },
 		{
 			"name": "test",
 			"working_dir": "$folder/bin",
