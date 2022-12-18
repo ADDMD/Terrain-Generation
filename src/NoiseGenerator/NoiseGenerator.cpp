@@ -16,6 +16,9 @@ tgen::NoiseGenerator::NoiseGenerator(int noise, unsigned int seed){
 	case 3:
 		this->noise = new tgen::FBMNoise(seed);
 		break;
+	case 4:
+		this->noise = new tgen::SimplexNoise(seed);
+		break;
 	}
 }
 

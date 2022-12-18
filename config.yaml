@@ -3,6 +3,6 @@ height: 200
 amplitude: 15
 octaves: 5
 frequency: 1
-noise: 1
+noise: 4
 data.path: ../data/
 data.extension: obj

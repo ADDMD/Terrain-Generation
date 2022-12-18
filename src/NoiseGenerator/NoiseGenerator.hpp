@@ -7,7 +7,7 @@
 #include "../Noises/CellularNoise.cpp"
 #include "../Noises/OpenSimplexNoise.cpp"
 #include "../Noises/FBMNoise.cpp"
-
+#include "../Noises/SimplexNoise.cpp"
 
 class tgen::NoiseGenerator{
 
