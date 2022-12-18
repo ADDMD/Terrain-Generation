@@ -12,6 +12,66 @@ config::config(std::string path) {
 	configFile.open(configFilePath);
 }
 
+std::string config::getAttribute(std::string attrName){
+	// fmt::print("[{}] Searching for {}\n",this->getName() , attrName);
+	// pulisci gli error flags
+	configFile.clear();
+	// ritorna all'inizio del file
+	configFile.seekg(0);
+	// Cerca per ogni linea del file
+	for(std::string line; std::getline(configFile, line);){
+		if(line.front() == '#'){
+			continue;
+		}
+		// Cerca la posizione del separatore
+		int pos = line.find(":");
+		// Se non trovi il separatore c'è un problema 
+		if(pos == -1) {
+			fmt::print("Please check if ':' separate attribute name and value.\nRemember the sintax <attrName:attrValue>\n");
+			return "";
+		}
+		std::string attrNameRetrieved = line.substr(0,pos);
+		boost::erase_all(attrNameRetrieved, " ");
+		// fmt::print("[{}] Found attribute {}\n", this->getName(), attrNameRetrieved);
+		if(attrNameRetrieved.compare(attrName) == 0){
+			// fmt::print("[{}] Found\n", this->getName());
+			std::string attrValue = line.substr(pos+1,line.length());
+			boost::erase_all(attrValue, " ");
+			return attrValue;
+		}
+	}
+	fmt::print("[{}] {} not found\n", this->getName(), attrName);
+	return "";
+}
+
+std::string config::operator[](std::string attrName){
+	return this->getAttribute(attrName);
+}
+
+std::string config::getName(){
+	return "config";
+}
+
+bool config::is_open(){
+	return configFile.is_open();
+}
+
+int config::open(){
+	// if(configFilePath.empty()){
+	// 	fmt::print("Config filepath needs to be passed in the constructor\n");
+	// }
+	configFile.open(configFilePath);
+	return this->is_open();
+}
+
+void config::close(){
+	configFile.close();
+}
+
+config::~config(){
+	close();
+}
+
 // void config::updateAttribute(std::string attrName, std::string attrValue){
 
 // }
@@ -91,60 +151,3 @@ config::config(std::string path) {
 // 	// non trovato, devo aggiungerlo alla fine del file
 // 	configFile << toWrite.append("\n");
 // }
-
-std::string config::getAttribute(std::string attrName){
-	// fmt::print("[{}] Searching for {}\n",this->getName() , attrName);
-	// pulisci gli error flags
-	configFile.clear();
-	// ritorna all'inizio del file
-	configFile.seekg(0);
-	// Cerca per ogni linea del file
-	for(std::string line; std::getline(configFile, line);){
-		// Cerca la posizione del separatore
-		int pos = line.find(":");
-		// Se non trovi il separatore c'è un problema 
-		if(pos == -1) {
-			fmt::print("Please check if ':' separate attribute name and value.\nRemember the sintax <attrName:attrValue>\n");
-			return "";
-		}
-		std::string attrNameRetrieved = line.substr(0,pos);
-		boost::erase_all(attrNameRetrieved, " ");
-		// fmt::print("[{}] Found attribute {}\n", this->getName(), attrNameRetrieved);
-		if(attrNameRetrieved.compare(attrName) == 0){
-			// fmt::print("[{}] Found\n", this->getName());
-			std::string attrValue = line.substr(pos+1,line.length());
-			boost::erase_all(attrValue, " ");
-			return attrValue;
-		}
-	}
-	fmt::print("[{}] {} not found\n", this->getName(), attrName);
-	return "";
-}
-
-std::string config::operator[](std::string attrName){
-	return this->getAttribute(attrName);
-}
-
-std::string config::getName(){
-	return "config";
-}
-
-bool config::is_open(){
-	return configFile.is_open();
-}
-
-int config::open(){
-	// if(configFilePath.empty()){
-	// 	fmt::print("Config filepath needs to be passed in the constructor\n");
-	// }
-	configFile.open(configFilePath);
-	return this->is_open();
-}
-
-void config::close(){
-	configFile.close();
-}
-
-config::~config(){
-	close();
-}
