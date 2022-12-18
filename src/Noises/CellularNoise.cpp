@@ -7,16 +7,15 @@ class tgen::CellularNoise: public tgen::Noise{
 	FastNoiseLite cellular;
 public:
 
-	CellularNoise(unsigned int seed) : Noise(seed){
+	CellularNoise(unsigned int seed, int octaves, int amplitude, double frequency) : Noise(seed, octaves, amplitude, frequency){
 		cellular.SetNoiseType(FastNoiseLite::NoiseType_Cellular);
 		cellular.SetSeed(seed);
+		cellular.SetFractalOctaves(octaves);
+		cellular.SetFrequency(frequency);
 	}
 
-	double generateNoise(double x, double y, int octaves){
-		//cellular.SetFractalOctaves(octaves);
-		cellular.SetCellularJitter(3);
-		cellular.SetFrequency(0.1);
-		return cellular.GetNoise(x, y);
+	double generateNoise(double x, double y){
+		return cellular.GetNoise(x, y) * this->amplitude;
 	}
 
 }; 

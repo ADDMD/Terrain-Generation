@@ -7,20 +7,19 @@
 #include "../Noises/CellularNoise.cpp"
 #include "../Noises/OpenSimplexNoise.cpp"
 #include "../Noises/FBMNoise.cpp"
-
+#include "../Noises/SimplexNoise.cpp"
 
 class tgen::NoiseGenerator{
 
+protected:
 	Noise* noise;
 
 public:
-	NoiseGenerator(int noise, unsigned int seed);
+	NoiseGenerator(int noise, unsigned int seed, int octaves, int amplitude, double frequency);
 
-	std::vector<Point> generatePoints(int width, int height, 
-		int octaves, int amplitude, double frequency);
+	std::vector<Point> generatePoints(int width, int height);
 
-	Point** generatePointsMatrix(int width, int heigth, 
-		int octaves, int amplitude, double frequency); 
+	Point** generatePointsMatrix(int width, int heigth); 
 
 };
 

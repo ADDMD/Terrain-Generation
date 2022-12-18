@@ -23,6 +23,7 @@ namespace tgen {
 	
 	class Noise;
 	class PerlinNoise;
+	class SimplexNoise;
 	class CellularNoise;
 	class OpenSimplexNoise;
 	class FBMNoise;
