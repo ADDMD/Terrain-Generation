@@ -17,7 +17,7 @@
 		{
 			"name": "clean",
 			"working_dir": "$folder/build",
-			"cmd": "cmake --build . --target clean",
+			"cmd": "cmake --build . --target clean & rm -dfr ./CMake* ./cmake* ./Makefile",
 			"shell": true,
 		},
 		{
@@ -38,12 +38,12 @@
 			"cmd": "./terrain_generation",
 			"shell": true,
 		},
-		// {
-		// 	"name": "run w",
-		// 	"working_dir": "$folder/bin",
-		// 	"cmd": "$folder/bin/Debug/terrain_generation",
-		// 	"shell": true,
-		// },
+		{
+			"name": "w remove data",
+			"working_dir": "$folder/data",
+			"cmd": "rm -f *.obj",
+			"shell": true,
+		},
 		{
 			"name": "test",
 			"working_dir": "$folder/bin",

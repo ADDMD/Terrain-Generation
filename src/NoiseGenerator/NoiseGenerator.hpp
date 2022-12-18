@@ -11,6 +11,7 @@
 
 class tgen::NoiseGenerator{
 
+protected:
 	Noise* noise;
 
 public:
