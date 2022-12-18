@@ -14,13 +14,11 @@ class tgen::NoiseGenerator{
 	Noise* noise;
 
 public:
-	NoiseGenerator(int noise, unsigned int seed);
+	NoiseGenerator(int noise, unsigned int seed, int octaves, int amplitude, double frequency);
 
-	std::vector<Point> generatePoints(int width, int height, 
-		int octaves, int amplitude, double frequency);
+	std::vector<Point> generatePoints(int width, int height);
 
-	Point** generatePointsMatrix(int width, int heigth, 
-		int octaves, int amplitude, double frequency); 
+	Point** generatePointsMatrix(int width, int heigth); 
 
 };
 
