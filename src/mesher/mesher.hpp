@@ -3,11 +3,10 @@
 
 #include "../terrain_generation.hpp"
 
-#include <fmt/format.h>
-
 #include <array>
 
-#include <CGAL/Advancing_front_surface_reconstruction.h>
+#include <fmt/format.h>
+
 
 /// Mesher
 class tgen::Mesher {
@@ -50,7 +49,10 @@ public:
 	 */
 	void triangulate(std::vector<Point> points);
 
-	void triangulate(Point** points, int width, int height);
+	/// Triangola una nuvola di punti
+	void triangulate(Point** points, const int width, const int height);
+
+	// void applayColor(CGAL::Color c);
 
 	void printSummary();
 

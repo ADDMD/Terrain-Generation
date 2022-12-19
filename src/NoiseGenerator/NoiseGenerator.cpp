@@ -1,5 +1,6 @@
 #include "NoiseGenerator.hpp"
 #include "../terrain_generation.hpp"
+
 #include <fmt/format.h>
 
 tgen::NoiseGenerator::NoiseGenerator(int noise, unsigned int seed, int octaves, int amplitude, double frequency){
