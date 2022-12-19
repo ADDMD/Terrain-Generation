@@ -37,10 +37,8 @@ int main(int argc, char const *argv[])
 		std::chrono::system_clock::now().time_since_epoch()).count();
 
 	fmt::print("[main] seed: {}\n", seed);
-	
 	tgen::NoiseGenerator ng(noise, seed, octaves, amplitude, frequency);
 	auto points = ng.generatePointsMatrix(width, height);
-	// auto points = ng.generatePoints(width, height);
 	
 	tgen::Mesher mr;
 	mr.triangulate(points, width, height);

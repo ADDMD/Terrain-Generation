@@ -29,7 +29,6 @@ std::vector<tgen::Point> tgen::NoiseGenerator::generatePoints(int width, int hei
 	for( int x = 0 ; x < width; x++){
 		for ( int y = 0 ; y < heigth ; y++){
 			double elevation = noise->generateNoise(x, y);
-			// fmt::print("{} {}\n", elevation, y);
 			points.push_back(Point(x, y, elevation));
 		}
 	}

@@ -10,7 +10,7 @@ public:
 		perlin = siv::PerlinNoise(seed);
 	}
 
-	double generateNoise(double x, double y, int octaves){
-		return perlin.octave2D_11(x, y, octaves);
+	double generateNoise(double x, double y){
+		return perlin.octave2D_11(x * this->frequency, y * this->frequency, this->octaves) * this->amplitude;
 	}
 }; 
