@@ -58,3 +58,4 @@ test/data/*
 *.off
 *.sublime-workspace
 .DS_Store
+config.yaml
