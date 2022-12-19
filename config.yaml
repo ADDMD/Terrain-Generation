@@ -1,8 +1,9 @@
 width: 200
 height: 200
-amplitude: 15
-octaves: 5
-frequency: 1
-noise: 1
+amplitude: 50
+octaves: 4
+frequency: .01
+noise: 0
 data.path: ../data/
-data.extension: obj
+data.extension: ply
+refine: 0

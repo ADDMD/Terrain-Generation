@@ -1,9 +1,9 @@
-#include <iostream>
-#include <fmt/format.h>
-#include <stdio.h>
-#include "config.hpp"
+// #include <iostream>
+// #include <fmt/format.h>
+// #include <stdio.h>
+// #include "config.hpp"
 
-// int maina()
+// int main()
 // {
 // 	config c("../config.txt");
 // 	if(not c.is_open()){

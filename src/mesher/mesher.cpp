@@ -3,9 +3,10 @@
 #include <CGAL/Advancing_front_surface_reconstruction.h>
 
 #include <CGAL/Polygon_mesh_processing/remesh.h>
+#include <CGAL/Polygon_mesh_processing/refine.h>
+#include <CGAL/IO/Color.h>
 
 #include <map>
-
 
 tgen::Mesher::Mesher() {}
 
@@ -18,6 +19,11 @@ void tgen::Mesher::triangulate(std::vector<Point> points) {
 	printSummary();
 }
 
+template <typename T, std::size_t N>
+inline std::size_t size(T (&)[N])
+{
+    return N;
+}
 
 /** Metodo che genera una mesh triangolare a partire da una griglia di punti 
  *
@@ -33,7 +39,13 @@ void tgen::Mesher::triangulate(std::vector<Point> points) {
  *
  *	I vertici delle facce sono definiti in senso antiorario
  */
-void tgen::Mesher::triangulate(Point** points, int width, int height) {
+void tgen::Mesher::triangulate(Point** points, const int width, const int height) {
+	// int width_1 = size(points);
+	// int height_1 = *(points + 1) - *points;
+	
+	// fmt::print("width_1 = {}\n", width_1);
+	// fmt::print("height_1 = {}\n", height_1);
+	
 	mesh = new Mesh();
 	std::map<Point, Mesh::vertex_index> pnt2idx;
 
@@ -59,17 +71,18 @@ void tgen::Mesher::triangulate(Point** points, int width, int height) {
 			Mesh::vertex_index v2 = pnt2idx.find(p2)->second;
 			Mesh::vertex_index v3 = pnt2idx.find(p3)->second;
 
-			//counterclockwise orientation
-			//mesh->add_face(v0, v3, v1); // f1
-			//mesh->add_face(v0, v2, v3); // f2
+			// counterclockwise orientation
+			// mesh->add_face(v0, v3, v1); // f1
+			// mesh->add_face(v0, v2, v3); // f2
 
-			//clockwise orientation
+			// clockwise orientation
 			mesh->add_face(v0, v1, v3); // f1
 			mesh->add_face(v0, v3, v2); // f2
 
 		}
 	}
 
+	fmt::print("[{}] mesh created:\n", this->name);
 	printSummary();
 }
 
@@ -79,17 +92,27 @@ tgen::Mesh* tgen::Mesher::getMesh() {
 
 
 void tgen::Mesher::printSummary() {
-	fmt::print("[{}] mesh created:\n", this->name, mesh->number_of_vertices());
-	fmt::print("[{}] \tvertices: {}\n", this->name, mesh->number_of_vertices());
-	fmt::print("[{}] \tedges: {}\n", this->name, mesh->number_of_edges());
-	fmt::print("[{}] \ttfaces: {}\n", this->name, mesh->number_of_faces());
+	fmt::print("[{}] vertices: {}\n", this->name, mesh->number_of_vertices());
+	fmt::print("[{}] edges: {}\n", this->name, mesh->number_of_edges());
+	fmt::print("[{}] tfaces: {}\n", this->name, mesh->number_of_faces());
 }
 
 
 
 void tgen::Mesher::refine() {
-	CGAL::Polygon_mesh_processing::isotropic_remeshing(mesh->faces(), 0.5, *mesh);
+	// CGAL::Polygon_mesh_processing::isotropic_remeshing(mesh->faces(), 1, *mesh);
 
+
+	std::vector<Mesh::Face_index>  new_facets;
+	std::vector<Mesh::Vertex_index> new_vertices;
+
+
+	CGAL::Polygon_mesh_processing::refine(*mesh,
+									faces(*mesh),
+									std::back_inserter(new_facets),
+									std::back_inserter(new_vertices),
+									CGAL::Polygon_mesh_processing::parameters::density_control_factor(2.));
+	printSummary();
 }
 
 

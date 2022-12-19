@@ -11,6 +11,6 @@ public:
 	}
 
 	double generateNoise(double x, double y, int octaves){
-		return perlin.octave2D_01(x, y, octaves);
+		return perlin.octave2D_11(x, y, octaves);
 	}
 }; 

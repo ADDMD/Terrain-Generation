@@ -1,15 +1,16 @@
 #include "./NoiseGenerator/NoiseGenerator.hpp"
 #include "./Mesher/Mesher.hpp"
+#include "./Utility/config.hpp"
 
 #include <fstream>
 #include <chrono>
 #include <string>
 
 #include <fmt/format.h>
-#include <vector>
-#include <iostream>
 
-#include "./config.hpp"
+#include <CGAL/Named_function_parameters.h>
+#include <CGAL/IO/OBJ.h>
+
 
 int main(int argc, char const *argv[])
 {
@@ -21,6 +22,7 @@ int main(int argc, char const *argv[])
 	std::string o = conf["octaves"];
 	std::string f = conf["frequency"];
 	std::string n = conf["noise"];
+
 
 	if(w == "" || h == "") return -1;
 
@@ -38,22 +40,32 @@ int main(int argc, char const *argv[])
 	
 	tgen::NoiseGenerator ng(noise, seed);
 	auto points = ng.generatePointsMatrix(width, height, octaves, amplitude, frequency);
+	// auto points = ng.generatePoints(width, height, octaves, amplitude, frequency);
 	
 	tgen::Mesher mr;
 	mr.triangulate(points, width, height);
-	tgen::Mesh m = *mr.getMesh();
+	// mr.triangulate(points);
+	
+	// il refine allunga i tempi (circa 100s in più per una 100x100)
+	if(std::stoi(conf["refine"]) == 1)
+		mr.refine(); 
 
-	// il refine allunga i tempi (circa 30s in più per una 100x100)
-	// mr.refine(); 
+	tgen::Mesh mesh = *mr.getMesh();
 
-	std::string filename_path = fmt::format("{}{}.{}",conf["data.path"], seed, conf["data.extension"]);
+	std::string ext = conf["data.extension"];
+	std::string filename_path = fmt::format("{}{}.{}",conf["data.path"], seed, ext);
+	conf.close();
 	
 	std::ofstream out(filename_path);
 	fmt::print("[main] {} created\n", filename_path);
 
-	CGAL::IO::write_OBJ(out, m);
+	if(ext == "ply")
+		CGAL::IO::write_PLY(out, mesh);			// formato .ply
+	else if (ext == "obj")
+		CGAL::IO::write_OBJ(out, mesh);			// formato .obj
+	else if(ext == "off")
+		out << mesh; 							// formato .off
 	
-	conf.close();
 	out.close();
 
 	return 0;
