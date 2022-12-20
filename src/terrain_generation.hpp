@@ -4,6 +4,8 @@
 #include <CGAL/Cartesian.h>
 #include <CGAL/Exact_predicates_inexact_constructions_kernel.h>
 #include <CGAL/Surface_mesh.h>
+#include "./Utility/Logger.hpp"
+#include "./Utility/Config.hpp"
 
 namespace tgen {
 	/// kernel
@@ -27,10 +29,17 @@ namespace tgen {
 	class CellularNoise;
 	class OpenSimplexNoise;
 	class FBMNoise;
-	
-	//class SimplexGenerator;
-	class OpenSimplexGenerator;
-	class fbmGenerator;
+
+
+	class TGENLogger : public log::Logger {
+
+	public:
+		TGENLogger(std::string className) 
+			: log::Logger(className, std::vector<std::ostream*>{
+					&std::cout, 
+					new std::ofstream(Config("../config.yaml")["logging.file"], std::ios::app)
+				}) {}
+	};
 
 }
 

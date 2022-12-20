@@ -2,7 +2,6 @@
 #define MESHER_H
 
 #include "../terrain_generation.hpp"
-
 #include <array>
 
 #include <fmt/format.h>
@@ -10,7 +9,8 @@
 
 /// Mesher
 class tgen::Mesher {
-	
+
+
 
 	/// Classe di support al mesher per la costruzione della mesh triangolare 
 	struct Construct{
@@ -30,7 +30,8 @@ class tgen::Mesher {
 		Construct operator++(int) { return *this; }
 	};
 
-	std::string name = "mesher";
+	std::string name = "Mesher";
+	TGENLogger logger = TGENLogger(name);
 	
 	Mesh* mesh;
 

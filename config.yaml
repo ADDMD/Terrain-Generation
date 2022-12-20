@@ -7,3 +7,5 @@ noise: 0
 data.path: ../data/
 data.extension: ply
 refine: 0
+logging.file: ../main.log 
+logging.level: INFO

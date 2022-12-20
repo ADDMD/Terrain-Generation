@@ -1,12 +1,13 @@
 #include "Mesher.hpp"
 
-#include <CGAL/Advancing_front_surface_reconstruction.h>
+#include <map>
 
+#include <CGAL/Advancing_front_surface_reconstruction.h>
 #include <CGAL/Polygon_mesh_processing/remesh.h>
 #include <CGAL/Polygon_mesh_processing/refine.h>
-#include <CGAL/IO/Color.h>
 
-#include <map>
+#include <fmt/format.h>
+
 
 tgen::Mesher::Mesher() {}
 
@@ -17,12 +18,6 @@ void tgen::Mesher::triangulate(std::vector<Point> points) {
 	CGAL::advancing_front_surface_reconstruction(points.begin(), points.end(), construct);
 
 	printSummary();
-}
-
-template <typename T, std::size_t N>
-inline std::size_t size(T (&)[N])
-{
-    return N;
 }
 
 /** Metodo che genera una mesh triangolare a partire da una griglia di punti 
@@ -81,8 +76,9 @@ void tgen::Mesher::triangulate(Point** points, const int width, const int height
 
 		}
 	}
+	logger.log(log::Level::INFO, "mesh created.");
 
-	fmt::print("[{}] mesh created:\n", this->name);
+
 	printSummary();
 }
 
@@ -92,16 +88,15 @@ tgen::Mesh* tgen::Mesher::getMesh() {
 
 
 void tgen::Mesher::printSummary() {
-	fmt::print("[{}] vertices: {}\n", this->name, mesh->number_of_vertices());
-	fmt::print("[{}] edges: {}\n", this->name, mesh->number_of_edges());
-	fmt::print("[{}] tfaces: {}\n", this->name, mesh->number_of_faces());
+	logger.log(log::Level::INFO, 
+		fmt::format("Mesh summary: Vertices: {}; Edges: {}; Faces: {}",
+		mesh->number_of_edges(), mesh->number_of_vertices(), mesh->number_of_faces()));
 }
 
 
 
 void tgen::Mesher::refine() {
 	// CGAL::Polygon_mesh_processing::isotropic_remeshing(mesh->faces(), 1, *mesh);
-
 
 	std::vector<Mesh::Face_index>  new_facets;
 	std::vector<Mesh::Vertex_index> new_vertices;
@@ -112,6 +107,8 @@ void tgen::Mesher::refine() {
 									std::back_inserter(new_facets),
 									std::back_inserter(new_vertices),
 									CGAL::Polygon_mesh_processing::parameters::density_control_factor(2.));
+
+	logger.log(log::Level::INFO, "Mesh refined");
 	printSummary();
 }
 
