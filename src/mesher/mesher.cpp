@@ -76,7 +76,7 @@ void tgen::Mesher::triangulate(Point** points, const int width, const int height
 
 		}
 	}
-	logger.log(log::Level::INFO, "mesh created.");
+	logger.log(log::Level::INFO, "Mesh created.");
 
 
 	printSummary();
@@ -89,7 +89,7 @@ tgen::Mesh* tgen::Mesher::getMesh() {
 
 void tgen::Mesher::printSummary() {
 	logger.log(log::Level::INFO, 
-		fmt::format("Mesh summary: Vertices: {}; Edges: {}; Faces: {}",
+		fmt::format("Mesh summary: Vertices: {}; Edges: {}; Faces: {}.",
 		mesh->number_of_edges(), mesh->number_of_vertices(), mesh->number_of_faces()));
 }
 
@@ -108,7 +108,7 @@ void tgen::Mesher::refine() {
 									std::back_inserter(new_vertices),
 									CGAL::Polygon_mesh_processing::parameters::density_control_factor(2.));
 
-	logger.log(log::Level::INFO, "Mesh refined");
+	logger.log(log::Level::INFO, "Mesh refined.");
 	printSummary();
 }
 
