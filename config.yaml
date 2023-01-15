@@ -1,12 +1,22 @@
-width: 1000
-height: 1000
-amplitude: 50
-octaves: 4
-frequency: .01
-noise: 0
-continentalness: 1
-pickNvalley: 2
-erosion: 2
+width: 400
+height: 400
+# Perlin: 0; Simplex: 1; Open: 2; Cellular: 3; FBM: 4.
+# CONTINENTALNESS
+continentalness: 0
+cAmplitude: 10
+cOctaves: 2
+cFrequency: .01
+# PICK AND VALLEY
+pickNvalley: 4
+pvAmplitude: 30
+pvOctaves: 6
+pvFrequency: .025
+# EROSION
+erosion: 1
+eAmplitude: 5
+eOctaves: 2
+eFrequency: .01
+#
 data.path: ../data/
 data.extension: ply
 refine: 0

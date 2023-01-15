@@ -2,6 +2,8 @@
 #define MESHER_H
 
 #include "../terrain_generation.hpp"
+#include "cubemarching.hpp"
+
 #include <array>
 
 #include <fmt/format.h>
@@ -9,6 +11,21 @@
 
 /// Mesher
 class tgen::Mesher {
+	template <typename T>
+	inline T lerp(T start, T end, FT t) {
+		return start + t * (end - start);
+	}
+
+	template <typename T>
+	inline T interp(T start, T end, FT t) {
+		FT ti = ((6 * t - 15) * t + 10) * t * t * t;
+		return lerp(start, end, ti);
+	}
+
+
+	inline FT getValue(tgen::Point p, FT*** map) {
+		return map[(int)p.x()][(int)p.y()][(int)p.z()];
+	}
 
 
 
@@ -18,22 +35,52 @@ class tgen::Mesher {
 
 		tgen::Mesh& mesh;
 
-		template <typename PointIterator>
-		Construct(tgen::Mesh& mesh, PointIterator b, PointIterator e);
-
-		Construct& operator=(const Facet f);
+		template <typename PointIterator> 
+		Construct(tgen::Mesh& mesh, PointIterator b, PointIterator e): mesh(mesh) {
+			for(; b!=e; ++b){
+				boost::graph_traits<tgen::Mesh>::vertex_descriptor v;
+				v = add_vertex(mesh);
+				mesh.point(v) = *b;
+			}
+		}
 
 		Construct& operator*() { return *this; }
 		
 		Construct& operator++() { return *this; }
 		
 		Construct operator++(int) { return *this; }
+
+		Construct& operator=(const Facet f) {
+			typedef boost::graph_traits<tgen::Mesh>::vertex_descriptor vertex_descriptor;
+			typedef boost::graph_traits<tgen::Mesh>::vertices_size_type size_type;
+
+			mesh.add_face(vertex_descriptor(static_cast<size_type>(f[0])),
+			              vertex_descriptor(static_cast<size_type>(f[1])),
+			              vertex_descriptor(static_cast<size_type>(f[2])));
+			
+			return *this;
+		}
 	};
 
 	std::string name = "Mesher";
 	TGENLogger logger = TGENLogger(name);
 	
 	Mesh* mesh;
+	struct pointWrapper {
+		tgen::Point p;
+		pointWrapper(tgen::Point p) : p(p) {}
+
+		bool operator>(const pointWrapper & other) const {
+			return std::tie(p.x(), p.y(), p.z()) > std::tie(other.p.x(), other.p.y(), other.p.z());
+		}
+		bool operator<(const pointWrapper & other) const {
+			return std::tie(p.x(), p.y(), p.z()) < std::tie(other.p.x(), other.p.y(), other.p.z());
+		}
+
+		bool operator==(const pointWrapper & other) const {
+			return std::tie(p.x(), p.y(), p.z()) == std::tie(other.p.x(), other.p.y(), other.p.z());
+		}
+	};
 
 
 public:
@@ -50,12 +97,20 @@ public:
 	 */
 	void triangulate(std::vector<Point> points);
 
-	/// Triangola una nuvola di punti
-	void triangulate(Point** points, const int width, const int height);
+	/// Triangola una mappa di rumore
+	void triangulate(FT** map, const int width, const int height);
+	
+	/// Triangola una mappa di rumore 3D (ref: http://paulbourke.net/geometry/polygonise/)
+	void triangulate(FT*** map,  const int width, const int height, const int deepth, const FT isoLevel);
 
-	// void applayColor(CGAL::Color c);
+	Point calculateVertexposition(Point a, Point b, FT isoLevel, FT*** map);
+	
+	
+	void coloring();
 
 	void printSummary();
+
+	void prova();
 
 	Mesh* getMesh();
 

@@ -25,9 +25,19 @@ int main(int argc, char const *argv[])
 
 	std::string w = conf["width"];
 	std::string h = conf["height"];
-	std::string a = conf["amplitude"];
-	std::string o = conf["octaves"];
-	std::string f = conf["frequency"];
+	// amplitude
+	std::string ac = conf["cAmplitude"];
+	std::string apv = conf["pvAmplitude"];
+	std::string ae = conf["eAmplitude"];
+	// octaves
+	std::string oc = conf["cOctaves"];
+	std::string opv = conf["pvOctaves"];
+	std::string oe = conf["eOctaves"];
+	// frequency
+	std::string fc = conf["cFrequency"];
+	std::string fpv = conf["pvFrequency"];
+	std::string fe = conf["eFrequency"];
+	// noises
 	std::string c = conf["continentalness"];
 	std::string pv = conf["pickNvalley"];
 	std::string e = conf["erosion"];
@@ -37,27 +47,47 @@ int main(int argc, char const *argv[])
 
 	int width = std::stoi(w);
 	int height = std::stoi(h);
-	int amplitude = std::stoi(a);
-	int octaves = std::stoi(o);
-	double frequency = std::stod(f);
+
+	int cAmplitude = std::stoi(ac);
+	int pvAmplitude = std::stoi(apv);
+	int eAmplitude = std::stoi(ae);
+
+	int cOctaves = std::stoi(oc);
+	int pvOctaves = std::stoi(opv);
+	int eOctaves = std::stoi(oe);
+
+	double cFrequency = std::stod(fc);
+	double pvFrequency = std::stod(fpv);
+	double eFrequency = std::stod(fe);
+
 	int noise_continentalness = std::stoi(c);
 	int noise_pickNvalley = std::stoi(pv);
 	int noise_erosion = std::stoi(e);
 
+
+
 	const auto seed = std::chrono::duration_cast<std::chrono::seconds>(
 		std::chrono::system_clock::now().time_since_epoch()).count();
 
-	logger.log(log::Level::INFO, 
-		fmt::format("Seed = {}; Width = {}; Height = {}; Amplitude = {}; Frequency = {}; Noise = {}.",
-		seed, width, height, amplitude, frequency, noise));
+	tgen::NoiseGenerator continentalnessGen(noise_continentalness, seed, cOctaves, cAmplitude, cFrequency);
+	tgen::NoiseGenerator pickNValleyGen(noise_pickNvalley, seed, pvOctaves, pvAmplitude, pvFrequency);
+	tgen::NoiseGenerator erosionGen(noise_erosion, seed, eOctaves, eAmplitude, eFrequency);
+	auto continentalness = continentalnessGen.generateMap(width, height);
+	auto pickNValley = pickNValleyGen.generateMap(width, height);
+	auto erosion = erosionGen.generateMap(width, height);
 
-	tgen::NoiseGenerator continentalness(noise_continentalness, seed, octaves, amplitude, frequency);
-	tgen::NoiseGenerator pickNValley(noise_pickNvalley, seed, octaves, amplitude, frequency);
-	tgen::NoiseGenerator erosion(noise_erosion, seed, octaves, amplitude, frequency);
-	auto points = ng1.generatePointsMatrix(width, height);
+	tgen::FT** map;
+
+	map = new tgen::FT*[width];
+	for(int i = 0; i < width; i++){
+		map[i] = new tgen::FT[height];
+		for(int j = 0; j < height; j++){
+			map[i][j] = continentalness[i][j] + pickNValley[i][j] - erosion[i][j];
+		}
+	}
 
 	tgen::Mesher mr;
-	mr.triangulate(points, width, height);
+	mr.triangulate(map, width, height);
 	// mr.triangulate(points);
 	
 	// il refine allunga i tempi (circa 100s in più per una 100x100)
