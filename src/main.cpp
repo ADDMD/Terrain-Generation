@@ -28,7 +28,9 @@ int main(int argc, char const *argv[])
 	std::string a = conf["amplitude"];
 	std::string o = conf["octaves"];
 	std::string f = conf["frequency"];
-	std::string n = conf["noise"];
+	std::string c = conf["continentalness"];
+	std::string pv = conf["pickNvalley"];
+	std::string e = conf["erosion"];
 
 
 	if(w == "" || h == "") return -1;
@@ -38,7 +40,9 @@ int main(int argc, char const *argv[])
 	int amplitude = std::stoi(a);
 	int octaves = std::stoi(o);
 	double frequency = std::stod(f);
-	int noise = std::stoi(n);
+	int noise_continentalness = std::stoi(c);
+	int noise_pickNvalley = std::stoi(pv);
+	int noise_erosion = std::stoi(e);
 
 	const auto seed = std::chrono::duration_cast<std::chrono::seconds>(
 		std::chrono::system_clock::now().time_since_epoch()).count();
@@ -47,8 +51,10 @@ int main(int argc, char const *argv[])
 		fmt::format("Seed = {}; Width = {}; Height = {}; Amplitude = {}; Frequency = {}; Noise = {}.",
 		seed, width, height, amplitude, frequency, noise));
 
-	tgen::NoiseGenerator ng(noise, seed, octaves, amplitude, frequency);
-	auto points = ng.generatePointsMatrix(width, height);
+	tgen::NoiseGenerator continentalness(noise_continentalness, seed, octaves, amplitude, frequency);
+	tgen::NoiseGenerator pickNValley(noise_pickNvalley, seed, octaves, amplitude, frequency);
+	tgen::NoiseGenerator erosion(noise_erosion, seed, octaves, amplitude, frequency);
+	auto points = ng1.generatePointsMatrix(width, height);
 
 	tgen::Mesher mr;
 	mr.triangulate(points, width, height);
