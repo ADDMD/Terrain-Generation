@@ -47,16 +47,19 @@ int main(int argc, char const *argv[])
 		fmt::format("Seed = {}; Width = {}; Height = {}; Amplitude = {}; Frequency = {}; Noise = {}.",
 		seed, width, height, amplitude, frequency, noise));
 
-	tgen::NoiseGenerator ng(noise, seed, octaves, amplitude, frequency);
-	auto points = ng.generatePointsMatrix(width, height);
+	// tgen::NoiseGenerator ng(noise, seed, octaves, amplitude, frequency);
+	// auto continentalness = ng.generateMap(width, height);
 
 	tgen::Mesher mr;
-	mr.triangulate(points, width, height);
-	// mr.triangulate(points);
+	// mr.triangulate(continentalness, width, height);
+	// mr.triangulate(continentalness);
+	mr.prova();
 	
 	// il refine allunga i tempi (circa 100s in più per una 100x100)
 	if(std::stoi(conf["refine"]) == 1)
 		mr.refine(); 
+
+	// mr.coloring();
 
 	tgen::Mesh mesh = *mr.getMesh();
 

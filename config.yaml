@@ -1,11 +1,17 @@
-width: 200
-height: 200
-amplitude: 50
-octaves: 4
-frequency: .01
-noise: 0
-data.path: ../data/
-data.extension: ply
+# 1 = True, 0 = false
 refine: 0
 logging.file: ../main.log 
 logging.level: INFO
+width: 200
+height: 200
+amplitude: 50
+octaves: 5
+frequency: .01
+# 0 -> perlin
+# 1 -> simplex
+# 2 -> opensimplex
+# 3 -> cellular
+# 4 -> fbm
+noise: 0
+data.path: ../data/
+data.extension: ply

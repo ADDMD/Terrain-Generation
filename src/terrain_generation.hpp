@@ -9,16 +9,21 @@
 
 namespace tgen {
 	/// kernel
-	typedef CGAL::Cartesian<double> Kernel;
+	// typedef CGAL::Cartesian<double> Kernel;
 
 	/// kernel per calcoli più precisi
-	// typedef CGAL::Exact_predicates_inexact_constructions_kernel Kernel;
+	typedef CGAL::Exact_predicates_inexact_constructions_kernel Kernel;
 
 	/// punto 3D
 	typedef Kernel::Point_3 Point;
 
+	/// VETTORE 3D
+	typedef Kernel::Vector_3 Vector;
+
 	/// mesh triangolare
 	typedef CGAL::Surface_mesh<Point> Mesh;
+
+	typedef Kernel::FT FT;
 	
 	class Mesher;
 	class NoiseGenerator;
