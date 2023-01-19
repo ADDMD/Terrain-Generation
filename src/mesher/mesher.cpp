@@ -122,14 +122,23 @@ void tgen::Mesher::coloring() {
 		Point p = mesh->point(v);
 		FT tz = n.z();
 
-		FT iz = interp(0, 360, tz);
-
-		CGAL::Color c = CGAL::Color().set_hsv(iz, 100, 50, 255);
+		// FT iz = interp(0, 360, tz);
+		CGAL::Color c;
+		if(tz <= 0.5) c = grey;
+		else if (tz > 0.5 & tz <= 0.85){
+				if ((p.z() / 55) < 0.1) c = blue;
+		 		else c = darkgreen;
+			}
+		else if (tz > 0.85 & tz <= 1){
+		 		if ((p.z() / 55) < 0.1) c = blue;
+		 		else c = green;
+		 	}
 
 		auto result = c.to_rgb();
 		c.set_rgb(result[0], result[1], result[2]);
 
 		color[v] = c;
+
 	}
 	logger.log(log::Level::INFO, "Mesh colored.");
 }

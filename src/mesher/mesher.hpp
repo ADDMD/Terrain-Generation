@@ -11,6 +11,13 @@
 
 /// Mesher
 class tgen::Mesher {
+
+	CGAL::Color green = CGAL::Color(115,169,102);
+	CGAL::Color darkgreen = CGAL::Color(68,126,92);
+	CGAL::Color grey = CGAL::Color(150,145,142);
+	CGAL::Color white = CGAL::Color(255,255,255);
+	CGAL::Color blue = CGAL::Color(68,68,122,255);
+
 	template <typename T>
 	inline T lerp(T start, T end, FT t) {
 		return start + t * (end - start);
