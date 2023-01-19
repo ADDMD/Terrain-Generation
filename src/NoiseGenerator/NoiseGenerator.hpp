@@ -16,6 +16,7 @@ class tgen::NoiseGenerator{
 
 	std::string name = "NoiseGenerator";
 	TGENLogger logger = TGENLogger(name);
+	double amplitude;
 
 protected:
 	Noise* noise;
@@ -25,7 +26,7 @@ public:
 
 	std::vector<Point> generatePoints(int width, int height);
 
-	double** generateMap(int width, int heigth);
+	double** generateMap(int width, int heigth, double exp_elevation);
 
 };
 

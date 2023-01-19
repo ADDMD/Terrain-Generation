@@ -7,12 +7,13 @@ cAmplitude: 10
 cOctaves: 2
 cFrequency: .01
 # PICK AND VALLEY
-pickNvalley: 4
-pvAmplitude: 30
+pickNvalley: 0
+pvAmplitude: 50
 pvOctaves: 6
-pvFrequency: .025
+pvFrequency: .015
+elevation: 2.5
 # EROSION
-erosion: 1
+erosion: 0
 eAmplitude: 5
 eOctaves: 2
 eFrequency: .01

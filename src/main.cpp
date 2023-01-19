@@ -42,6 +42,8 @@ int main(int argc, char const *argv[])
 	std::string pv = conf["pickNvalley"];
 	std::string e = conf["erosion"];
 
+	std::string el = conf["elevation"];
+
 
 	if(w == "" || h == "") return -1;
 
@@ -64,6 +66,8 @@ int main(int argc, char const *argv[])
 	int noise_pickNvalley = std::stoi(pv);
 	int noise_erosion = std::stoi(e);
 
+	double elevation = std::stod(el);
+
 
 
 	const auto seed = std::chrono::duration_cast<std::chrono::seconds>(
@@ -72,9 +76,9 @@ int main(int argc, char const *argv[])
 	tgen::NoiseGenerator continentalnessGen(noise_continentalness, seed, cOctaves, cAmplitude, cFrequency);
 	tgen::NoiseGenerator pickNValleyGen(noise_pickNvalley, seed, pvOctaves, pvAmplitude, pvFrequency);
 	tgen::NoiseGenerator erosionGen(noise_erosion, seed, eOctaves, eAmplitude, eFrequency);
-	auto continentalness = continentalnessGen.generateMap(width, height);
-	auto pickNValley = pickNValleyGen.generateMap(width, height);
-	auto erosion = erosionGen.generateMap(width, height);
+	auto continentalness = continentalnessGen.generateMap(width, height, 1);
+	auto pickNValley = pickNValleyGen.generateMap(width, height, elevation);
+	auto erosion = erosionGen.generateMap(width, height, 1);
 
 	tgen::FT** map;
 
@@ -93,6 +97,8 @@ int main(int argc, char const *argv[])
 	// il refine allunga i tempi (circa 100s in più per una 100x100)
 	if(std::stoi(conf["refine"]) == 1)
 		mr.refine(); 
+
+	mr.coloring();
 
 	tgen::Mesh mesh = *mr.getMesh();
 

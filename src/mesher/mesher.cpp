@@ -115,12 +115,12 @@ void tgen::Mesher::refine() {
 void tgen::Mesher::coloring() {
 	Mesh::Property_map<Mesh::Vertex_index, CGAL::Color> color;
 	bool created;
-
 	boost::tie(color, created) = mesh->add_property_map<Mesh::Vertex_index, CGAL::Color>("v:color");
-	
+
 	for (auto v: mesh->vertices()) {
+		auto n = CGAL::Polygon_mesh_processing::compute_vertex_normal(v, *mesh);
 		Point p = mesh->point(v);
-		FT tz = (p.z() + 50) / 100;
+		FT tz = n.z();
 
 		FT iz = interp(0, 360, tz);
 
