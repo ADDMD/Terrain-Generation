@@ -1,15 +1,22 @@
 #ifndef NOISE_GENERATOR_H
 #define NOISE_GENERATOR_H
 
-#include <vector>
 #include "../terrain_generation.hpp"
 #include "../Noises/PerlinNoise.cpp"
 #include "../Noises/CellularNoise.cpp"
 #include "../Noises/OpenSimplexNoise.cpp"
 #include "../Noises/FBMNoise.cpp"
 #include "../Noises/SimplexNoise.cpp"
+#include "../Utility/Logger.hpp"
+
+#include <vector>
+
 
 class tgen::NoiseGenerator{
+
+	std::string name = "NoiseGenerator";
+	TGENLogger logger = TGENLogger(name);
+	double amplitude;
 
 protected:
 	Noise* noise;
@@ -19,7 +26,7 @@ public:
 
 	std::vector<Point> generatePoints(int width, int height);
 
-	Point** generatePointsMatrix(int width, int heigth); 
+	double** generateMap(int width, int heigth, double exp_elevation);
 
 };
 

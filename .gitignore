@@ -56,6 +56,7 @@ test/data/*
 *.sublime-workspace
 *.json
 *.off
+*.log
 *.sublime-workspace
 .DS_Store
 config.yaml

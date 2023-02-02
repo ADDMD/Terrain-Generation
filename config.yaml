@@ -1,9 +1,25 @@
-width: 200
-height: 200
-amplitude: 50
-octaves: 4
-frequency: .01
-noise: 0
+width: 400
+height: 400
+# Perlin: 0; Simplex: 1; Open: 2; Cellular: 3; FBM: 4.
+# CONTINENTALNESS
+continentalness: 0
+cAmplitude: 10
+cOctaves: 2
+cFrequency: .01
+# PICK AND VALLEY
+pickNvalley: 0
+pvAmplitude: 50
+pvOctaves: 6
+pvFrequency: .015
+elevation: 2.5
+# EROSION
+erosion: 0
+eAmplitude: 5
+eOctaves: 2
+eFrequency: .01
+#
 data.path: ../data/
 data.extension: ply
 refine: 0
+logging.file: ../main.log 
+logging.level: INFO

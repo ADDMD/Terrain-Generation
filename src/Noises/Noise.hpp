@@ -8,13 +8,11 @@ public:
 	
 	unsigned int seed;
 	int octaves;
-	int amplitude;
 	double frequency;
 
-	Noise(unsigned int seed, int octaves, int amplitude, double frequency){
+	Noise(unsigned int seed, int octaves, double frequency){
 		this->seed = seed;
 		this->octaves = octaves;
-		this->amplitude = amplitude;
 		this->frequency = frequency;
 	}
 

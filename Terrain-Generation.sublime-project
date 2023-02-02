@@ -35,7 +35,7 @@
 		{
 			"name": "w remove data",
 			"working_dir": "$folder/data",
-			"cmd": "rm -f *.obj",
+			"cmd": "rm -f *.obj *.ply *.off",
 			"shell": true,
 		},
 		{

@@ -7,12 +7,12 @@
 #include <boost/algorithm/string.hpp>
 #include <fstream>
 
-config::config(std::string path) {
+Config::Config(std::string path) {
 	configFilePath = path;
 	configFile.open(configFilePath);
 }
 
-std::string config::getAttribute(std::string attrName){
+std::string Config::getAttribute(std::string attrName){
 	// fmt::print("[{}] Searching for {}\n",this->getName() , attrName);
 	// pulisci gli error flags
 	configFile.clear();
@@ -44,19 +44,19 @@ std::string config::getAttribute(std::string attrName){
 	return "";
 }
 
-std::string config::operator[](std::string attrName){
+std::string Config::operator[](std::string attrName){
 	return this->getAttribute(attrName);
 }
 
-std::string config::getName(){
+std::string Config::getName(){
 	return "config";
 }
 
-bool config::is_open(){
+bool Config::is_open(){
 	return configFile.is_open();
 }
 
-int config::open(){
+int Config::open(){
 	// if(configFilePath.empty()){
 	// 	fmt::print("Config filepath needs to be passed in the constructor\n");
 	// }
@@ -64,20 +64,20 @@ int config::open(){
 	return this->is_open();
 }
 
-void config::close(){
+void Config::close(){
 	configFile.close();
 }
 
-config::~config(){
+Config::~Config(){
 	close();
 }
 
-// void config::updateAttribute(std::string attrName, std::string attrValue){
+// void Config::updateAttribute(std::string attrName, std::string attrValue){
 
 // }
 
 //TODO: update attribute already present and add new one if not 
-// void config::setAttribute(std::string attrName, std::string attrValue){
+// void Config::setAttribute(std::string attrName, std::string attrValue){
 // 	// pulisci gli error flags
 // 	configFile.clear();
 // 	// ritorna all'inizio del file

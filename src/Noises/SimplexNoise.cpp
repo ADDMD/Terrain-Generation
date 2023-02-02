@@ -6,7 +6,7 @@ class tgen::SimplexNoise: public tgen::Noise{
 	FastNoiseLite simplex;
 
 public:
-	SimplexNoise(unsigned int seed, int octaves, int amplitude, double frequency) : Noise(seed, octaves, amplitude, frequency){
+	SimplexNoise(unsigned int seed, int octaves, double frequency) : Noise(seed, octaves, frequency){
 		simplex.SetNoiseType(FastNoiseLite::NoiseType_OpenSimplex2);
 		simplex.SetSeed(seed);
 		simplex.SetFractalOctaves(octaves);
@@ -14,6 +14,6 @@ public:
 	}
 
 	double generateNoise(double x, double y){
-		return simplex.GetNoise(x, y) * amplitude;
+		return simplex.GetNoise(x, y);
 	}
 }; 
