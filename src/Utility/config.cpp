@@ -1,4 +1,4 @@
-#include "config.hpp"
+#include "Config.hpp"
 #include <fmt/format.h>
 #include <stdio.h>
 #include <string>
