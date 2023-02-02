@@ -33,14 +33,20 @@ int main(int argc, char const *argv[])
 	std::string oc = conf["cOctaves"];
 	std::string opv = conf["pvOctaves"];
 	std::string oe = conf["eOctaves"];
+	std::string ot = conf["tOctaves"];
+	std::string oh = conf["hOctaves"];
 	// frequency
 	std::string fc = conf["cFrequency"];
 	std::string fpv = conf["pvFrequency"];
 	std::string fe = conf["eFrequency"];
+	std::string ft = conf["tFrequency"];
+	std::string fh = conf["hFrequency"];
 	// noises
 	std::string c = conf["continentalness"];
 	std::string pv = conf["pickNvalley"];
 	std::string e = conf["erosion"];
+	std::string t = conf["temperature"];
+	std::string hu = conf["humidity"];
 
 	std::string el = conf["elevation"];
 
@@ -57,18 +63,22 @@ int main(int argc, char const *argv[])
 	int cOctaves = std::stoi(oc);
 	int pvOctaves = std::stoi(opv);
 	int eOctaves = std::stoi(oe);
+	int tOctaves = std::stoi(ot);
+	int hOctaves = std::stoi(oh);
 
 	double cFrequency = std::stod(fc);
 	double pvFrequency = std::stod(fpv);
 	double eFrequency = std::stod(fe);
+	double tFrequency = std::stod(ft);
+	double hFrequency = std::stod(fh);
 
 	int noise_continentalness = std::stoi(c);
 	int noise_pickNvalley = std::stoi(pv);
 	int noise_erosion = std::stoi(e);
+	int noise_temperature = std::stoi(t);
+	int noise_humidity = std::stoi(hu);
 
 	double elevation = std::stod(el);
-
-
 
 	const auto seed = std::chrono::duration_cast<std::chrono::seconds>(
 		std::chrono::system_clock::now().time_since_epoch()).count();
@@ -76,7 +86,11 @@ int main(int argc, char const *argv[])
 	tgen::NoiseGenerator continentalnessGen(noise_continentalness, seed, cOctaves, cAmplitude, cFrequency);
 	tgen::NoiseGenerator pickNValleyGen(noise_pickNvalley, seed, pvOctaves, pvAmplitude, pvFrequency);
 	tgen::NoiseGenerator erosionGen(noise_erosion, seed, eOctaves, eAmplitude, eFrequency);
+	tgen::NoiseGenerator temperatureGen(noise_temperature, seed, tOctaves, 1, tFrequency);
+	tgen::NoiseGenerator humidityGen(noise_humidity, seed, hOctaves, 1, hFrequency);
 	auto continentalness = continentalnessGen.generateMap(width, height, 1);
+	auto temperature = temperatureGen.generateMap(width, height, 1);
+	auto humidity = humidityGen.generateMap(width, height, 1);
 	auto pickNValley = pickNValleyGen.generateMap(width, height, elevation);
 	auto erosion = erosionGen.generateMap(width, height, 1);
 
@@ -86,7 +100,40 @@ int main(int argc, char const *argv[])
 	for(int i = 0; i < width; i++){
 		map[i] = new tgen::FT[height];
 		for(int j = 0; j < height; j++){
-			map[i][j] = continentalness[i][j] + pickNValley[i][j] - erosion[i][j];
+			double h = humidity[i][j];
+			double t = temperature[i][j];
+			double pvparam, eparam;
+			if (h < .33 && t < .33){
+				pvparam = 2.5;
+				eparam = 2.5;
+			}else if(h < .33 && t > .33 && t < .66){
+				pvparam = 3.75;
+				eparam = 2.5;
+			}else if(t < .33 && h > .33 && h < .66){
+				pvparam = 2.5;
+				eparam = 3.75;
+			} else if(h > .33 && h < .66 && t > .33 && t < .66){
+				pvparam = 3.75;
+				eparam = 3.75;
+			} else if(h < .33 && t > .66){
+				pvparam = 5;
+				eparam = 2.5;
+			} else if(h > .66 && t < .33){
+				pvparam = 2.5;
+				eparam = 5;
+			} else if(h > .33 && h < .66 && t > .66){
+				pvparam = 5;
+				eparam = 3.75;
+			}else if(h > .66 && t > .33 && t < .66){
+				pvparam = 3.75;
+				eparam = 5;
+			} else {
+				pvparam = 5;
+				eparam = 5;
+			}
+			pvparam = pvparam * t * h;
+			eparam = eparam * t * h;
+			map[i][j] = continentalness[i][j] + pvparam * pickNValley[i][j] - eparam * erosion[i][j];
 		}
 	}
 

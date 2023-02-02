@@ -2,7 +2,7 @@
 #define MESHER_H
 
 #include "../terrain_generation.hpp"
-#include "cubemarching.hpp"
+#include "Cubemarching.hpp"
 
 #include <array>
 
