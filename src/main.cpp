@@ -26,29 +26,29 @@ int main(int argc, char const *argv[])
 	std::string w = conf["width"];
 	std::string h = conf["height"];
 	// amplitude
-	std::string ac = conf["cAmplitude"];
-	std::string apv = conf["pvAmplitude"];
-	std::string ae = conf["eAmplitude"];
+	std::string ac = conf["continentalness.amplitude"];
+	std::string apv = conf["pickNvalley.amplitude"];
+	std::string ae = conf["erosion.amplitude"];
 	// octaves
-	std::string oc = conf["cOctaves"];
-	std::string opv = conf["pvOctaves"];
-	std::string oe = conf["eOctaves"];
-	std::string ot = conf["tOctaves"];
-	std::string oh = conf["hOctaves"];
+	std::string oc = conf["continentalness.octaves"];
+	std::string opv = conf["pickNvalley.octaves"];
+	std::string oe = conf["erosion.octaves"];
+	std::string ot = conf["temperature.octaves"];
+	std::string oh = conf["humidity.octaves"];
 	// frequency
-	std::string fc = conf["cFrequency"];
-	std::string fpv = conf["pvFrequency"];
-	std::string fe = conf["eFrequency"];
-	std::string ft = conf["tFrequency"];
-	std::string fh = conf["hFrequency"];
+	std::string fc = conf["continentalness.frequency"];
+	std::string fpv = conf["pickNvalley.frequency"];
+	std::string fe = conf["erosion.frequency"];
+	std::string ft = conf["temperature.frequency"];
+	std::string fh = conf["humidity.frequency"];
 	// noises
-	std::string c = conf["continentalness"];
-	std::string pv = conf["pickNvalley"];
-	std::string e = conf["erosion"];
-	std::string t = conf["temperature"];
-	std::string hu = conf["humidity"];
+	std::string c = conf["continentalness.noise"];
+	std::string pv = conf["pickNvalley.noise"];
+	std::string e = conf["erosion.noise"];
+	std::string t = conf["temperature.noise"];
+	std::string hu = conf["humidity.noise"];
 
-	std::string el = conf["elevation"];
+	std::string el = conf["pickNvalley.elevation"];
 
 
 	if(w == "" || h == "") return -1;
