@@ -1,5 +1,5 @@
-width: 400
-height: 400
+width: 700
+height: 700
 # Perlin: 0; Simplex: 1; Open: 2; Cellular: 3; FBM: 4.
 # CONTINENTALNESS
 continentalness: 0
@@ -8,10 +8,10 @@ cOctaves: 2
 cFrequency: .01
 # PICK AND VALLEY
 pickNvalley: 0
-pvAmplitude: 40
-pvOctaves: 6
-pvFrequency: .015
-elevation: 2.5
+pvAmplitude: 50
+pvOctaves: 10
+pvFrequency: .01
+elevation: 2
 # EROSION
 erosion: 0
 eAmplitude: 5
@@ -20,11 +20,11 @@ eFrequency: .01
 # TEMPERATURE
 temperature: 0
 tOctaves: 2
-tFrequency: .01
+tFrequency: .005
 # HUMIDITY
 humidity: 0
 hOctaves: 2
-hFrequency: .01
+hFrequency: .005
 #
 data.path: ../data/
 data.extension: ply

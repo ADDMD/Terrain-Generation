@@ -126,11 +126,11 @@ void tgen::Mesher::coloring() {
 		CGAL::Color c;
 		if(tz <= 0.5) c = grey;
 		else if (tz > 0.5 & tz <= 0.85){
-				if ((p.z() / 55) < 0.1) c = blue;
+				if ((p.z() / 55) < 0.05) c = giallastra;
 		 		else c = darkgreen;
 			}
 		else if (tz > 0.85 & tz <= 1){
-		 		if ((p.z() / 55) < 0.1) c = blue;
+		 		if ((p.z() / 55) < 0.05) c = giallastra;
 		 		else c = green;
 		 	}
 
