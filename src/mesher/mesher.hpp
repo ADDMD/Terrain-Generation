@@ -17,6 +17,7 @@ class tgen::Mesher {
 	CGAL::Color grey = CGAL::Color(150,145,142);
 	CGAL::Color white = CGAL::Color(255,255,255);
 	CGAL::Color blue = CGAL::Color(68,68,122,255);
+	CGAL::Color giallastra = CGAL::Color(247,218,158,255);
 
 	template <typename T>
 	inline T lerp(T start, T end, FT t) {
