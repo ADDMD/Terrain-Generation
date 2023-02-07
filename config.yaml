@@ -6,6 +6,7 @@ continentalness.noise: 0
 continentalness.amplitude: 10
 continentalness.octaves: 2
 continentalness.frequency: .01
+continentalness.elevation: 1
 # PICK AND VALLEY
 pickNvalley.noise: 0
 pickNvalley.amplitude: 40
@@ -17,14 +18,19 @@ erosion.noise: 0
 erosion.amplitude: 5
 erosion.octaves: 2
 erosion.frequency: .01
+erosion.elevation: 1
 # TEMPERATURE
 temperature.noise: 0
+temperature.amplitude: 1
 temperature.octaves: 2
 temperature.frequency: .01
+temperature.elevation: 1
 # HUMIDITY
 humidity.noise: 0
+humidity.amplitude: 1
 humidity.octaves: 2
 humidity.frequency: .01
+humidity.elevation: 1
 #
 data.path: ../data/
 data.extension: ply

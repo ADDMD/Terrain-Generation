@@ -1,4 +1,5 @@
 #include "../terrain_generation.hpp"
+#include <CGAL/IO/OBJ.h>
 
 class tgen::Terrain{
 

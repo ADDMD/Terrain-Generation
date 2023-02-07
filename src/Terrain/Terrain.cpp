@@ -1,6 +1,6 @@
 #include "./Terrain.hpp"
 
-
+tgen::Terrain::Terrain(){}
 tgen::Terrain::Terrain(tgen::Mesh mesh, tgen::FT** terrainMap, tgen::FT** humidity, tgen::FT** temperature){
 	this->mesh = mesh;
 	this->terrainMap = terrainMap;

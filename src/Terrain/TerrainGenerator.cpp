@@ -3,79 +3,26 @@
 tgen::TerrainGenerator::TerrainGenerator(){}
 
 tgen::Terrain tgen::TerrainGenerator::generateTerrain(unsigned int seed){
-	Config conf("../config.yaml");
 
+	Config conf("../config.yaml");
 	std::string w = conf["width"];
 	std::string h = conf["height"];
-	// amplitude
-	std::string ac = conf["continentalness.amplitude"];
-	std::string apv = conf["pickNvalley.amplitude"];
-	std::string ae = conf["erosion.amplitude"];
-	// octaves
-	std::string oc = conf["continentalness.octaves"];
-	std::string opv = conf["pickNvalley.octaves"];
-	std::string oe = conf["erosion.octaves"];
-	std::string ot = conf["temperature.octaves"];
-	std::string oh = conf["humidity.octaves"];
-	// frequency
-	std::string fc = conf["continentalness.frequency"];
-	std::string fpv = conf["pickNvalley.frequency"];
-	std::string fe = conf["erosion.frequency"];
-	std::string ft = conf["temperature.frequency"];
-	std::string fh = conf["humidity.frequency"];
-	// noises
-	std::string c = conf["continentalness.noise"];
-	std::string pv = conf["pickNvalley.noise"];
-	std::string e = conf["erosion.noise"];
-	std::string t = conf["temperature.noise"];
-	std::string hu = conf["humidity.noise"];
-
-	std::string el = conf["pickNvalley.elevation"];
-
 
 	// if(w == "" || h == "") return nullptr;
 
 	int width = std::stoi(w);
 	int height = std::stoi(h);
 
-	int cAmplitude = std::stoi(ac);
-	int pvAmplitude = std::stoi(apv);
-	int eAmplitude = std::stoi(ae);
-
-	int cOctaves = std::stoi(oc);
-	int pvOctaves = std::stoi(opv);
-	int eOctaves = std::stoi(oe);
-	int tOctaves = std::stoi(ot);
-	int hOctaves = std::stoi(oh);
-
-	double cFrequency = std::stod(fc);
-	double pvFrequency = std::stod(fpv);
-	double eFrequency = std::stod(fe);
-	double tFrequency = std::stod(ft);
-	double hFrequency = std::stod(fh);
-
-	int noise_continentalness = std::stoi(c);
-	int noise_pickNvalley = std::stoi(pv);
-	int noise_erosion = std::stoi(e);
-	int noise_temperature = std::stoi(t);
-	int noise_humidity = std::stoi(hu);
-
-	double elevation = std::stod(el);
-
-	tgen::NoiseGenerator continentalnessGen(noise_continentalness, seed, cOctaves, cAmplitude, cFrequency);
-	tgen::NoiseGenerator pickNValleyGen(noise_pickNvalley, seed, pvOctaves, pvAmplitude, pvFrequency);
-	tgen::NoiseGenerator erosionGen(noise_erosion, seed, eOctaves, eAmplitude, eFrequency);
-	tgen::NoiseGenerator temperatureGen(noise_temperature, seed, tOctaves, 1, tFrequency);
-	tgen::NoiseGenerator humidityGen(noise_humidity, seed, hOctaves, 1, hFrequency);
-	auto continentalness = continentalnessGen.generateMap(width, height, 1);
-	auto temperature = temperatureGen.generateMap(width, height, 1);
-	auto humidity = humidityGen.generateMap(width, height, 1);
-	auto pickNValley = pickNValleyGen.generateMap(width, height, elevation);
-	auto erosion = erosionGen.generateMap(width, height, 1);
-
+	std::map<std::string, tgen::FT**>  maps = generateMaps(width, height, seed);
 	tgen::FT** map;
 
 	map = new tgen::FT*[width];
+	auto continentalness = maps["continentalness"];
+	auto pickNValley = maps["pickNvalley"];
+	auto erosion = maps["erosion"];
+	auto humidity = maps["humidity"];
+	auto temperature = maps["temperature"];
+
 	for(int i = 0; i < width; i++){
 		map[i] = new tgen::FT[height];
 		for(int j = 0; j < height; j++){
@@ -133,4 +80,36 @@ tgen::Terrain tgen::TerrainGenerator::generateTerrain(unsigned int seed){
 
 tgen::Terrain tgen::TerrainGenerator::getTerrain(){
 	return this->terrain;
+}
+
+std::map<std::string, tgen::FT**> tgen::TerrainGenerator::generateMaps(int width, int height, unsigned int seed){
+	Config conf("../config.yaml");
+	std::map<std::string, tgen::FT**> maps;
+	std::vector<std::string> mapnames({"continentalness", "pickNvalley", "erosion", "humidity", "temperature"});
+
+	for(auto name: mapnames){
+
+		std::string ampl = conf[fmt::format("{}.amplitude", name)];
+		// octaves
+		std::string oct = conf[fmt::format("{}.octaves", name)];
+		// frequency
+		std::string freq = conf[fmt::format("{}.frequency", name)];
+		// noises
+		std::string noi = conf[fmt::format("{}.noise", name)];
+		// elevation
+		std::string elev = conf[fmt::format("{}.elevation", name)];
+
+		int amplitude = std::stoi(ampl);
+		int octaves = std::stoi(oct);
+		double frequency = std::stod(freq);
+		int noise = std::stoi(noi);
+		double elevation = std::stod(elev);
+
+		tgen::NoiseGenerator gen(noise, seed, octaves, amplitude, frequency);
+		auto map = gen.generateMap(width, height, elevation);
+
+		maps.insert({name, map});
+	} 
+
+	return maps;
 }

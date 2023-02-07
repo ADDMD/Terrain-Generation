@@ -5,7 +5,9 @@
 #include "./Terrain.hpp"
 
 #include <fstream>
+#include <fmt/format.h>
 #include <chrono>
+#include <map>
 
 #include <CGAL/Named_function_parameters.h>
 #include <CGAL/IO/OBJ.h>
@@ -18,4 +20,5 @@ public:
 	TerrainGenerator();
 	tgen::Terrain generateTerrain(unsigned int seed);
 	tgen::Terrain getTerrain();
+	std::map<std::string, tgen::FT**> generateMaps(int width, int height, unsigned int seed);
 };
