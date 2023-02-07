@@ -1,4 +1,4 @@
-#include "./terrain_generation.hpp"
+#include "../terrain_generation.hpp"
 
 class tgen::Terrain {
 

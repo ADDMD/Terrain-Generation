@@ -1,7 +1,7 @@
-#include "./terrain_generation.hpp"
-#include "./NoiseGenerator/NoiseGenerator.hpp"
-#include "./Mesher/Mesher.hpp"
-#include "./Utility/Config.hpp"
+#include "../terrain_generation.hpp"
+#include "../NoiseGenerator/NoiseGenerator.hpp"
+#include "../Mesher/Mesher.hpp"
+#include "../Utility/Config.hpp"
 
 #include <fstream>
 #include <chrono>
@@ -12,5 +12,5 @@
 class tgen::TerrainGenerator {
 
 public:
-	void generateTerrain(unsigned int seed);
+	tgen::Terrain generateTerrain(unsigned int seed);
 };
