@@ -12,8 +12,6 @@
 #include <CGAL/Named_function_parameters.h>
 #include <CGAL/IO/OBJ.h>
 
-
-
 int main(int argc, char const *argv[])
 {
 	tgen::TGENLogger logger = tgen::TGENLogger("main");
