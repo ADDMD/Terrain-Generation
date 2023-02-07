@@ -1,6 +1,6 @@
 #include "../terrain_generation.hpp"
 
-class tgen::Terrain {
+class tgen::Terrain{
 
 	tgen::Mesh mesh;
 
@@ -9,6 +9,7 @@ class tgen::Terrain {
 	tgen::FT** temperature;
 
 public:
+	Terrain();
 	Terrain(tgen::Mesh mesh, tgen::FT** terrainMap, tgen::FT** humidity, tgen::FT** temperature);
 
 	tgen::Mesh getMesh();

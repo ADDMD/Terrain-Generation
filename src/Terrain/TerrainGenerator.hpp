@@ -2,6 +2,7 @@
 #include "../NoiseGenerator/NoiseGenerator.hpp"
 #include "../Mesher/Mesher.hpp"
 #include "../Utility/Config.hpp"
+#include "./Terrain.hpp"
 
 #include <fstream>
 #include <chrono>
@@ -11,6 +12,10 @@
 
 class tgen::TerrainGenerator {
 
+	tgen::Terrain terrain;
+
 public:
+	TerrainGenerator();
 	tgen::Terrain generateTerrain(unsigned int seed);
+	tgen::Terrain getTerrain();
 };
