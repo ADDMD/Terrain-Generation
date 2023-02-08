@@ -45,11 +45,11 @@ namespace tgen {
 	class TerrainGenerator;
 
 
-	class TGENLogger : public log::Logger {
+	class TGENLogger : public logtg::Logger {
 
 	public:
 		TGENLogger(std::string className) 
-			: log::Logger(className, std::vector<std::ostream*>{
+			: logtg::Logger(className, std::vector<std::ostream*>{
 					&std::cout, 
 					new std::ofstream(Config("../config.yaml")["logging.file"], std::ios::app)
 				}) {}

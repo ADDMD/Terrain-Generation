@@ -82,7 +82,7 @@ void tgen::Mesher::triangulate(FT** map, const int width, const int height) {
 
 		}
 	}
-	logger.log(log::Level::INFO, "Mesh created.");
+	logger.log(logtg::Level::INFO, "Mesh created.");
 	printSummary();
 }
 
@@ -92,7 +92,7 @@ tgen::Mesh* tgen::Mesher::getMesh() {
 
 
 void tgen::Mesher::printSummary() {
-	logger.log(log::Level::INFO, 
+	logger.log(logtg::Level::INFO, 
 		fmt::format("Mesh summary: Vertices: {}; Edges: {}; Faces: {}.",
 		mesh->number_of_vertices(), mesh->number_of_edges(), mesh->number_of_faces()));
 }
@@ -112,7 +112,7 @@ void tgen::Mesher::refine() {
 									std::back_inserter(new_vertices),
 									CGAL::Polygon_mesh_processing::parameters::density_control_factor(2.));
 
-	logger.log(log::Level::INFO, "Mesh refined.");
+	logger.log(logtg::Level::INFO, "Mesh refined.");
 	printSummary();
 }
 
@@ -144,7 +144,7 @@ void tgen::Mesher::coloring() {
 		color[v] = c;
 
 	}
-	logger.log(log::Level::INFO, "Mesh colored.");
+	logger.log(logtg::Level::INFO, "Mesh colored.");
 }
 
 void tgen::Mesher::texturing(){
