@@ -126,11 +126,11 @@ void tgen::Mesher::coloring() {
 		CGAL::Color c;
 		if(tz <= 0.5) c = grey;
 		else if (tz > 0.5 & tz <= 0.85){
-				if ((p.z() / 55) < 0.1) c = blue;
+				if ((p.z() / 55) < 0.05) c = giallastra;
 		 		else c = darkgreen;
 			}
 		else if (tz > 0.85 & tz <= 1){
-		 		if ((p.z() / 55) < 0.1) c = blue;
+		 		if ((p.z() / 55) < 0.05) c = giallastra;
 		 		else c = green;
 		 	}
 
@@ -240,40 +240,4 @@ void tgen::Mesher::triangulate(FT ***points, const int width,
 				}
 			}
 	printSummary();
-}
-
-
-#include "../../include/FastNoise/FastNoiseLite.h"
-void tgen::Mesher::prova() {
-
-	mesh = new Mesh;
-	const int width = 100;
-	const int height = 100;
-	const int deepth = 60;
-
-	// genero il rumore
-	FastNoiseLite fbm;
-	fbm.SetSeed(0);
-	fbm.SetNoiseType(FastNoiseLite::NoiseType_Perlin);
-	fbm.SetFractalOctaves(5);
-	fbm.SetFrequency(.1);
-	fbm.SetFractalType(FastNoiseLite::FractalType_FBm);
-	int ray = 30;
-	int offset = 30;
-	FT*** points = new FT**[width];
-	for(int x = 0; x < width; x++) {
-		points[x] = new FT*[height];
-		for(int y = 0; y < height; y++) {
-			points[x][y] = new FT[deepth];
-			for(int z = 0; z < deepth; z++) {
-				FT eval = -fbm.GetNoise(1.0 * x, 1.0 * y, 1.0 * z) * 20 + (z - 30);
-				// FT eval = std::sqrt((x-offset)*(x-offset) + (y-offset)*(y-offset) + (z-offset)*(z-offset)) - ray;
-				points[x][y][z] = eval;
-			}
-		}
-	}
-
-	triangulate(points, width, height, deepth, 0);
-	for(auto f : mesh->faces())
-		CGAL::Polygon_mesh_processing::compute_face_normal(f, *mesh);
 }

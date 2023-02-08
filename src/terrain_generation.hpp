@@ -9,10 +9,10 @@
 
 namespace tgen {
 	/// kernel
-	// typedef CGAL::Cartesian<double> Kernel;
+	typedef CGAL::Cartesian<double> Kernel;
 
 	/// kernel per calcoli più precisi
-	typedef CGAL::Exact_predicates_inexact_constructions_kernel Kernel;
+	// typedef CGAL::Exact_predicates_inexact_constructions_kernel Kernel;
 
 	/// punto 3D
 	typedef Kernel::Point_3 Point;
@@ -34,6 +34,8 @@ namespace tgen {
 	class CellularNoise;
 	class OpenSimplexNoise;
 	class FBMNoise;
+	class Terrain;
+	class TerrainGenerator;
 
 
 	class TGENLogger : public log::Logger {
