@@ -113,8 +113,9 @@ public:
 
 	Point calculateVertexposition(Point a, Point b, FT isoLevel, FT*** map);
 	
-	
 	void coloring();
+
+	void texturing();
 
 	void printSummary();
 

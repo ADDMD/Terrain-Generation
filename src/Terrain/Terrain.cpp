@@ -44,6 +44,7 @@ void tgen::Terrain::save(std::string filePath){
 		CGAL::IO::write_PLY(out, mesh);			// formato .ply
 	else if (ext == "obj")
 		CGAL::IO::write_OBJ(out, mesh);			// formato .obj
+		// CGAL::IO::write_OBJ(out, mesh, CGAL::parameters::vertex_texture_map(mesh.property_map<vertex_descriptor, Point_2>("v:uv").first));			// formato .obj
 	else if(ext == "off")
 		out << mesh; 							// formato .off
 

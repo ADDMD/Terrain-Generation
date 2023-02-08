@@ -5,7 +5,11 @@
 #include <CGAL/Advancing_front_surface_reconstruction.h>
 #include <CGAL/Polygon_mesh_processing/remesh.h>
 #include <CGAL/Polygon_mesh_processing/refine.h>
+#include <CGAL/Polygon_mesh_processing/measure.h>
 #include <CGAL/marching_tetrahedra_3.h>
+#include <CGAL/Polygon_mesh_processing/measure.h>
+
+#include <CGAL/Surface_mesh_parameterization/parameterize.h>
 
 #include <fmt/format.h>
 
@@ -141,6 +145,15 @@ void tgen::Mesher::coloring() {
 
 	}
 	logger.log(log::Level::INFO, "Mesh colored.");
+}
+
+void tgen::Mesher::texturing(){
+	halfedge_descriptor bhd = CGAL::Polygon_mesh_processing::longest_border(*mesh).first;
+
+	typedef Mesh::Property_map<vertex_descriptor, Point_2> UV_pmap;
+	UV_pmap uvmap = mesh->add_property_map<vertex_descriptor, Point_2>("v:uv").first;
+
+	CGAL::Surface_mesh_parameterization::parameterize(*mesh, bhd, uvmap);
 }
 
 tgen::Point tgen::Mesher::calculateVertexposition(Point a, Point b, FT isoLevel, FT*** map) {

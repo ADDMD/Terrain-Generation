@@ -71,6 +71,7 @@ tgen::Terrain tgen::TerrainGenerator::generateTerrain(unsigned int seed){
 		mr.refine(); 
 
 	mr.coloring();
+	// mr.texturing();
 
 	tgen::Mesh mesh = *mr.getMesh();
 

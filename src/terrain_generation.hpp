@@ -14,6 +14,9 @@ namespace tgen {
 	/// kernel per calcoli più precisi
 	// typedef CGAL::Exact_predicates_inexact_constructions_kernel Kernel;
 
+	/// punto 2D
+	typedef Kernel::Point_2 Point_2;
+
 	/// punto 3D
 	typedef Kernel::Point_3 Point;
 
@@ -24,6 +27,10 @@ namespace tgen {
 	typedef CGAL::Surface_mesh<Point> Mesh;
 
 	typedef Kernel::FT FT;
+
+	typedef boost::graph_traits<Mesh>::halfedge_descriptor halfedge_descriptor;
+	typedef boost::graph_traits<Mesh>::vertex_descriptor vertex_descriptor;
+	typedef boost::graph_traits<Mesh>::face_descriptor face_descriptor;
 	
 	class Mesher;
 	class NoiseGenerator;
