@@ -9,7 +9,7 @@
 #include <chrono>
 #include <map>
 
-#include <CGAL/Named_function_parameters.h>
+
 #include <CGAL/IO/OBJ.h>
 
 class tgen::TerrainGenerator {

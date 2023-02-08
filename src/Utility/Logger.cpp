@@ -6,19 +6,19 @@
 
 #include <fmt/format.h>
 
-log::Level log::Logger::loggingLevel = log::Level::INFO;
+logtg::Level logtg::Logger::loggingLevel = logtg::Level::INFO;
 
-log::Logger::Logger(const std::string className, std::vector<std::ostream*> outStreams)
+logtg::Logger::Logger(const std::string className, std::vector<std::ostream*> outStreams)
 	: className(className), outStreams(outStreams){}
 
-log::Logger::Logger(const std::string className, std::ostream* outStream) 
+logtg::Logger::Logger(const std::string className, std::ostream* outStream) 
 	: Logger(className, std::vector<std::ostream*>{outStream}){}
 
-log::Logger::Logger(const std::string className) 
+logtg::Logger::Logger(const std::string className) 
 	: Logger(className, &std::cout){}
 
 
-void log::Logger::log(const Level lvl, std::string message) {
+void logtg::Logger::log(const Level lvl, std::string message) {
 	if(lvl < loggingLevel) return;
 
 	for (auto stram : outStreams) {
@@ -26,7 +26,7 @@ void log::Logger::log(const Level lvl, std::string message) {
 	}
 }
 
-log::Logger::~Logger() {
+logtg::Logger::~Logger() {
 	for (auto stream : outStreams) {
 		stream->flush();
 		try {

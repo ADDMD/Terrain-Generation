@@ -10,7 +10,6 @@
 
 #include <fmt/format.h>
 
-#include <CGAL/Named_function_parameters.h>
 #include <CGAL/IO/OBJ.h>
 
 int main(int argc, char const *argv[])
@@ -18,9 +17,9 @@ int main(int argc, char const *argv[])
 	Config conf("../config.yaml");
 	tgen::TGENLogger logger = tgen::TGENLogger("main");
 	
-	log::setLoggingLevel(log::getLevel(conf["logging.level"]));
+	logtg::setLoggingLevel(logtg::getLevel(conf["logging.level"]));
 
-	logger.log(log::Level::INFO, "Configuration file opened.");
+	logger.log(logtg::Level::INFO, "Configuration file opened.");
 
 	const auto seed = std::chrono::duration_cast<std::chrono::seconds>(
 		std::chrono::system_clock::now().time_since_epoch()).count();
@@ -32,9 +31,9 @@ int main(int argc, char const *argv[])
 
 	std::string filename_path = fmt::format("{}{}.{}",conf["data.path"], seed, ext);
 
-	logger.log(log::Level::INFO, fmt::format("Created file \"{}\".", filename_path));
+	logger.log(logtg::Level::INFO, fmt::format("Created file \"{}\".", filename_path));
 	terrain.save(filename_path);
-	logger.log(log::Level::INFO, fmt::format("Mesh saved in \"{}\".", filename_path));
+	logger.log(logtg::Level::INFO, fmt::format("Mesh saved in \"{}\".", filename_path));
 	
 	conf.close();
 
