@@ -115,8 +115,6 @@ public:
 	
 	void coloring();
 
-	void texturing();
-
 	void printSummary();
 
 	void prova();

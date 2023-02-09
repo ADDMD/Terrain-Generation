@@ -32,6 +32,34 @@ tgen::FT tgen::Terrain::getTemperature(int x, int y){
 	return this->temperature[x][y];
 }
 
+void tgen::Terrain::texturing(){
+	// Create the property map, called "v:uv", for vertices' (u,v) coordinates [vertex v -> (u,v)]
+	Mesh::Property_map<vertex_descriptor, Point_2> uvmap = this->mesh.add_property_map<vertex_descriptor, Point_2>("v:uv").first;
+
+	// int firstTen = 0;
+	// Associate (u,v) coordinates to each mesh's vertex
+	for(vertex_descriptor v : vertices(this->mesh)){
+		// Get vertex's 3D point
+		Point_3 p = this->mesh.point(v);
+		// u coordinate
+		tgen::FT vertexTemperature = getTemperature(p.x(), p.y());
+		// v coordinate
+		tgen::FT vertexHumidity = getHumidity(p.x(), p.y());
+
+		// if(firstTen < 10) {
+		// 	fmt::print("Vertice idx={}, ({},{})\n", v, p.x(), p.y());
+		// 	fmt::print("Temperature (u coord) = {}\n", vertexTemperature);
+		// 	fmt::print("Humidity (v coord) = {}\n", vertexHumidity);
+		// }
+		
+		// Update vertex's (u,v) coordinate
+		uvmap[v] = Point_2(vertexTemperature, vertexHumidity);
+		
+		// put(uvmap, v, Point_2(vertexTemperature, vertexHumidity));
+		// firstTen++;
+	}
+}
+
 void tgen::Terrain::save(std::string filePath){
 	//store the position of last '.' in the file name
 	int position=filePath.find_last_of(".");
@@ -43,8 +71,9 @@ void tgen::Terrain::save(std::string filePath){
 	if(ext == "ply")
 		CGAL::IO::write_PLY(out, mesh);			// formato .ply
 	else if (ext == "obj")
-		CGAL::IO::write_OBJ(out, mesh);			// formato .obj
-		// CGAL::IO::write_OBJ(out, mesh, CGAL::parameters::vertex_texture_map(mesh.property_map<vertex_descriptor, Point_2>("v:uv").first));			// formato .obj
+		// CGAL::IO::write_OBJ(out, mesh);			// formato .obj
+		// passed vertex texture map as named parameter
+		write_OBJ_texture(out, mesh, CGAL::parameters::vertex_texture_map(mesh.property_map<vertex_descriptor, Point_2>("v:uv").first));			// formato .obj
 	else if(ext == "off")
 		out << mesh; 							// formato .off
 

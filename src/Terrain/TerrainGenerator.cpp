@@ -70,12 +70,12 @@ tgen::Terrain tgen::TerrainGenerator::generateTerrain(unsigned int seed){
 	if(std::stoi(conf["refine"]) == 1)
 		mr.refine(); 
 
-	mr.coloring();
-	// mr.texturing();
+	// mr.coloring();
 
 	tgen::Mesh mesh = *mr.getMesh();
 
 	this->terrain = Terrain(mesh, map, humidity, temperature);
+	this->terrain.texturing();
 	return this->terrain;
 }
 
