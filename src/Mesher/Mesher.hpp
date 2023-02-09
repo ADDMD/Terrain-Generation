@@ -30,12 +30,6 @@ class tgen::Mesher {
 	}
 
 
-	inline FT getValue(tgen::Point p, FT*** map) {
-		return map[(int)p.x()][(int)p.y()][(int)p.z()];
-	}
-
-
-
 	/// Classe di support al mesher per la costruzione della mesh triangolare 
 	struct Construct{
 		typedef std::array<std::size_t, 3> Facet;
@@ -74,8 +68,8 @@ class tgen::Mesher {
 	
 	Mesh* mesh;
 	struct pointWrapper {
-		tgen::Point p;
-		pointWrapper(tgen::Point p) : p(p) {}
+		Point_3 p;
+		pointWrapper(Point_3 p) : p(p) {}
 
 		bool operator>(const pointWrapper & other) const {
 			return std::tie(p.x(), p.y(), p.z()) > std::tie(other.p.x(), other.p.y(), other.p.z());
@@ -102,10 +96,10 @@ public:
 	 * - Poisson Surface Reconstruction
 	 * fonte: https://stackoverflow.com/questions/34887019/surface-mesh-from-point-cloud
 	 */
-	void triangulate(std::vector<Point> points);
+	void triangulate(std::vector<Point_3> points);
 
 	/// Triangola una mappa di rumore
-	void triangulate(Matrix<FT> map, const int width, const int height);
+	void triangulate(Matrix<FT> map);
 
 	void coloring();
 

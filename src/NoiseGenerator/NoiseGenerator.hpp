@@ -24,7 +24,7 @@ protected:
 public:
 	NoiseGenerator(int noise, unsigned int seed, int octaves, int amplitude, double frequency);
 
-	std::vector<Point> generatePoints(int width, int height);
+	std::vector<Point_3> generatePoints(int width, int height);
 
 	Matrix<FT> generateMap(int width, int height, double exp_elevation);
 

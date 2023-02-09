@@ -1,7 +1,6 @@
 #include "./TerrainGenerator.hpp"
 
 tgen::Terrain tgen::TerrainGenerator::generateTerrain(unsigned int seed){
-
 	Config conf("../config.yaml");
 	std::string w = conf["width"];
 	std::string h = conf["height"];
@@ -60,7 +59,7 @@ tgen::Terrain tgen::TerrainGenerator::generateTerrain(unsigned int seed){
 	}
 
 	tgen::Mesher mr;
-	mr.triangulate(map, width, height);
+	mr.triangulate(map);
 
 	// il refine allunga i tempi (circa 100s in più per una 100x100)
 	if(std::stoi(conf["refine"]) == 1)
@@ -86,9 +85,8 @@ std::map<std::string, tgen::Matrix<tgen::FT>> tgen::TerrainGenerator::generateMa
 	std::map<std::string, Matrix<FT>> maps;
 	std::vector<std::string> mapnames({"continentalness", "pickNvalley", "erosion", "humidity", "temperature"});
 
-	for(auto name: mapnames){
-		fmt::print("name = {}\n", name);
-
+	for(auto name : mapnames){
+		// amplitude
 		std::string ampl = conf[fmt::format("{}.amplitude", name)];
 		// octaves
 		std::string oct = conf[fmt::format("{}.octaves", name)];

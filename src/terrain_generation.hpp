@@ -18,13 +18,13 @@ namespace tgen {
 	typedef Kernel::Point_2 Point_2;
 
 	/// punto 3D
-	typedef Kernel::Point_3 Point;
+	typedef Kernel::Point_3 Point_3;
 
 	/// VETTORE 3D
 	typedef Kernel::Vector_3 Vector;
 
 	/// mesh triangolare
-	typedef CGAL::Surface_mesh<Point> Mesh;
+	typedef CGAL::Surface_mesh<Point_3> Mesh;
 
 	typedef Kernel::FT FT;
 

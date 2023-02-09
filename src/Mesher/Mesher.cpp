@@ -18,7 +18,7 @@
 
 tgen::Mesher::Mesher() {}
 
-void tgen::Mesher::triangulate(std::vector<Point> points) {
+void tgen::Mesher::triangulate(std::vector<Point_3> points) {
 	mesh = new Mesh();
 
 	Construct construct(*mesh, points.begin(), points.end());
@@ -41,15 +41,19 @@ void tgen::Mesher::triangulate(std::vector<Point> points) {
  *
  *	I vertici delle facce sono definiti in senso antiorario
  */
-void tgen::Mesher::triangulate(Matrix<FT> map, const int width, const int height) {
+void tgen::Mesher::triangulate(Matrix<FT> map) {
+	unsigned int width = map.size();
+	unsigned int height = map[0].size();
+
 	mesh = new Mesh();
-	std::map<Point, Mesh::vertex_index> pnt2idx;
-	auto points = generateMatrix<Point>(width, height);
+	
+	std::map<Point_3, Mesh::vertex_index> pnt2idx;
+	auto points = generateMatrix<Point_3>(width, height);
 
 	// aggiungo tutti i punti alla mesh come vertici
 	for(int x = 0; x < width; x++) {
 		for(int y = 0; y < height; y++) {
-			Point p = Point(x, y, map[x][y]);
+			Point_3 p = Point_3(x, y, map[x][y]);
 			points[x][y] = p;
 
 			pnt2idx.insert({p, mesh->add_vertex(p)});
@@ -60,10 +64,10 @@ void tgen::Mesher::triangulate(Matrix<FT> map, const int width, const int height
 	for(int x0 = 0, x1 = 1; x1 < width; x0++, x1++) {
 		for(int y0 = 0, y1 = 1; y1 < height; y0++, y1++) {
 			
-			Point p0 = points[x0][y0];
-			Point p1 = points[x1][y0];
-			Point p2 = points[x0][y1];
-			Point p3 = points[x1][y1];
+			Point_3 p0 = points[x0][y0];
+			Point_3 p1 = points[x1][y0];
+			Point_3 p2 = points[x0][y1];
+			Point_3 p3 = points[x1][y1];
 
 			Mesh::vertex_index v0 = pnt2idx.find(p0)->second;
 			Mesh::vertex_index v1 = pnt2idx.find(p1)->second;
@@ -121,7 +125,7 @@ void tgen::Mesher::coloring() {
 
 	for (auto v: mesh->vertices()) {
 		auto n = CGAL::Polygon_mesh_processing::compute_vertex_normal(v, *mesh);
-		Point p = mesh->point(v);
+		Point_3 p = mesh->point(v);
 		FT tz = n.z();
 
 		// FT iz = interp(0, 360, tz);
