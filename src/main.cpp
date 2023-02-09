@@ -14,6 +14,7 @@
 
 int main(int argc, char const *argv[])
 {
+
 	Config conf("../config.yaml");
 	tgen::TGENLogger logger = tgen::TGENLogger("main");
 	

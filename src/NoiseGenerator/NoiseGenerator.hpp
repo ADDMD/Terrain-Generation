@@ -26,7 +26,7 @@ public:
 
 	std::vector<Point> generatePoints(int width, int height);
 
-	double** generateMap(int width, int heigth, double exp_elevation);
+	Matrix<FT> generateMap(int width, int height, double exp_elevation);
 
 };
 

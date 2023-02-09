@@ -44,6 +44,22 @@ namespace tgen {
 	class Terrain;
 	class TerrainGenerator;
 
+	// template<typename T>
+	// constexpr size_t maxLength(size_t n, size_t m_size=0) {
+	//     return n==0 ? m_size : maxLength<T>(n-1, m_size << 8 | std::numeric_limits<T>::max());
+	// }
+	// template <size_t width, size_t height, typename T>
+	// using Matrix = std::array<std::array<T, height>, width>;
+
+	template <typename T>
+	using Matrix = std::vector<std::vector<T>>;
+
+	template <typename T>
+	inline Matrix<T> generateMatrix(int width, int height) {
+		Matrix<T> result(width);
+		std::fill(result.begin(), result.end(), std::vector<T>(height));
+		return result;
+	}
 
 	class TGENLogger : public logtg::Logger {
 

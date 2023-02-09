@@ -2,7 +2,6 @@
 #define MESHER_H
 
 #include "../terrain_generation.hpp"
-#include "Cubemarching.hpp"
 
 #include <array>
 
@@ -106,20 +105,13 @@ public:
 	void triangulate(std::vector<Point> points);
 
 	/// Triangola una mappa di rumore
-	void triangulate(FT** map, const int width, const int height);
-	
-	/// Triangola una mappa di rumore 3D (ref: http://paulbourke.net/geometry/polygonise/)
-	void triangulate(FT*** map,  const int width, const int height, const int deepth, const FT isoLevel);
+	void triangulate(Matrix<FT> map, const int width, const int height);
 
-	Point calculateVertexposition(Point a, Point b, FT isoLevel, FT*** map);
-	
 	void coloring();
 
 	void texturing();
 
 	void printSummary();
-
-	void prova();
 
 	Mesh* getMesh();
 
