@@ -2,7 +2,6 @@
 #define MESHER_H
 
 #include "../terrain_generation.hpp"
-#include "Cubemarching.hpp"
 
 #include <array>
 
@@ -29,12 +28,6 @@ class tgen::Mesher {
 		FT ti = ((6 * t - 15) * t + 10) * t * t * t;
 		return lerp(start, end, ti);
 	}
-
-
-	inline FT getValue(tgen::Point p, FT*** map) {
-		return map[(int)p.x()][(int)p.y()][(int)p.z()];
-	}
-
 
 
 	/// Classe di support al mesher per la costruzione della mesh triangolare 
@@ -75,8 +68,8 @@ class tgen::Mesher {
 	
 	Mesh* mesh;
 	struct pointWrapper {
-		tgen::Point p;
-		pointWrapper(tgen::Point p) : p(p) {}
+		Point_3 p;
+		pointWrapper(Point_3 p) : p(p) {}
 
 		bool operator>(const pointWrapper & other) const {
 			return std::tie(p.x(), p.y(), p.z()) > std::tie(other.p.x(), other.p.y(), other.p.z());
@@ -103,21 +96,14 @@ public:
 	 * - Poisson Surface Reconstruction
 	 * fonte: https://stackoverflow.com/questions/34887019/surface-mesh-from-point-cloud
 	 */
-	void triangulate(std::vector<Point> points);
+	void triangulate(std::vector<Point_3> points);
 
 	/// Triangola una mappa di rumore
-	void triangulate(FT** map, const int width, const int height);
-	
-	/// Triangola una mappa di rumore 3D (ref: http://paulbourke.net/geometry/polygonise/)
-	void triangulate(FT*** map,  const int width, const int height, const int deepth, const FT isoLevel);
+	void triangulate(Matrix<FT> map);
 
-	Point calculateVertexposition(Point a, Point b, FT isoLevel, FT*** map);
-	
 	void coloring();
 
 	void printSummary();
-
-	void prova();
 
 	Mesh* getMesh();
 

@@ -17,8 +17,8 @@ class tgen::TerrainGenerator {
 	tgen::Terrain terrain;
 
 public:
-	TerrainGenerator();
-	tgen::Terrain generateTerrain(unsigned int seed);
-	tgen::Terrain getTerrain();
-	std::map<std::string, tgen::FT**> generateMaps(int width, int height, unsigned int seed);
+	TerrainGenerator() {}
+	Terrain generateTerrain(unsigned int seed);
+	Terrain getTerrain();
+	std::map<std::string, Matrix<FT>> generateMaps(int width, int height, unsigned int seed);
 };

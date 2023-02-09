@@ -1,9 +1,6 @@
 #include "./TerrainGenerator.hpp"
 
-tgen::TerrainGenerator::TerrainGenerator(){}
-
 tgen::Terrain tgen::TerrainGenerator::generateTerrain(unsigned int seed){
-
 	Config conf("../config.yaml");
 	std::string w = conf["width"];
 	std::string h = conf["height"];
@@ -13,10 +10,9 @@ tgen::Terrain tgen::TerrainGenerator::generateTerrain(unsigned int seed){
 	int width = std::stoi(w);
 	int height = std::stoi(h);
 
-	std::map<std::string, tgen::FT**>  maps = generateMaps(width, height, seed);
-	tgen::FT** map;
+	std::map<std::string, Matrix<FT>>  maps = generateMaps(width, height, seed);
+	auto map = generateMatrix<FT>(width, height);
 
-	map = new tgen::FT*[width];
 	auto continentalness = maps["continentalness"];
 	auto pickNValley = maps["pickNvalley"];
 	auto erosion = maps["erosion"];
@@ -24,7 +20,6 @@ tgen::Terrain tgen::TerrainGenerator::generateTerrain(unsigned int seed){
 	auto temperature = maps["temperature"];
 
 	for(int i = 0; i < width; i++){
-		map[i] = new tgen::FT[height];
 		for(int j = 0; j < height; j++){
 			double h = humidity[i][j];
 			double t = temperature[i][j];
@@ -64,7 +59,7 @@ tgen::Terrain tgen::TerrainGenerator::generateTerrain(unsigned int seed){
 	}
 
 	tgen::Mesher mr;
-	mr.triangulate(map, width, height);
+	mr.triangulate(map);
 
 	// il refine allunga i tempi (circa 100s in più per una 100x100)
 	if(std::stoi(conf["refine"]) == 1)
@@ -73,6 +68,8 @@ tgen::Terrain tgen::TerrainGenerator::generateTerrain(unsigned int seed){
 	// mr.coloring();
 
 	tgen::Mesh mesh = *mr.getMesh();
+
+	conf.close();
 
 	this->terrain = Terrain(mesh, map, humidity, temperature);
 	this->terrain.texturing();
@@ -83,13 +80,13 @@ tgen::Terrain tgen::TerrainGenerator::getTerrain(){
 	return this->terrain;
 }
 
-std::map<std::string, tgen::FT**> tgen::TerrainGenerator::generateMaps(int width, int height, unsigned int seed){
+std::map<std::string, tgen::Matrix<tgen::FT>> tgen::TerrainGenerator::generateMaps(int width, int height, unsigned int seed){
 	Config conf("../config.yaml");
-	std::map<std::string, tgen::FT**> maps;
+	std::map<std::string, Matrix<FT>> maps;
 	std::vector<std::string> mapnames({"continentalness", "pickNvalley", "erosion", "humidity", "temperature"});
 
-	for(auto name: mapnames){
-
+	for(auto name : mapnames){
+		// amplitude
 		std::string ampl = conf[fmt::format("{}.amplitude", name)];
 		// octaves
 		std::string oct = conf[fmt::format("{}.octaves", name)];
@@ -110,7 +107,8 @@ std::map<std::string, tgen::FT**> tgen::TerrainGenerator::generateMaps(int width
 		auto map = gen.generateMap(width, height, elevation);
 
 		maps.insert({name, map});
-	} 
+	}
 
+	conf.close();
 	return maps;
 }

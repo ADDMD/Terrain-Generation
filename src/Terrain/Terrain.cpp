@@ -1,7 +1,7 @@
 #include "./Terrain.hpp"
 
 tgen::Terrain::Terrain(){}
-tgen::Terrain::Terrain(tgen::Mesh mesh, tgen::FT** terrainMap, tgen::FT** humidity, tgen::FT** temperature){
+tgen::Terrain::Terrain(tgen::Mesh mesh, Matrix<FT> terrainMap, Matrix<FT> humidity, Matrix<FT> temperature){
 	this->mesh = mesh;
 	this->terrainMap = terrainMap;
 	this->humidity = humidity;
@@ -16,7 +16,7 @@ tgen::FT tgen::Terrain::getHeigth(int x, int y){
 	return this->terrainMap[x][y];
 }
 
-tgen::FT** tgen::Terrain::getHumidity(){
+tgen::Matrix<tgen::FT> tgen::Terrain::getHumidity(){
 	return this->humidity;
 }
 
@@ -24,7 +24,7 @@ tgen::FT tgen::Terrain::getHumidity(int x, int y){
 	return this->humidity[x][y];
 }
 
-tgen::FT** tgen::Terrain::getTemperature(){
+tgen::Matrix<tgen::FT> tgen::Terrain::getTemperature(){
 	return this->temperature;
 }
 

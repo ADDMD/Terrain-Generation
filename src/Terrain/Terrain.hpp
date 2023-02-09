@@ -3,22 +3,22 @@
 
 class tgen::Terrain{
 
-	tgen::Mesh mesh;
+	Mesh mesh;
 
-	tgen::FT** terrainMap;
-	tgen::FT** humidity;
-	tgen::FT** temperature;
+	Matrix<FT> terrainMap;
+	Matrix<FT> humidity;
+	Matrix<FT> temperature;
 
 public:
 	Terrain();
-	Terrain(tgen::Mesh mesh, tgen::FT** terrainMap, tgen::FT** humidity, tgen::FT** temperature);
+	Terrain(Mesh mesh, Matrix<FT> terrainMap, Matrix<FT> humidity, Matrix<FT> temperature);
 
-	tgen::Mesh getMesh();
-	tgen::FT getHeigth(int x, int y);
-	tgen::FT** getHumidity();
-	tgen::FT getHumidity(int x, int y);
-	tgen::FT** getTemperature();
-	tgen::FT getTemperature(int x, int y);
+	Mesh getMesh();
+	FT getHeigth(int x, int y);
+	Matrix<FT> getHumidity();
+	FT getHumidity(int x, int y);
+	Matrix<FT> getTemperature();
+	FT getTemperature(int x, int y);
 
 	/** Associate (u,v) coordinates to mesh vertices 
 	 * 
