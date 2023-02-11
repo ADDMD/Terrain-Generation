@@ -74,10 +74,10 @@ void tgen::Mesher::triangulate(Matrix<FT> map, Matrix<FT> humidity, Matrix<FT> t
 
 			//INIZIO PARTE RELATIVA PER LA GENERAZIONE DEGLI ALBERI
 
-			Vector3D normale_1 = findNormal(p0, p1, p3);
-			Vector3D normale_2 = findNormal(p0, p3, p2);
+			Point_3 normale_1 = findNormal(p0, p1, p3);
+			Point_3 normale_2 = findNormal(p0, p3, p2);
 
-			if (normale_1.y>=0.7 && normale_1.y <=1){
+			if (normale_1.hy()>=0.7 && normale_1.hy() <=1){
 				
 				//generazione di numeri casuali tra 0 e 1
 				std::mt19937 generator(std::random_device{}());
@@ -103,7 +103,14 @@ void tgen::Mesher::triangulate(Matrix<FT> map, Matrix<FT> humidity, Matrix<FT> t
 				}
 			}
 
-			if (normale_2.y>=0.7 && normale_2.y <=1){
+			if (normale_2.hy()>=0.7 && normale_2.hy() <=1){
+
+				//generazione di numeri casuali tra 0 e 1
+				std::mt19937 generator(std::random_device{}());
+    			std::uniform_real_distribution<double> distribution(0, 1);
+    			//generazione numero casuale
+    			auto num_ran = distribution(generator);
+
 				if (temperature[x0][y0] < 0.7 && humidity[x0][y0] > 0.5){
 					//creazione albero con alta probabilità grazie ad un numero
 					//random che deve essere maggiore di 0.5
@@ -149,26 +156,28 @@ tgen::Mesh* tgen::Mesher::getMesh() {
 }
 
 
-Vector3D tgen::Mesher::crossProduct(Vector3D a, Vector3D b) {
-    Vector3D result;
-    result.x = a.y * b.z - a.z * b.y;
-    result.y = a.z * b.x - a.x * b.z;
-    result.z = a.x * b.y - a.y * b.x;
+Point_3 tgen::Mesher::crossProduct(Point_3 a, Point_3 b) {
+    auto x = a.y() * b.z() - a.z() * b.y();
+    auto y = a.z() * b.x() - a.x() * b.z();
+    auto z = a.x() * b.y() - a.y() * b.x();
+    Point_3 result(x, y, z);
     return result;
 }
 
 
-Vector3D tgen::Mesher::findNormal(Point3D p1, Point3D p2, Point3D p3) {
-    Vector3D v1, v2, normal;
-    v1.x = p2.x - p1.x;
-    v1.y = p2.y - p1.y;
-    v1.z = p2.z - p1.z;
+Point_3 tgen::Mesher::findNormal(Point_3 p1, Point_3 p2, Point_3 p3) {
+    auto x = p2.x() - p1.x();
+    auto y = p2.y() - p1.y();
+    auto z = p2.z() - p1.z();
+    Point_3 v1(x,y,z);
 
-    v2.x = p3.x - p1.x;
-    v2.y = p3.y - p1.y;
-    v2.z = p3.z - p1.z;
+    x = p3.x() - p1.x();
+    y = p3.y() - p1.y();
+    z = p3.z() - p1.z();
 
-    normal = crossProduct(v1, v2);
+    Point_3 v2(x,y,z);
+
+    Point_3 normal = crossProduct(v1, v2);
     return normal;
 }
 
