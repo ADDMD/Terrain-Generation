@@ -59,7 +59,7 @@ tgen::Terrain tgen::TerrainGenerator::generateTerrain(unsigned int seed){
 	}
 
 	tgen::Mesher mr;
-	mr.triangulate(map);
+	mr.triangulate(map, humidity, temperature);
 
 	// il refine allunga i tempi (circa 100s in più per una 100x100)
 	if(std::stoi(conf["refine"]) == 1)
@@ -86,6 +86,8 @@ std::map<std::string, tgen::Matrix<tgen::FT>> tgen::TerrainGenerator::generateMa
 	std::vector<std::string> mapnames({"continentalness", "pickNvalley", "erosion", "humidity", "temperature"});
 
 	for(auto name : mapnames){
+
+		fmt::print("Prima");
 		// amplitude
 		std::string ampl = conf[fmt::format("{}.amplitude", name)];
 		// octaves
@@ -96,6 +98,9 @@ std::map<std::string, tgen::Matrix<tgen::FT>> tgen::TerrainGenerator::generateMa
 		std::string noi = conf[fmt::format("{}.noise", name)];
 		// elevation
 		std::string elev = conf[fmt::format("{}.elevation", name)];
+
+		fmt::print("Dopo");
+
 
 		int amplitude = std::stoi(ampl);
 		int octaves = std::stoi(oct);

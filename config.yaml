@@ -31,3 +31,9 @@ data.extension: ply
 refine: 0
 logging.file: ../main.log 
 logging.level: INFO
+# ulteriori
+continentalness.amplitude: 1
+continentalness.octaves: 1
+continentalness.frequency: 1
+continentalness.noise: 1
+continentalness.elevation: 1

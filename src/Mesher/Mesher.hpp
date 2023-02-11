@@ -98,6 +98,10 @@ public:
 	 */
 	void triangulate(std::vector<Point_3> points);
 
+	Vector3D crossProduct(Vector3D a, Vector3D b);
+
+	Vector3D findNormal(Point3D p1, Point3D p2, Point3D p3);
+
 	/// Triangola una mappa di rumore
 	void triangulate(Matrix<FT> map);
 

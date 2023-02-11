@@ -13,6 +13,9 @@
 
 #include <fmt/format.h>
 
+#include <cmath>
+#include <random>
+
 // TODO: prendere spunti da https://www.youtube.com/watch?v=CSa5O6knuwI
 
 
@@ -41,7 +44,7 @@ void tgen::Mesher::triangulate(std::vector<Point_3> points) {
  *
  *	I vertici delle facce sono definiti in senso antiorario
  */
-void tgen::Mesher::triangulate(Matrix<FT> map) {
+void tgen::Mesher::triangulate(Matrix<FT> map, Matrix<FT> humidity, Matrix<FT> temperature) {
 	unsigned int width = map.size();
 	unsigned int height = map[0].size();
 
@@ -69,6 +72,59 @@ void tgen::Mesher::triangulate(Matrix<FT> map) {
 			Point_3 p2 = points[x0][y1];
 			Point_3 p3 = points[x1][y1];
 
+			//INIZIO PARTE RELATIVA PER LA GENERAZIONE DEGLI ALBERI
+
+			Vector3D normale_1 = findNormal(p0, p1, p3);
+			Vector3D normale_2 = findNormal(p0, p3, p2);
+
+			if (normale_1.y>=0.7 && normale_1.y <=1){
+				
+				//generazione di numeri casuali tra 0 e 1
+				std::mt19937 generator(std::random_device{}());
+    			std::uniform_real_distribution<double> distribution(0, 1);
+    			//generazione numero casuale
+    			auto num_ran = distribution(generator);
+				
+				if (temperature[x0][y0] < 0.7 && humidity[x0][y0] > 0.5){
+					//creazione albero con alta probabilità grazie ad un numero
+					//random che deve essere maggiore di 0.5
+					if (num_ran>=0.5)
+					{
+						//generazione albero
+					}
+				}
+				else{
+					//creazione albero con alta probabilità grazie ad un numero
+					//random che deve essere maggiore di 0.8
+					if (num_ran>=0.8)
+					{
+						//generazione albero
+					}
+				}
+			}
+
+			if (normale_2.y>=0.7 && normale_2.y <=1){
+				if (temperature[x0][y0] < 0.7 && humidity[x0][y0] > 0.5){
+					//creazione albero con alta probabilità grazie ad un numero
+					//random che deve essere maggiore di 0.5
+					if (num_ran>=0.5)
+					{
+						//generazione albero
+					}
+				}
+				else{
+					//creazione albero con alta probabilità grazie ad un numero
+					//random che deve essere maggiore di 0.8
+					if (num_ran>=0.8)
+					{
+						//generazione albero
+					}
+				}
+			}
+
+			//FINE PARTE RELATIVA PER LA GENERAZIONE DEGLI ALBERI
+
+
 			Mesh::vertex_index v0 = pnt2idx.find(p0)->second;
 			Mesh::vertex_index v1 = pnt2idx.find(p1)->second;
 			Mesh::vertex_index v2 = pnt2idx.find(p2)->second;
@@ -90,6 +146,30 @@ void tgen::Mesher::triangulate(Matrix<FT> map) {
 
 tgen::Mesh* tgen::Mesher::getMesh() {
 	return mesh;
+}
+
+
+Vector3D tgen::Mesher::crossProduct(Vector3D a, Vector3D b) {
+    Vector3D result;
+    result.x = a.y * b.z - a.z * b.y;
+    result.y = a.z * b.x - a.x * b.z;
+    result.z = a.x * b.y - a.y * b.x;
+    return result;
+}
+
+
+Vector3D tgen::Mesher::findNormal(Point3D p1, Point3D p2, Point3D p3) {
+    Vector3D v1, v2, normal;
+    v1.x = p2.x - p1.x;
+    v1.y = p2.y - p1.y;
+    v1.z = p2.z - p1.z;
+
+    v2.x = p3.x - p1.x;
+    v2.y = p3.y - p1.y;
+    v2.z = p3.z - p1.z;
+
+    normal = crossProduct(v1, v2);
+    return normal;
 }
 
 

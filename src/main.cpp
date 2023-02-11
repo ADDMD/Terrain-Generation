@@ -49,6 +49,14 @@ int main(int argc, char const *argv[])
 
 	std::string el = conf["elevation"];
 
+	fmt::print("{}\n", ac);
+	fmt::print("{}\n", oc);
+	fmt::print("{}\n", fc);
+	fmt::print("{}\n", c);
+
+
+
+
 
 	if(w == "" || h == "") return -1;
 
@@ -79,11 +87,23 @@ int main(int argc, char const *argv[])
 
 	double elevation = std::stod(el);
 
+	fmt::print("{}\n", cAmplitude);
+	fmt::print("{}\n", cOctaves);
+	fmt::print("{}\n", cFrequency);
+	fmt::print("{}\n", noise_continentalness);
+
 	const auto seed = std::chrono::duration_cast<std::chrono::seconds>(
 		std::chrono::system_clock::now().time_since_epoch()).count();
 
+	fmt::print("Seed: {}\n", seed);
+
 	tgen::TerrainGenerator tg;
 	tgen::Terrain terrain = tg.generateTerrain(seed);
+
+	fmt::print("{}\n", cAmplitude);
+	fmt::print("{}\n", cOctaves);
+	fmt::print("{}\n", cFrequency);
+	fmt::print("{}\n", noise_continentalness);
 
 	std::string ext = conf["data.extension"];
 
