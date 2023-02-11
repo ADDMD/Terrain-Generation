@@ -43,6 +43,7 @@ namespace tgen {
 	class FBMNoise;
 	class Terrain;
 	class TerrainGenerator;
+	class Biome;
 
 	// template<typename T>
 	// constexpr size_t maxLength(size_t n, size_t m_size=0) {
