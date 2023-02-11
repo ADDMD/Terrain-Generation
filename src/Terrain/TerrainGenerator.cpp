@@ -1,4 +1,5 @@
 #include "./TerrainGenerator.hpp"
+#include "../Utility/ImageWriter/ImageWriter.cpp"
 
 tgen::Terrain tgen::TerrainGenerator::generateTerrain(unsigned int seed){
 	Config conf("../config.yaml");
@@ -24,28 +25,28 @@ tgen::Terrain tgen::TerrainGenerator::generateTerrain(unsigned int seed){
 			double h = humidity[i][j];
 			double t = temperature[i][j];
 			double pvparam, eparam;
-			if (h < .33 && t < .33){
+			if (h < .5 && t < .5){
 				pvparam = 2.5;
 				eparam = 2.5;
-			}else if(h < .33 && t > .33 && t < .66){
+			}else if(h < .5 && t > .5 && t < .75){
 				pvparam = 3.75;
 				eparam = 2.5;
-			}else if(t < .33 && h > .33 && h < .66){
+			}else if(t < .5 && h > .5 && h < .75){
 				pvparam = 2.5;
 				eparam = 3.75;
-			} else if(h > .33 && h < .66 && t > .33 && t < .66){
+			} else if(h > .5 && h < .75 && t > .5 && t < .75){
 				pvparam = 3.75;
 				eparam = 3.75;
-			} else if(h < .33 && t > .66){
+			} else if(h < .5 && t > .75){
 				pvparam = 5;
 				eparam = 2.5;
-			} else if(h > .66 && t < .33){
+			} else if(h > .75 && t < .5){
 				pvparam = 2.5;
 				eparam = 5;
-			} else if(h > .33 && h < .66 && t > .66){
+			} else if(h > .5 && h < .75 && t > .75){
 				pvparam = 5;
 				eparam = 3.75;
-			}else if(h > .66 && t > .33 && t < .66){
+			}else if(h > .75 && t > .5 && t < .75){
 				pvparam = 3.75;
 				eparam = 5;
 			} else {
@@ -103,10 +104,30 @@ std::map<std::string, tgen::Matrix<tgen::FT>> tgen::TerrainGenerator::generateMa
 		int noise = std::stoi(noi);
 		double elevation = std::stod(elev);
 
-		tgen::NoiseGenerator gen(noise, seed, octaves, amplitude, frequency);
+		std::hash<std::string> intHash;
+
+		tgen::NoiseGenerator gen(noise, seed xor intHash(name), octaves, amplitude, frequency);
 		auto map = gen.generateMap(width, height, elevation);
 
 		maps.insert({name, map});
+
+		unsigned char image[height][width][BYTES_PER_PIXEL];
+
+		std::string fileName = fmt::format("{}.bmp", name); 
+	    char* imageFileName;
+	    std::strcpy(imageFileName, fileName.c_str());
+
+	    int i, j;
+	    for (i = 0; i < width; i++) {
+	        for (j = 0; j < height; j++) {
+	       		double value = (map[i][j] / amplitude) * 255;
+	            image[i][j][2] = (unsigned char) (value);             ///red
+	            image[i][j][1] = (unsigned char) (value);              ///green
+	            image[i][j][0] = (unsigned char) (value); ///blue
+	        }
+	    }
+
+	    generateBitmapImage((unsigned char*) image, height, width, imageFileName);
 	}
 
 	conf.close();

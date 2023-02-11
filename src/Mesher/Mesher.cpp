@@ -130,15 +130,16 @@ void tgen::Mesher::coloring() {
 
 		// FT iz = interp(0, 360, tz);
 		CGAL::Color c;
-		if(tz <= 0.5) c = grey;
-		else if (tz > 0.5 & tz <= 0.85){
-				if ((p.z() / 55) < 0.05) c = giallastra;
-		 		else c = darkgreen;
-			}
-		else if (tz > 0.85 & tz <= 1){
-		 		if ((p.z() / 55) < 0.05) c = giallastra;
-		 		else c = green;
-		 	}
+		if(p.z() > 50) c = snow;
+		else if(tz <= 0.6) c = mountain;
+			else if (tz > 0.6 & tz <= 0.9){
+					if ((p.z() / 55) < 0.05) c = giallastra;
+		 			else c = darkgreen;
+				}
+			else if (tz > 0.9 & tz <= 1){
+			 		if ((p.z() / 55) < 0.05) c = giallastra;
+			 		else c = grass;
+			 	}
 
 		auto result = c.to_rgb();
 		c.set_rgb(result[0], result[1], result[2]);
