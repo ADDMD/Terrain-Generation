@@ -78,23 +78,23 @@ std::map<std::string, tgen::Matrix<tgen::FT>> tgen::TerrainGenerator::generateMa
 
 		maps.insert({name, map});
 
-		unsigned char image[height][width][BYTES_PER_PIXEL];
+		// unsigned char image[height][width][BYTES_PER_PIXEL];
 
-		std::string fileName = fmt::format("{}.bmp", name); 
-	    char* imageFileName;
-	    std::strcpy(imageFileName, fileName.c_str());
+		// std::string fileName = fmt::format("{}.bmp", name); 
+	    // char* imageFileName;
+	    // std::strcpy(imageFileName, fileName.c_str());
 
-	    int i, j;
-	    for (i = 0; i < width; i++) {
-	        for (j = 0; j < height; j++) {
-	       		double value = (map[i][j] / amplitude) * 255;
-	            image[i][j][2] = (unsigned char) (value);             ///red
-	            image[i][j][1] = (unsigned char) (value);              ///green
-	            image[i][j][0] = (unsigned char) (value); ///blue
-	        }
-	    }
+	    // int i, j;
+	    // for (i = 0; i < width; i++) {
+	    //     for (j = 0; j < height; j++) {
+	    //    		double value = (map[i][j] / amplitude) * 255;
+	    //         image[i][j][2] = (unsigned char) (value);             ///red
+	    //         image[i][j][1] = (unsigned char) (value);              ///green
+	    //         image[i][j][0] = (unsigned char) (value); ///blue
+	    //     }
+	    // }
 
-	    generateBitmapImage((unsigned char*) image, height, width, imageFileName);
+	    // generateBitmapImage((unsigned char*) image, height, width, imageFileName);
 	}
 
 	conf.close();
@@ -102,36 +102,45 @@ std::map<std::string, tgen::Matrix<tgen::FT>> tgen::TerrainGenerator::generateMa
 }
 
 bool inBound(int index, int size) {
-	return 0 < index && index < size ;
+	return 0 <= index && index < size ;
 }
 
-std::set<std::pair<int, int>> tgen::TerrainGenerator::recursiveComputeBiomes(std::set<std::pair<int, int>> visited,
-	std::set<std::pair<int, int>> result, std::pair<int, int> index, Biome::BiomeType biomeType, Matrix<FT> humidity, Matrix<FT> temperature) {
 
-	if(!(inBound(index.first, humidity.size()) && inBound(index.second, humidity[0].size())))
+std::set<tgen::Point_2> tgen::TerrainGenerator::recursiveComputeBiomes(std::set<Point_2> visited,
+	std::set<Point_2> result, Point_2 index, Biome::BiomeType biomeType, Matrix<Biome::BiomeType> biomeMap) {
+
+	if(!(inBound((int)index.x(), biomeMap.size()) && inBound((int)index.y(), biomeMap[0].size())))
 		return result;
 
-	if(!visited.insert(index).second) return result;
+	fmt::print("In bound\n");
 
-	if (biomeType != assignBiomeType(humidity[index.first][index.second], temperature[index.first][index.second])) 
+	if(!visited.insert(index).second) 
+		return result;
+	fmt::print("Not visited\n");
+
+	if (biomeType != assignBiomeType(biomeMap[(int)index.x()][(int)index.y()], biomeMap[(int)index.x()][(int)index.y()])) 
 		return result;
 
 	result.insert(index);
 
-	auto up = std::pair<int, int>(index.first, index.second - 1);
-	auto down = std::pair<int, int>(index.first, index.second + 1);
-	auto left = std::pair<int, int>(index.first - 1, index.second);
-	auto right = std::pair<int, int>(index.first + 1, index.second);
+	auto up = Point_2((int)index.x(), (int)index.y() - 1, 0);
+	auto down = Point_2((int)index.x(), (int)index.y() + 1, 0);
+	auto left = Point_2((int)index.x() - 1, (int)index.y(), 0);
+	auto right = Point_2((int)index.x() + 1, (int)index.y(), 0);
 
-	
-	auto upResult = recursiveComputeBiomes(visited, result, up, biomeType, humidity, temperature);
+
+	auto upResult = recursiveComputeBiomes(visited, result, up, biomeType, biomeMap);
 	result.insert(upResult.begin(), upResult.end());
-	auto downResult = recursiveComputeBiomes(visited, result, down, biomeType, humidity, temperature);
+
+	auto downResult = recursiveComputeBiomes(visited, result, down, biomeType, biomeMap);
 	result.insert(downResult.begin(), downResult.end());
-	auto leftResult = recursiveComputeBiomes(visited, result, left, biomeType, humidity, temperature);
+
+	auto leftResult = recursiveComputeBiomes(visited, result, left, biomeType, biomeMap);
 	result.insert(leftResult.begin(), leftResult.end());
-	auto rightResult = recursiveComputeBiomes(visited, result, right, biomeType, humidity, temperature);
+
+	auto rightResult = recursiveComputeBiomes(visited, result, right, biomeType, biomeMap);
 	result.insert(rightResult.begin(), rightResult.end());
+
 	return result;
 }
 
@@ -140,17 +149,29 @@ std::vector<tgen::Biome> tgen::TerrainGenerator::computeBiomes(Matrix<FT> terrai
 	Matrix<FT> humidity, Matrix<FT> temperature) {
 
 	std::vector<Biome> biomes;
-	std::set<std::pair<int, int>> visited;
+	std::set<Point_2> visited;
+
+	Matrix<Biome::BiomeType> biomeMap = generateMatrix<Biome::BiomeType>(terrainMap.size(), terrainMap[0].size());
 
 	for(int i = 0; i < terrainMap.size(); i++) {
 		for(int j = 0; j < terrainMap[0].size(); j++) {
+			biomeMap[i][j] = assignBiomeType(humidity[i][j], temperature[i][j]);
+			fmt::print("({}, {}) = {} ", i, j, biomeMap[i][j]);
+		}
+		fmt::print("\n");
+	}
 
-			auto index = std::pair(i, j);
+	for(int i = 0; i < biomeMap.size(); i++) {
+		for(int j = 0; j < biomeMap[0].size(); j++) {
+
+			auto index = Point_2(i, j);
 			if(visited.find(index) != visited.end()) continue;
 
-			std::set<std::pair<int, int>> biome;
-			biome = recursiveComputeBiomes(visited, biome, index, 
-				assignBiomeType(humidity[i][j], temperature[i][j]), humidity, temperature);
+			std::set<Point_2> biome;
+
+			biome = recursiveComputeBiomes(visited, biome, index, biomeMap[i][j], biomeMap);
+
+			visited.insert(biome.begin(), biome.end());
 
 			fmt::print("biome size: {}\n", biome.size());
 
@@ -164,14 +185,15 @@ tgen::Biome::BiomeType tgen::TerrainGenerator::assignBiomeType(FT humidityValue,
 	Biome::BiomeType result;
 
 	if(humidityValue < .5 && temperatureValue < .5) {
-		result = Biome::BiomeType(0);
+		result = Biome::BiomeType::Mountains;
 	} else if(humidityValue >= .5 && temperatureValue < .5) {
-		result = Biome::BiomeType(1);
+		result = Biome::BiomeType::Snowy;
 	} else if(humidityValue < .5 && temperatureValue >= .5) {
-		result = Biome::BiomeType(2);
+		result = Biome::BiomeType::Hills;
 	} else {
-		result = Biome::BiomeType(3);
+		result = Biome::BiomeType::Plains;
 	}
+
 	return result;
 }
 

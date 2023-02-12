@@ -18,9 +18,9 @@ class tgen::TerrainGenerator {
 	tgen::Terrain terrain;
 
 	std::vector<Biome> computeBiomes(Matrix<FT> terrainMap, Matrix<FT> humidity, Matrix<FT> temperature);
-	std::set<std::pair<int, int>> recursiveComputeBiomes(std::set<std::pair<int, int>> visited, 
-		std::set<std::pair<int, int>> result, std::pair<int, int> index,Biome::BiomeType biomeType,
-		Matrix<FT> humidity, Matrix<FT> temperature);
+	std::set<Point_2> recursiveComputeBiomes(std::set<Point_2> visited,
+		std::set<Point_2> result, Point_2 index, Biome::BiomeType biomeType,
+		Matrix<Biome::BiomeType> humidity);
 
 	Biome::BiomeType assignBiomeType(FT humidityValue, FT temperatureValue);
 
