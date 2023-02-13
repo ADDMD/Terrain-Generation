@@ -74,18 +74,19 @@ struct Texture_writer<internal_np::Param_not_found>
 };
 
 template <typename Stream, typename Graph, typename FileWriter>
-class Generic_facegraph_printer_obj
+class Texture_facegraph_printer_obj
 {
   typedef typename boost::graph_traits<Graph>::vertex_descriptor                   vertex_descriptor;
   typedef typename boost::graph_traits<Graph>::vertices_size_type                  vertices_size_type;
   typedef typename boost::graph_traits<Graph>::face_descriptor                     face_descriptor;
 
 public:
-  Generic_facegraph_printer_obj(Stream& os) : m_os(os) { }
-  Generic_facegraph_printer_obj(Stream& os, FileWriter writer) : m_os(os), m_writer(writer) { }
+  Texture_facegraph_printer_obj(Stream& os) : m_os(os) { }
+  Texture_facegraph_printer_obj(Stream& os, FileWriter writer) : m_os(os), m_writer(writer) { }
 
   template <typename NamedParameters = parameters::Default_named_parameters>
   bool operator()(const Graph& g,
+                  const std::string materialFileName,
                   const NamedParameters& np = parameters::default_values())
   {
     typedef typename GetVertexPointMap<Graph, NamedParameters>::const_type         VPM;
@@ -140,7 +141,7 @@ public:
                           has_vertex_normals                  ,
                           has_vertex_textures                 );
 
-    m_writer.write_mtllib();
+    m_writer.write_mtllib(materialFileName);
 
     vertices_size_type id = 0;
 

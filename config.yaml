@@ -1,5 +1,5 @@
-width: 400
-height: 400
+width: 100
+height: 100
 # Perlin: 0; Simplex: 1; Open: 2; Cellular: 3; FBM: 4.
 # CONTINENTALNESS
 continentalness.noise: 0
@@ -34,6 +34,8 @@ humidity.elevation: 1
 #
 data.path: ../data/
 data.extension: ply
+data.withTexture: 0
+data.mtl: biomi.mtl
 refine: 0
 logging.file: ../main.log 
 logging.level: INFO

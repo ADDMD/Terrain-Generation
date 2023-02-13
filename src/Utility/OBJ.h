@@ -10,7 +10,7 @@
 //                 Mael Rouxel-Labbé
 
 #include "./File_writer_wavefront_texture.h"
-#include "./Generic_facegraph_printer_obj.h"
+#include "./Texture_facegraph_printer_obj.h"
 
 #include <CGAL/IO/OBJ.h>
 #include <CGAL/boost/graph/IO/Generic_facegraph_builder.h>
@@ -29,22 +29,24 @@
 
 template <typename Graph,
           typename CGAL_NP_TEMPLATE_PARAMETERS>
-bool write_OBJ_texture(std::ostream& os,
+bool write_OBJ_MTL(std::ostream& os,
                const Graph& g,
+               const std::string materialFileName,
                const CGAL_NP_CLASS& np = CGAL::parameters::default_values()
 #ifndef DOXYGEN_RUNNING
                , typename boost::disable_if<CGAL::IO::internal::is_Point_set_or_Range_or_Iterator<Graph> >::type* = nullptr
 #endif
                )
 {
-  Generic_facegraph_printer_obj<std::ostream, Graph, File_writer_wavefront_texture> printer(os);
-  return printer(g, np);
+  Texture_facegraph_printer_obj<std::ostream, Graph, File_writer_wavefront_texture> printer(os);
+  return printer(g, materialFileName, np);
 }
 
 template <typename Graph,
           typename CGAL_NP_TEMPLATE_PARAMETERS>
-bool write_OBJ_texture(const std::string& fname,
+bool write_OBJ_MTL(const std::string& fname,
                const Graph& g,
+               const std::string materialFileName,
                const CGAL_NP_CLASS& np = CGAL::parameters::default_values()
 #ifndef DOXYGEN_RUNNING
                , typename boost::disable_if<CGAL::IO::internal::is_Point_set_or_Range_or_Iterator<Graph> >::type* = nullptr
@@ -53,5 +55,5 @@ bool write_OBJ_texture(const std::string& fname,
 {
   std::ofstream os(fname);
   CGAL::IO::set_mode(os, CGAL::IO::ASCII);
-  return write_OBJ_texture(os, g, np);
+  return write_OBJ_MTL(os, g, materialFileName, np);
 }

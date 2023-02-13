@@ -48,8 +48,8 @@ public:
     out() << "# ------------------------------------------\n\n";
   }
 
-  void write_mtllib(){
-    out() << "mtllib biomi.mtl\n";
+  void write_mtllib(std::string materialFileName){
+    out() << "mtllib " << materialFileName << "\n";
   }
 
   void write_usemtl(){

@@ -30,4 +30,14 @@ public:
 	void texturing();
 
 	void save(std::string path);
+
+	/** Salva la mesh in un file .obj con material file associato
+	 * 
+	 * @param path, percorso del file .obj con cui si salva il terreno
+	 * @param materialFileName, nome del .mtl file che si associa al .obj
+	 
+	 * N.B. Il file .mtl deve essere nella stessa directory del file .obj associato,
+	 * 		così come l'eventuale texture (in formato immagine) a cui si riferisce il materiale
+	 */
+	void saveWithTexture(std::string path, std::string materialFileName);
 };
