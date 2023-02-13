@@ -17,12 +17,16 @@ class tgen::TerrainGenerator {
 
 	tgen::Terrain terrain;
 
-	std::vector<Biome> computeBiomes(Matrix<FT> terrainMap, Matrix<FT> humidity, Matrix<FT> temperature);
-	std::set<Point_2> recursiveComputeBiomes(std::set<Point_2> visited,
-		std::set<Point_2> result, Point_2 index, Biome::BiomeType biomeType,
-		Matrix<Biome::BiomeType> humidity);
+	std::vector<Biome> computeBiomes(Matrix<FT>& terrainMap, Matrix<FT>& humidity, Matrix<FT>& temperature, int maxBiomeSize);
+
+	void recursiveComputeBiomes(std::set<Point_2>& visited, std::set<Point_2>& result, Point_2 index, Biome::BiomeType biomeType,
+		Matrix<Biome::BiomeType>& humidity, int maxBiomeSize);
 
 	Biome::BiomeType assignBiomeType(FT humidityValue, FT temperatureValue);
+
+	std::tuple<FT, FT, FT> getBiomeParam(Biome::BiomeType biomeType);
+
+	bool isInBound(Point_2 index, int sizeX, int sizeY);
 
 public:
 	TerrainGenerator() {}

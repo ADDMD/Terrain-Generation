@@ -1,16 +1,17 @@
 #include "./Biome.hpp"
 
-tgen::Biome::Biome(std::vector<Point_3> points) {
-	this->points = std::set(points.begin(), points.end());
+tgen::Biome::Biome(std::set<Point_2>& points, BiomeType type) {
+	this->points = points;
+	this->type = type;
 	this->centroid = computeCentroid();
 
 }
 
-bool tgen::Biome::contains(Point_3 point) {
+bool tgen::Biome::contains(Point_2 point) {
 	return points.find(point) != points.end();
 }
 
-bool tgen::Biome::addPoint(Point_3 point) {
+bool tgen::Biome::addPoint(Point_2 point) {
 	bool result = points.insert(point).second;
 	
 	if (result)
@@ -19,18 +20,22 @@ bool tgen::Biome::addPoint(Point_3 point) {
 	return result;
 }
 
+void tgen::Biome::addPoints(std::set<Point_2> points) {
+	this->points.insert(points.begin(), points.end());
 
-tgen::Point_3 tgen::Biome::computeCentroid() {
+	this->centroid =computeCentroid();
+}
+
+
+tgen::Point_2 tgen::Biome::computeCentroid() {
 	FT dx = 0;
 	FT dy = 0;
-	FT dz = 0;
 
 	for(auto point : points) {
 		dx += point.x();
 		dy += point.y();
-		dz += point.z();
 	}
 	int size = points.size();
 
-	return Point_3(dx/size, dy/size, dz/size);
+	return Point_2(dx/size, dy/size);
 }

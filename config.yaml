@@ -1,5 +1,6 @@
-width: 10
-height: 10
+width: 400
+height: 400
+biome.size: 10000
 # Perlin: 0; Simplex: 1; Open: 2; Cellular: 3; FBM: 4.
 # CONTINENTALNESS
 continentalness.noise: 4
@@ -23,13 +24,13 @@ erosion.elevation: 1
 temperature.noise: 4
 temperature.amplitude: 1
 temperature.octaves: 1
-temperature.frequency: .01
+temperature.frequency: .005
 temperature.elevation: 1
 # HUMIDITY
 humidity.noise: 4
 humidity.amplitude: 1
 humidity.octaves: 1
-humidity.frequency: .01
+humidity.frequency: .005
 humidity.elevation: 1
 #
 data.path: ../data/

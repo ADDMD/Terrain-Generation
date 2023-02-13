@@ -4,35 +4,45 @@
 #include "../terrain_generation.hpp"
 
 class tgen::Biome {
-
-
-	Point_3 centroid;
-
-	std::set<Point_3> points;
-
-	Point_3 computeCentroid();
-
-public:
-	Biome() {}
-	Biome(std::vector<Point_3> points);
-
-	Point_3 getCentroid() {
-		return centroid;
-	}
-	std::set<Point_3> getPoints() {
-		return points;
-	}
-
-	bool addPoint(Point_3 point);
-
-	bool contains(Point_3 point);
-
+public:	
 	enum BiomeType {
 		Mountains = 0,
 		Hills,
 		Plains,
 		Snowy
 	};
+
+private:
+	Point_2 centroid;
+
+	std::set<Point_2> points;
+
+	Point_2 computeCentroid();
+	BiomeType type;
+
+
+public:
+	Biome() {}
+	Biome(std::set<Point_2>& points, BiomeType type);
+
+	Point_2 getCentroid() {
+		return centroid;
+	}
+	std::set<Point_2> getPoints() {
+		return points;
+	}
+
+	BiomeType getType() {
+		return type;
+	}
+
+	bool addPoint(Point_2 point);
+	void addPoints(std::set<Point_2> points);
+
+	bool contains(Point_2 point);
+
+
+	
 };
 
 

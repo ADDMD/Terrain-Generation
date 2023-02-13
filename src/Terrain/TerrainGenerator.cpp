@@ -1,7 +1,6 @@
 #include "./TerrainGenerator.hpp"
 #include "../Utility/ImageWriter/ImageWriter.cpp"
 
-
 tgen::Terrain tgen::TerrainGenerator::generateTerrain(unsigned int seed){
 	Config conf("../config.yaml");
 	std::string w = conf["width"];
@@ -21,12 +20,41 @@ tgen::Terrain tgen::TerrainGenerator::generateTerrain(unsigned int seed){
 	auto humidity = maps["humidity"];
 	auto temperature = maps["temperature"];
 
-	for(int i = 0; i < width; i++){
-		for(int j = 0; j < height; j++){
-			map[i][j] = continentalness[i][j] + pickNValley[i][j] - erosion[i][j];
+	int maxBiomeSize = std::stoi(conf["biome.size"]);
+	auto biomes = computeBiomes(map, humidity, temperature, maxBiomeSize);
+
+	std::map<Point_2, Biome::BiomeType> centroids2biomeType;
+	for(auto biome : biomes) {
+		centroids2biomeType.insert({biome.getCentroid(), biome.getType()});
+	}
+
+	for(auto biome : biomes) {
+		for(auto point : biome.getPoints()) {
+			int i = point.x();
+			int j = point.y();
+
+			auto pointParam = getBiomeParam(biome.getType());
+			
+			FT currentHeight = continentalness[i][j] * std::get<0>(pointParam) 
+				+ pickNValley[i][j] * std::get<1>(pointParam) 
+				- erosion[i][j] * std::get<2>(pointParam);
+
+			for(auto centroidPair : centroids2biomeType) {
+				auto centroid = centroidPair.first;
+				auto centroidParams = getBiomeParam(centroidPair.second);
+
+				FT centroidHeight = continentalness[centroid.x()][centroid.y()] * std::get<0>(centroidParams) 
+					+ pickNValley[centroid.x()][centroid.y()] * std::get<1>(centroidParams) 
+					- erosion[centroid.x()][centroid.y()] * std::get<2>(centroidParams);
+
+				double param =  1/(1 + std::exp(- CGAL::squared_distance(point, centroid)));
+				currentHeight = lerp(currentHeight, centroidHeight, param);
+			}
+
+			map[i][j] = currentHeight;
 		}
 	}
-	computeBiomes(map, humidity, temperature);
+
 
 	tgen::Mesher mr;
 	mr.triangulate(map);
@@ -101,66 +129,59 @@ std::map<std::string, tgen::Matrix<tgen::FT>> tgen::TerrainGenerator::generateMa
 	return maps;
 }
 
-bool inBound(int index, int size) {
-	return 0 <= index && index < size ;
+bool tgen::TerrainGenerator::isInBound(Point_2 index, int sizeX, int sizeY) {
+	return 0 <= index.x() && index.x() < sizeX 
+		&& 0 <= index.y() && index.y() < sizeY;
 }
 
 
-std::set<tgen::Point_2> tgen::TerrainGenerator::recursiveComputeBiomes(std::set<Point_2> visited,
-	std::set<Point_2> result, Point_2 index, Biome::BiomeType biomeType, Matrix<Biome::BiomeType> biomeMap) {
+void tgen::TerrainGenerator::recursiveComputeBiomes(std::set<Point_2>& visited,
+	std::set<Point_2>& result, Point_2 index, Biome::BiomeType biomeType, Matrix<Biome::BiomeType>& biomeMap, int maxBiomeSize) {
+	
+	// controllo che il punto sia all'interno della mappa
+	// che il tipo del bioma sia lo stesso del punto da cui proviene
+	// e che non sia già stato visitato
+	if(!isInBound(index, biomeMap.size(), biomeMap[0].size())) 
+		return;
+	if(biomeType != biomeMap[index.x()][index.y()])
+		return;
+	if(visited.find(index) != visited.end())
+		return;
 
-	if(!(inBound((int)index.x(), biomeMap.size()) && inBound((int)index.y(), biomeMap[0].size())))
-		return result;
+	if (result.size() >= 10000)
+		return;
 
-	fmt::print("In bound\n");
-
-	if(!visited.insert(index).second) 
-		return result;
-	fmt::print("Not visited\n");
-
-	if (biomeType != assignBiomeType(biomeMap[(int)index.x()][(int)index.y()], biomeMap[(int)index.x()][(int)index.y()])) 
-		return result;
-
+	visited.insert(index);
 	result.insert(index);
 
-	auto up = Point_2((int)index.x(), (int)index.y() - 1, 0);
-	auto down = Point_2((int)index.x(), (int)index.y() + 1, 0);
-	auto left = Point_2((int)index.x() - 1, (int)index.y(), 0);
-	auto right = Point_2((int)index.x() + 1, (int)index.y(), 0);
+	// calcolo della possibili vie (quelle adiacenti) sulle quali lanciare la funzione 
+	auto up = Point_2(index.x(), index.y() - 1);
+	auto down = Point_2(index.x(), index.y() + 1);
+	auto left = Point_2(index.x() - 1, index.y());
+	auto right = Point_2(index.x() + 1, index.y());
 
-
-	auto upResult = recursiveComputeBiomes(visited, result, up, biomeType, biomeMap);
-	result.insert(upResult.begin(), upResult.end());
-
-	auto downResult = recursiveComputeBiomes(visited, result, down, biomeType, biomeMap);
-	result.insert(downResult.begin(), downResult.end());
-
-	auto leftResult = recursiveComputeBiomes(visited, result, left, biomeType, biomeMap);
-	result.insert(leftResult.begin(), leftResult.end());
-
-	auto rightResult = recursiveComputeBiomes(visited, result, right, biomeType, biomeMap);
-	result.insert(rightResult.begin(), rightResult.end());
-
-	return result;
+	// chiamate ricorsive sulle vie calcolate prima
+	recursiveComputeBiomes(visited, result, up, biomeType, biomeMap, maxBiomeSize);
+	recursiveComputeBiomes(visited, result, down, biomeType, biomeMap, maxBiomeSize);
+	recursiveComputeBiomes(visited, result, left, biomeType, biomeMap, maxBiomeSize);
+	recursiveComputeBiomes(visited, result, right, biomeType, biomeMap, maxBiomeSize);
 }
 
 
-std::vector<tgen::Biome> tgen::TerrainGenerator::computeBiomes(Matrix<FT> terrainMap, 
-	Matrix<FT> humidity, Matrix<FT> temperature) {
+std::vector<tgen::Biome> tgen::TerrainGenerator::computeBiomes(Matrix<FT>& terrainMap, 
+	Matrix<FT>& humidity, Matrix<FT>& temperature, int maxBiomeSize) {
 
-	std::vector<Biome> biomes;
-	std::set<Point_2> visited;
 
 	Matrix<Biome::BiomeType> biomeMap = generateMatrix<Biome::BiomeType>(terrainMap.size(), terrainMap[0].size());
 
 	for(int i = 0; i < terrainMap.size(); i++) {
 		for(int j = 0; j < terrainMap[0].size(); j++) {
 			biomeMap[i][j] = assignBiomeType(humidity[i][j], temperature[i][j]);
-			fmt::print("({}, {}) = {} ", i, j, biomeMap[i][j]);
 		}
-		fmt::print("\n");
 	}
 
+	std::set<Point_2> visited;
+	std::vector<Biome> biomes;
 	for(int i = 0; i < biomeMap.size(); i++) {
 		for(int j = 0; j < biomeMap[0].size(); j++) {
 
@@ -169,15 +190,11 @@ std::vector<tgen::Biome> tgen::TerrainGenerator::computeBiomes(Matrix<FT> terrai
 
 			std::set<Point_2> biome;
 
-			biome = recursiveComputeBiomes(visited, biome, index, biomeMap[i][j], biomeMap);
-
-			visited.insert(biome.begin(), biome.end());
-
-			fmt::print("biome size: {}\n", biome.size());
+			recursiveComputeBiomes(visited, biome, index, biomeMap[i][j], biomeMap, maxBiomeSize);
+			biomes.push_back(Biome(biome, biomeMap[i][j]));
 
 		}
 	}
-
 	return biomes;
 }
 
@@ -194,6 +211,26 @@ tgen::Biome::BiomeType tgen::TerrainGenerator::assignBiomeType(FT humidityValue,
 		result = Biome::BiomeType::Plains;
 	}
 
+	return result;
+}
+
+std::tuple<tgen::FT, tgen::FT, tgen::FT> tgen::TerrainGenerator::getBiomeParam(Biome::BiomeType biomeType) {
+	std::tuple<FT, FT, FT> result(1, 1, 1);
+
+	switch (biomeType) {
+	case Biome::Mountains:
+		result = std::tuple<FT, FT, FT>(1, 3, .5); 
+		break;
+	case Biome::Plains:
+		result = std::tuple<FT, FT, FT>(1, .5, 1); 
+		break;
+	case Biome::Hills:
+		result = std::tuple<FT, FT, FT>(1, 1.5, 1.5); 
+		break;
+	case Biome::Snowy:
+		result = std::tuple<FT, FT, FT>(2, 1, 2); 
+		break;
+	}
 	return result;
 }
 

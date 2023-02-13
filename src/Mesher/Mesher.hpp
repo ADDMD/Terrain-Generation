@@ -21,17 +21,6 @@ class tgen::Mesher {
 	CGAL::Color mountain = CGAL::Color(151,124,83);
 	CGAL::Color grass = CGAL::Color(126, 200, 80);
 
-	template <typename T>
-	inline T lerp(T start, T end, FT t) {
-		return start + t * (end - start);
-	}
-
-	template <typename T>
-	inline T interp(T start, T end, FT t) {
-		FT ti = ((6 * t - 15) * t + 10) * t * t * t;
-		return lerp(start, end, ti);
-	}
-
 
 	/// Classe di support al mesher per la costruzione della mesh triangolare 
 	struct Construct{

@@ -23,6 +23,8 @@ namespace tgen {
 	/// VETTORE 3D
 	typedef Kernel::Vector_3 Vector;
 
+	typedef Kernel::Vector_2 Vector_2;
+
 	/// mesh triangolare
 	typedef CGAL::Surface_mesh<Point_3> Mesh;
 
@@ -60,6 +62,17 @@ namespace tgen {
 		Matrix<T> result(width);
 		std::fill(result.begin(), result.end(), std::vector<T>(height));
 		return result;
+	}
+
+	template <typename T>
+	inline T lerp(T start, T end, tgen::FT t) {
+		return start + t * (end - start);
+	}
+
+	template <typename T>
+	inline T interp(T start, T end, tgen::FT t) {
+		tgen::FT ti = ((6 * t - 15) * t + 10) * t * t * t;
+		return lerp(start, end, ti);
 	}
 
 	class TGENLogger : public logtg::Logger {
