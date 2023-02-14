@@ -2,24 +2,24 @@ width: 400
 height: 400
 biome.size: 10000
 # Perlin: 0; Simplex: 1; Open: 2; Cellular: 3; FBM: 4.
-# CONTINENTALNESS
-continentalness.noise: 4
-continentalness.amplitude: 10
-continentalness.octaves: 2
-continentalness.frequency: .01
-continentalness.elevation: 1
-# PICK AND VALLEY
-pickNvalley.noise: 4
-pickNvalley.amplitude: 50
-pickNvalley.octaves: 6
-pickNvalley.frequency: .015
-pickNvalley.elevation: 2.5
-# EROSION
-erosion.noise: 4
-erosion.amplitude: 5
-erosion.octaves: 2
-erosion.frequency: .01
-erosion.elevation: 1
+# # CONTINENTALNESS
+# continentalness.noise: 4
+# continentalness.amplitude: 10
+# continentalness.octaves: 2
+# continentalness.frequency: .01
+# continentalness.elevation: 1
+# # PICK AND VALLEY
+# pickNvalley.noise: 4
+# pickNvalley.amplitude: 50
+# pickNvalley.octaves: 6
+# pickNvalley.frequency: .015
+# pickNvalley.elevation: 2.5
+# # EROSION
+# erosion.noise: 4
+# erosion.amplitude: 5
+# erosion.octaves: 2
+# erosion.frequency: .01
+# erosion.elevation: 1
 # TEMPERATURE
 temperature.noise: 4
 temperature.amplitude: 1

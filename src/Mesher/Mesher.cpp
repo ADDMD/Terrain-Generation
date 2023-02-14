@@ -130,7 +130,7 @@ void tgen::Mesher::coloring() {
 
 		// FT iz = interp(0, 360, tz);
 		CGAL::Color c;
-		if(p.z() > 50) c = snow;
+		if(p.z() > 35) c = snow;
 		else if(tz <= 0.6) c = mountain;
 			else if (tz > 0.6 & tz <= 0.9){
 					if ((p.z() / 55) < 0.05) c = giallastra;

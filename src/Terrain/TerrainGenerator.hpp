@@ -17,11 +17,6 @@ class tgen::TerrainGenerator {
 
 	tgen::Terrain terrain;
 
-	std::vector<Biome> computeBiomes(Matrix<FT>& terrainMap, Matrix<FT>& humidity, Matrix<FT>& temperature, int maxBiomeSize);
-
-	void recursiveComputeBiomes(std::set<Point_2>& visited, std::set<Point_2>& result, Point_2 index, Biome::BiomeType biomeType,
-		Matrix<Biome::BiomeType>& humidity, int maxBiomeSize);
-
 	Biome::BiomeType assignBiomeType(FT humidityValue, FT temperatureValue);
 
 	std::tuple<FT, FT, FT> getBiomeParam(Biome::BiomeType biomeType);
@@ -36,5 +31,7 @@ public:
 		return this->terrain;
 	}
 	std::map<std::string, Matrix<FT>> generateMaps(int width, int height, unsigned int seed);
+	std::map<std::string, Matrix<FT>> generateHumNTemp(int width, int height, unsigned int seed);
+	std::string getBiomeName(Biome::BiomeType biomeType);
 
 };

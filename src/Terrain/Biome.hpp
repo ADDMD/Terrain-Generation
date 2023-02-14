@@ -9,7 +9,7 @@ public:
 		Mountains = 0,
 		Hills,
 		Plains,
-		Snowy
+		Desert
 	};
 
 private:
