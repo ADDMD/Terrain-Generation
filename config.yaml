@@ -31,6 +31,8 @@ data.extension: ply
 refine: 0
 logging.file: ../main.log 
 logging.level: INFO
+# assets
+assets.tree: ../assets/model.obj
 # ulteriori
 continentalness.amplitude: 1
 continentalness.octaves: 1

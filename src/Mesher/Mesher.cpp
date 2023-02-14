@@ -9,12 +9,20 @@
 #include <CGAL/marching_tetrahedra_3.h>
 #include <CGAL/Polygon_mesh_processing/measure.h>
 
+//necessario per lettura di file .obj
+//#include <CGAL/Three/reader/OBJ.h>
+#include <CGAL/Exact_predicates_inexact_constructions_kernel.h>
+#include <CGAL/Polyhedron_3.h>
+
 #include <CGAL/Surface_mesh_parameterization/parameterize.h>
 
 #include <fmt/format.h>
 
 #include <cmath>
 #include <random>
+
+typedef CGAL::Exact_predicates_inexact_constructions_kernel K;
+typedef CGAL::Polyhedron_3<K> Polyhedron;
 
 // TODO: prendere spunti da https://www.youtube.com/watch?v=CSa5O6knuwI
 
@@ -45,6 +53,8 @@ void tgen::Mesher::triangulate(std::vector<Point_3> points) {
  *	I vertici delle facce sono definiti in senso antiorario
  */
 void tgen::Mesher::triangulate(Matrix<FT> map, Matrix<FT> humidity, Matrix<FT> temperature) {
+	Config conf("../config.yaml");
+
 	unsigned int width = map.size();
 	unsigned int height = map[0].size();
 
@@ -62,6 +72,17 @@ void tgen::Mesher::triangulate(Matrix<FT> map, Matrix<FT> humidity, Matrix<FT> t
 			pnt2idx.insert({p, mesh->add_vertex(p)});
 		}
 	}
+
+	// Crea un'istanza della classe OBJ_reader
+    CGAL::Three::OBJ_reader reader;
+
+    // Carica il file .obj (in questo esempio, il file si chiama "model.obj")
+    reader.read("model.obj");
+
+	// Il modello è stato caricato con successo, puoi accedere ai suoi dati
+    // tramite un oggetto Polyhedron
+    Polyhedron poly;
+    reader.get_mesh(poly);
 
 	// triangolo le facce
 	for(int x0 = 0, x1 = 1; x1 < width; x0++, x1++) {
@@ -82,6 +103,9 @@ void tgen::Mesher::triangulate(Matrix<FT> map, Matrix<FT> humidity, Matrix<FT> t
 			*/
 			Point_3 normale_1 = findNormal(p0, p1, p3);
 			Point_3 normale_2 = findNormal(p0, p3, p2);
+
+
+
 
 			if (normale_1.hy()>=0.7 && normale_1.hy() <=1){
 				
