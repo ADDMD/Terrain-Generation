@@ -49,14 +49,6 @@ int main(int argc, char const *argv[])
 
 	std::string el = conf["elevation"];
 
-	fmt::print("{}\n", ac);
-	fmt::print("{}\n", oc);
-	fmt::print("{}\n", fc);
-	fmt::print("{}\n", c);
-
-
-
-
 
 	if(w == "" || h == "") return -1;
 

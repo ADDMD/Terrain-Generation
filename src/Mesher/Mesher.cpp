@@ -73,7 +73,13 @@ void tgen::Mesher::triangulate(Matrix<FT> map, Matrix<FT> humidity, Matrix<FT> t
 			Point_3 p3 = points[x1][y1];
 
 			//INIZIO PARTE RELATIVA PER LA GENERAZIONE DEGLI ALBERI
-
+			/*
+				CGAL::Vector_3 normale_1= CGAL::normal(p0,p1,p3);
+				CGAL::Vector_3 normale_2= CGAL::normal(p0,p3,p2);
+				fmt::print("Normale x: {}\n",normale_1.x());
+				fmt::print("Normale y: {}\n",normale_1.y());
+				fmt::print("Normale z: {}\n",normale_1.z());
+			*/
 			Point_3 normale_1 = findNormal(p0, p1, p3);
 			Point_3 normale_2 = findNormal(p0, p3, p2);
 
@@ -156,28 +162,29 @@ tgen::Mesh* tgen::Mesher::getMesh() {
 }
 
 
-Point_3 tgen::Mesher::crossProduct(Point_3 a, Point_3 b) {
+tgen::Point_3 tgen::Mesher::crossProduct(Point_3 a, Point_3 b) {
     auto x = a.y() * b.z() - a.z() * b.y();
     auto y = a.z() * b.x() - a.x() * b.z();
     auto z = a.x() * b.y() - a.y() * b.x();
-    Point_3 result(x, y, z);
+	
+    tgen::Point_3 result(x, y, z);
     return result;
 }
 
 
-Point_3 tgen::Mesher::findNormal(Point_3 p1, Point_3 p2, Point_3 p3) {
+tgen::Point_3 tgen::Mesher::findNormal(Point_3 p1, Point_3 p2, Point_3 p3) {
     auto x = p2.x() - p1.x();
     auto y = p2.y() - p1.y();
     auto z = p2.z() - p1.z();
-    Point_3 v1(x,y,z);
+    tgen::Point_3 v1(x,y,z);
 
     x = p3.x() - p1.x();
     y = p3.y() - p1.y();
     z = p3.z() - p1.z();
 
-    Point_3 v2(x,y,z);
+    tgen::Point_3 v2(x,y,z);
 
-    Point_3 normal = crossProduct(v1, v2);
+    tgen::Point_3 normal = crossProduct(v1, v2);
     return normal;
 }
 
