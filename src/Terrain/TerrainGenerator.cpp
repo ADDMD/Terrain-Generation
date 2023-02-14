@@ -22,7 +22,22 @@ tgen::Terrain tgen::TerrainGenerator::generateTerrain(unsigned int seed){
 			map[i][j] = biomeMaps[biomeName][i][j];
 		}
 	}
-
+	for(int i = 0; i < width; i++){
+		for(int j = 0; j < height; j++){
+			double interpValue = 1;
+			int window = 20;
+			for(int x = - window / 2; x < window / 2; x++){
+				for(int y = - window / 2; y < window / 2; y++){
+					if(isInBound(i + x, j + y, width, height)){
+						double diff_heigth = map[i][j] - map[i + x][j + y];
+						// if(diff_heigth > 5)
+						if((abs(x) + abs(y)) != 0)
+							map[i][j] = interp(map[i][j], map[i + x][j + y], interpValue / (abs(x)+abs(y)));
+					}
+				}
+			}
+		}
+	}
 	tgen::Mesher mr;
 	mr.triangulate(map);
 
@@ -109,9 +124,9 @@ std::map<std::string, tgen::Matrix<tgen::FT>> tgen::TerrainGenerator::generateMa
 	return maps;
 }
 
-bool tgen::TerrainGenerator::isInBound(Point_2 index, int sizeX, int sizeY) {
-	return 0 <= index.x() && index.x() < sizeX 
-		&& 0 <= index.y() && index.y() < sizeY;
+bool tgen::TerrainGenerator::isInBound(int x, int y, int sizeX, int sizeY) {
+	return 0 <= x && x < sizeX 
+		&& 0 <= y && y < sizeY;
 }
 
 tgen::Biome::BiomeType tgen::TerrainGenerator::assignBiomeType(FT humidityValue, FT temperatureValue) {

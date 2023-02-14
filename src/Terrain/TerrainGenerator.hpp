@@ -21,7 +21,7 @@ class tgen::TerrainGenerator {
 
 	std::tuple<FT, FT, FT> getBiomeParam(Biome::BiomeType biomeType);
 
-	bool isInBound(Point_2 index, int sizeX, int sizeY);
+	bool isInBound(int x, int y, int sizeX, int sizeY);
 
 public:
 	TerrainGenerator() {}
