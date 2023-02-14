@@ -173,16 +173,26 @@ void tgen::Mesher::triangulate(Matrix<FT> map, Matrix<FT> humidity, Matrix<FT> t
 		}
 	}
 
+	// Crea un oggetto Polyhedron vuoto
+	Polyhedron tree_mesh;
+
+	// Leggi il file .obj
+	std::ifstream input(path_tree);
+	if (!input || !CGAL::IO::read_OBJ(input, tree_mesh)) {
+		std::cerr << "Errore nella lettura del file obj" << std::endl;
+	}
+
+
 	// Crea un'istanza della classe OBJ_reader
-    CGAL::Three::OBJ_reader reader;
+    //CGAL::Three::OBJ_reader reader;
 
     // Carica il file .obj (in questo esempio, il file si chiama "model.obj")
-    reader.read(path_tree);
+    //reader.read(path_tree);
 
 	// Il modello è stato caricato con successo, puoi accedere ai suoi dati
     // tramite un oggetto Polyhedron
-    Polyhedron tree_mesh;
-    reader.get_mesh(tree_mesh);
+    //Polyhedron tree_mesh;
+    //reader.get_mesh(tree_mesh);
 
     // Itera sulla lista e stampa i suoi elementi
 	for (auto it = pnt2tree.begin(); it != pnt2tree.end(); ++it) {
