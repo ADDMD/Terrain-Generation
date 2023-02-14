@@ -14,6 +14,8 @@
 #include <CGAL/Exact_predicates_inexact_constructions_kernel.h>
 #include <CGAL/Polyhedron_3.h>
 
+#include <CGAL/Surface_mesh.h>
+#include <CGAL/make_surface_mesh.h>
 #include <CGAL/Surface_mesh_parameterization/parameterize.h>
 
 #include <fmt/format.h>
@@ -54,6 +56,7 @@ void tgen::Mesher::triangulate(std::vector<Point_3> points) {
  */
 void tgen::Mesher::triangulate(Matrix<FT> map, Matrix<FT> humidity, Matrix<FT> temperature) {
 	Config conf("../config.yaml");
+	std::string path_tree = conf["assets.tree"];
 
 	unsigned int width = map.size();
 	unsigned int height = map[0].size();
@@ -61,6 +64,8 @@ void tgen::Mesher::triangulate(Matrix<FT> map, Matrix<FT> humidity, Matrix<FT> t
 	mesh = new Mesh();
 	
 	std::map<Point_3, Mesh::vertex_index> pnt2idx;
+	// Crea una Point_3 per i punti in cui verrà aggiunto un albero
+  	std::list<Point_3> pnt2tree;
 	auto points = generateMatrix<Point_3>(width, height);
 
 	// aggiungo tutti i punti alla mesh come vertici
@@ -73,16 +78,6 @@ void tgen::Mesher::triangulate(Matrix<FT> map, Matrix<FT> humidity, Matrix<FT> t
 		}
 	}
 
-	// Crea un'istanza della classe OBJ_reader
-    CGAL::Three::OBJ_reader reader;
-
-    // Carica il file .obj (in questo esempio, il file si chiama "model.obj")
-    reader.read("model.obj");
-
-	// Il modello è stato caricato con successo, puoi accedere ai suoi dati
-    // tramite un oggetto Polyhedron
-    Polyhedron poly;
-    reader.get_mesh(poly);
 
 	// triangolo le facce
 	for(int x0 = 0, x1 = 1; x1 < width; x0++, x1++) {
@@ -120,7 +115,7 @@ void tgen::Mesher::triangulate(Matrix<FT> map, Matrix<FT> humidity, Matrix<FT> t
 					//random che deve essere maggiore di 0.5
 					if (num_ran>=0.5)
 					{
-						//generazione albero
+						pnt2tree.push_back(p0);
 					}
 				}
 				else{
@@ -128,7 +123,7 @@ void tgen::Mesher::triangulate(Matrix<FT> map, Matrix<FT> humidity, Matrix<FT> t
 					//random che deve essere maggiore di 0.8
 					if (num_ran>=0.8)
 					{
-						//generazione albero
+						pnt2tree.push_back(p0);
 					}
 				}
 			}
@@ -146,7 +141,7 @@ void tgen::Mesher::triangulate(Matrix<FT> map, Matrix<FT> humidity, Matrix<FT> t
 					//random che deve essere maggiore di 0.5
 					if (num_ran>=0.5)
 					{
-						//generazione albero
+						pnt2tree.push_back(p0);
 					}
 				}
 				else{
@@ -154,7 +149,7 @@ void tgen::Mesher::triangulate(Matrix<FT> map, Matrix<FT> humidity, Matrix<FT> t
 					//random che deve essere maggiore di 0.8
 					if (num_ran>=0.8)
 					{
-						//generazione albero
+						pnt2tree.push_back(p0);
 					}
 				}
 			}
@@ -177,6 +172,27 @@ void tgen::Mesher::triangulate(Matrix<FT> map, Matrix<FT> humidity, Matrix<FT> t
 
 		}
 	}
+
+	// Crea un'istanza della classe OBJ_reader
+    CGAL::Three::OBJ_reader reader;
+
+    // Carica il file .obj (in questo esempio, il file si chiama "model.obj")
+    reader.read(path_tree);
+
+	// Il modello è stato caricato con successo, puoi accedere ai suoi dati
+    // tramite un oggetto Polyhedron
+    Polyhedron tree_mesh;
+    reader.get_mesh(tree_mesh);
+
+    // Itera sulla lista e stampa i suoi elementi
+	for (auto it = pnt2tree.begin(); it != pnt2tree.end(); ++it) {
+		// Applica la trasformazione all'albero
+		CGAL::Polygon_mesh_processing::transform(*it, tree_mesh);
+		CGAL::make_surface_mesh(mesh, tree_mesh);
+		//mesh.join(tree_mesh);
+		std::cout << *it << std::endl;
+	}
+
 	logger.log(logtg::Level::INFO, "Mesh created.");
 	printSummary();
 }
