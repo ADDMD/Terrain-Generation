@@ -7,12 +7,15 @@
 #include <CGAL/Polygon_mesh_processing/refine.h>
 #include <CGAL/Polygon_mesh_processing/measure.h>
 #include <CGAL/marching_tetrahedra_3.h>
-#include <CGAL/Polygon_mesh_processing/measure.h>
 
 //necessario per lettura di file .obj
 //#include <CGAL/Three/reader/OBJ.h>
 #include <CGAL/Exact_predicates_inexact_constructions_kernel.h>
 #include <CGAL/Polyhedron_3.h>
+#include <CGAL/aff_transformation_tags.h>
+#include <CGAL/Aff_transformation_3.h>
+#include <CGAL/Polygon_mesh_processing/transform.h>
+
 
 #include <CGAL/Surface_mesh.h>
 #include <CGAL/make_surface_mesh.h>
@@ -96,13 +99,26 @@ void tgen::Mesher::triangulate(Matrix<FT> map, Matrix<FT> humidity, Matrix<FT> t
 				fmt::print("Normale y: {}\n",normale_1.y());
 				fmt::print("Normale z: {}\n",normale_1.z());
 			*/
-			Point_3 normale_1 = findNormal(p0, p1, p3);
-			Point_3 normale_2 = findNormal(p0, p3, p2);
+
+			Mesh::vertex_index v0 = pnt2idx.find(p0)->second;
+			Mesh::vertex_index v1 = pnt2idx.find(p1)->second;
+			Mesh::vertex_index v2 = pnt2idx.find(p2)->second;
+			Mesh::vertex_index v3 = pnt2idx.find(p3)->second;
+
+			// counterclockwise orientation
+			// mesh->add_face(v0, v3, v1); // f1
+			// mesh->add_face(v0, v2, v3); // f2
+
+			// clockwise orientation
+			auto f1 = mesh->add_face(v0, v1, v3); // f1
+			auto f2 = mesh->add_face(v0, v3, v2); // f2
 
 
+			auto normal1 = CGAL::Polygon_mesh_processing::compute_face_normal(f1, *mesh);
+			auto normal2 = CGAL::Polygon_mesh_processing::compute_face_normal(f2, *mesh);
 
 
-			if (normale_1.hy()>=0.7 && normale_1.hy() <=1){
+			if (normal1.z()>=0.7 && normal1.z() <=1){
 				
 				//generazione di numeri casuali tra 0 e 1
 				std::mt19937 generator(std::random_device{}());
@@ -128,7 +144,7 @@ void tgen::Mesher::triangulate(Matrix<FT> map, Matrix<FT> humidity, Matrix<FT> t
 				}
 			}
 
-			if (normale_2.hy()>=0.7 && normale_2.hy() <=1){
+			if (normal2.z()>=0.7 && normal2.z() <=1){
 
 				//generazione di numeri casuali tra 0 e 1
 				std::mt19937 generator(std::random_device{}());
@@ -157,24 +173,17 @@ void tgen::Mesher::triangulate(Matrix<FT> map, Matrix<FT> humidity, Matrix<FT> t
 			//FINE PARTE RELATIVA PER LA GENERAZIONE DEGLI ALBERI
 
 
-			Mesh::vertex_index v0 = pnt2idx.find(p0)->second;
-			Mesh::vertex_index v1 = pnt2idx.find(p1)->second;
-			Mesh::vertex_index v2 = pnt2idx.find(p2)->second;
-			Mesh::vertex_index v3 = pnt2idx.find(p3)->second;
 
-			// counterclockwise orientation
-			// mesh->add_face(v0, v3, v1); // f1
-			// mesh->add_face(v0, v2, v3); // f2
 
-			// clockwise orientation
-			mesh->add_face(v0, v1, v3); // f1
-			mesh->add_face(v0, v3, v2); // f2
+
 
 		}
 	}
 
 	// Crea un oggetto Polyhedron vuoto
-	Polyhedron tree_mesh;
+	Mesh tree_mesh;
+
+	Mesh tree_map;
 
 	// Leggi il file .obj
 	std::ifstream input(path_tree);
@@ -182,25 +191,28 @@ void tgen::Mesher::triangulate(Matrix<FT> map, Matrix<FT> humidity, Matrix<FT> t
 		std::cerr << "Errore nella lettura del file obj" << std::endl;
 	}
 
-
-	// Crea un'istanza della classe OBJ_reader
-    //CGAL::Three::OBJ_reader reader;
-
-    // Carica il file .obj (in questo esempio, il file si chiama "model.obj")
-    //reader.read(path_tree);
-
-	// Il modello è stato caricato con successo, puoi accedere ai suoi dati
-    // tramite un oggetto Polyhedron
-    //Polyhedron tree_mesh;
-    //reader.get_mesh(tree_mesh);
-
     // Itera sulla lista e stampa i suoi elementi
-	for (auto it = pnt2tree.begin(); it != pnt2tree.end(); ++it) {
+	for (auto it : pnt2tree) {
+		//auto transf = CGAL::Translation(it);
+		//CGAL::Aff_transformation_3<Kernel>
+		/*CGAL::Aff_transformation_3<Kernel> translate(1, 0, 0, it.x(),
+													 0, 1, 0, it.y(),
+													 0, 0, 1, it.z(),
+													 0, 0, 0, 1);
+*/
+		// Crea una trasformazione di oggetti che sposterà la mesh in un punto specifico
+		CGAL::Aff_transformation_3<Kernel> transformation(CGAL::TRANSLATION, Vector(it.x(), it.y(), it.z()));
+
+		// Applica la trasformazione alla mesh
+		//mesh->transform(transformation);
+		
+		CGAL::Polygon_mesh_processing::transform(transformation, tree_mesh);
+
 		// Applica la trasformazione all'albero
-		CGAL::Polygon_mesh_processing::transform(*it, tree_mesh);
-		CGAL::make_surface_mesh(mesh, tree_mesh);
-		//mesh.join(tree_mesh);
-		std::cout << *it << std::endl;
+		//CGAL::Polygon_mesh_processing::transform(transf, tree_mesh);
+		//CGAL::make_surface_mesh(mesh, tree_mesh);
+		mesh->join(tree_mesh);
+		std::cout << it << std::endl;
 	}
 
 	logger.log(logtg::Level::INFO, "Mesh created.");
@@ -211,7 +223,7 @@ tgen::Mesh* tgen::Mesher::getMesh() {
 	return mesh;
 }
 
-
+/*
 tgen::Point_3 tgen::Mesher::crossProduct(Point_3 a, Point_3 b) {
     auto x = a.y() * b.z() - a.z() * b.y();
     auto y = a.z() * b.x() - a.x() * b.z();
@@ -236,7 +248,7 @@ tgen::Point_3 tgen::Mesher::findNormal(Point_3 p1, Point_3 p2, Point_3 p3) {
 
     tgen::Point_3 normal = crossProduct(v1, v2);
     return normal;
-}
+}*/
 
 
 void tgen::Mesher::printSummary() {
