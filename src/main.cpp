@@ -111,7 +111,7 @@ int main(int argc, char const *argv[])
 	tgen::Mesher mr;
 	mr.triangulate(map, humidity, temperature);
 	// il refine allunga i tempi (circa 100s in più per una 100x100)if(std::stoi(conf["refine"]) == 1)
-	  mr.refine(); 
+	// mr.refine(); 
 	mr.coloring();
 	tgen::Mesh mesh = *mr.getMesh();
 	std::string ext = conf["data.extension"];
