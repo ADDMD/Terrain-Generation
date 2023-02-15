@@ -89,23 +89,43 @@ int main(int argc, char const *argv[])
 
 	fmt::print("Seed: {}\n", seed);
 
-	tgen::TerrainGenerator tg;
-	tgen::Terrain terrain = tg.generateTerrain(seed);
+	tgen::NoiseGenerator continentalnessGen(noise_continentalness, seed, cOctaves, cAmplitude, cFrequency);
+	tgen::NoiseGenerator pickNValleyGen(noise_pickNvalley, seed, pvOctaves, pvAmplitude, pvFrequency);
+	tgen::NoiseGenerator erosionGen(noise_erosion, seed, eOctaves, eAmplitude, eFrequency);
 
-	fmt::print("{}\n", cAmplitude);
-	fmt::print("{}\n", cOctaves);
-	fmt::print("{}\n", cFrequency);
-	fmt::print("{}\n", noise_continentalness);
+	tgen::NoiseGenerator humidityGen(noise_humidity, seed, hOctaves, 1, hFrequency);
+	tgen::NoiseGenerator temperatureGen(noise_temperature, seed, tOctaves, 1, tFrequency);
 
+	auto continentalness = continentalnessGen.generateMap(width, height, 1);
+	auto pickNValley = pickNValleyGen.generateMap(width, height, elevation);
+	auto erosion = erosionGen.generateMap(width, height, 1);
+	auto humidity = humidityGen.generateMap(width, height, 1);
+	auto temperature = temperatureGen.generateMap(width, height, 1);
+
+	auto map = tgen::generateMatrix<tgen::FT>(width, height);
+	for(int i = 0; i < width; i++){
+	  for(int j = 0; j < height; j++){
+	    map[i][j] = continentalness[i][j] + pickNValley[i][j] - erosion[i][j];
+	  }
+	}
+	tgen::Mesher mr;
+	mr.triangulate(map, humidity, temperature);
+	// il refine allunga i tempi (circa 100s in più per una 100x100)if(std::stoi(conf["refine"]) == 1)
+	  mr.refine(); 
+	mr.coloring();
+	tgen::Mesh mesh = *mr.getMesh();
 	std::string ext = conf["data.extension"];
-
 	std::string filename_path = fmt::format("{}{}.{}",conf["data.path"], seed, ext);
-
+	std::ofstream out(filename_path);
 	logger.log(logtg::Level::INFO, fmt::format("Created file \"{}\".", filename_path));
-	terrain.save(filename_path);
+	if(ext == "ply")
+	  CGAL::IO::write_PLY(out, mesh);           // formato .ply
+	else if (ext == "obj")
+	  CGAL::IO::write_OBJ(out, mesh);           // formato .obj
+	else if(ext == "off")
+	  out << mesh;                          // formato .off
 	logger.log(logtg::Level::INFO, fmt::format("Mesh saved in \"{}\".", filename_path));
-	
 	conf.close();
-
+	out.close();
 	return 0;
 }

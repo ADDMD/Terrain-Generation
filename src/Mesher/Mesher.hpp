@@ -103,7 +103,7 @@ public:
 	Point_3 findNormal(Point_3 p1, Point_3 p2, Point_3 p3);
 
 	/// Triangola una mappa di rumore
-	void triangulate(Matrix<FT> map, Matrix<FT> humidity, Matrix<FT> temperature);
+	void triangulate(Matrix<FT> &map, Matrix<FT> &humidity, Matrix<FT> &temperature);
 
 	void coloring();
 

@@ -57,7 +57,7 @@ void tgen::Mesher::triangulate(std::vector<Point_3> points) {
  *
  *	I vertici delle facce sono definiti in senso antiorario
  */
-void tgen::Mesher::triangulate(Matrix<FT> map, Matrix<FT> humidity, Matrix<FT> temperature) {
+void tgen::Mesher::triangulate(Matrix<FT> &map, Matrix<FT> &humidity, Matrix<FT> &temperature) {
 	Config conf("../config.yaml");
 	std::string path_tree = conf["assets.tree"];
 
