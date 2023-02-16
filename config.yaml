@@ -1,9 +1,10 @@
-width: 100
-height: 100
+width: 1000
+height: 1000
 # Perlin: 0; Simplex: 1; Open: 2; Cellular: 3; FBM: 4.
 #
 data.path: ../data/
 data.extension: ply
 data.withTexture: 1
+data.mtl: ../data/biomi.mtl
 logging.file: ../main.log 
 logging.level: INFO

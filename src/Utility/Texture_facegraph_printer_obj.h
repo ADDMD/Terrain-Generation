@@ -8,7 +8,7 @@
 //
 // Author(s)     : Mael Rouxel-Labbé
 
-#include <CGAL/assertions.h>
+#include <CGAL/IO/io.h>
 #include <CGAL/boost/graph/iterator.h>
 #include <CGAL/Named_function_parameters.h>
 #include <CGAL/boost/graph/named_params_helper.h>

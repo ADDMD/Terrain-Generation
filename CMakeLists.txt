@@ -5,7 +5,7 @@ project(terrain_generation)
 
 # Ricerca delle librerie
 find_package(fmt REQUIRED)
-
+find_package(Eigen3 REQUIRED)
 find_package(CGAL REQUIRED)
 
 # Percorsi delle varie cartelle
@@ -51,6 +51,7 @@ target_include_directories(fbm INTERFACE "${terrain_generation_SOURCE_DIR}/inclu
 # Linking delle librerie
 target_link_libraries(terrain_generation 
   fmt::fmt-header-only
+  Eigen3::Eigen
   CGAL::CGAL
   fbm
 )

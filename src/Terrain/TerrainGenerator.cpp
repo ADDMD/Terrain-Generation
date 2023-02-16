@@ -37,6 +37,7 @@ tgen::Terrain tgen::TerrainGenerator::generateTerrain(unsigned int seed){
 	tgen::Mesh mesh = *mr.getMesh();
 
 	this->terrain = Terrain("Terreno finale", mesh, finalMap, humNtemp["humidity"], humNtemp["temperature"]);
+	this->terrain.texturing();
 	return this->terrain;
 }
 

@@ -11,7 +11,6 @@
 #include <CGAL/Polygon_mesh_processing/smooth_shape.h>
 
 #include <CGAL/Surface_mesh_parameterization/parameterize.h>
-
 #include <fmt/format.h>
 
 // TODO: prendere spunti da https://www.youtube.com/watch?v=CSa5O6knuwI
