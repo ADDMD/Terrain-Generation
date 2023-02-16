@@ -54,7 +54,6 @@ test/data/*
 *.obj
 *.ply
 *.sublime-workspace
-*.json
 *.off
 *.log
 *.sublime-workspace
