@@ -1,7 +1,8 @@
 #include "./Terrain.hpp"
 
 tgen::Terrain::Terrain(){}
-tgen::Terrain::Terrain(tgen::Mesh mesh, Matrix<FT> terrainMap, Matrix<FT> humidity, Matrix<FT> temperature){
+tgen::Terrain::Terrain(std::string name, tgen::Mesh mesh, Matrix<FT> terrainMap, Matrix<FT> humidity, Matrix<FT> temperature){
+	this->name = name;
 	this->mesh = mesh;
 	this->terrainMap = terrainMap;
 	this->humidity = humidity;
@@ -58,7 +59,9 @@ void tgen::Terrain::save(std::string filePath){
 	//store the characters after the '.' from the filePath string
 	std::string ext = filePath.substr(position+1);
 
-	std::ofstream out(filePath);
+	std::string final_path = fmt::format("{}{}.{}", filePath.substr(0, position-1), this->name, ext);
+
+	std::ofstream out(final_path);
 	if(ext == "ply")
 		CGAL::IO::write_PLY(out, mesh);			// formato .ply
 	else if (ext == "obj")

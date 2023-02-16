@@ -8,6 +8,7 @@
 #include <CGAL/Polygon_mesh_processing/measure.h>
 #include <CGAL/marching_tetrahedra_3.h>
 #include <CGAL/Polygon_mesh_processing/measure.h>
+#include <CGAL/Polygon_mesh_processing/smooth_shape.h>
 
 #include <CGAL/Surface_mesh_parameterization/parameterize.h>
 
@@ -88,6 +89,7 @@ void tgen::Mesher::triangulate(Matrix<FT> map) {
 	printSummary();
 }
 
+
 tgen::Mesh* tgen::Mesher::getMesh() {
 	return mesh;
 }
@@ -102,58 +104,19 @@ void tgen::Mesher::printSummary() {
 
 
 void tgen::Mesher::refine() {
-	CGAL::Polygon_mesh_processing::isotropic_remeshing(mesh->faces(), 1, *mesh);
+	CGAL::Polygon_mesh_processing::split_long_edges(mesh->edges(), 1.5, *mesh);
+ 	CGAL::Polygon_mesh_processing::isotropic_remeshing(mesh->faces(), 1, *mesh);
 
-	std::vector<Mesh::Face_index>  new_facets;
-	std::vector<Mesh::Vertex_index> new_vertices;
+	// std::vector<Mesh::Face_index>  new_facets;
+	// std::vector<Mesh::Vertex_index> new_vertices;
 
 
-	CGAL::Polygon_mesh_processing::refine(*mesh,
-									faces(*mesh),
-									std::back_inserter(new_facets),
-									std::back_inserter(new_vertices),
-									CGAL::Polygon_mesh_processing::parameters::density_control_factor(2.));
-
+	// CGAL::Polygon_mesh_processing::refine(*mesh,
+	// 								faces(*mesh),
+	// 								std::back_inserter(new_facets),
+	// 								std::back_inserter(new_vertices),
+	// 								CGAL::Polygon_mesh_processing::parameters::density_control_factor(2.));
+	CGAL::Polygon_mesh_processing::smooth_shape(mesh->faces(), *mesh, 0.1);
 	logger.log(logtg::Level::INFO, "Mesh refined.");
 	printSummary();
 }
-
-void tgen::Mesher::coloring() {
-	Mesh::Property_map<Mesh::Vertex_index, CGAL::Color> color;
-	bool created;
-	boost::tie(color, created) = mesh->add_property_map<Mesh::Vertex_index, CGAL::Color>("v:color");
-
-	for (auto v: mesh->vertices()) {
-		auto n = CGAL::Polygon_mesh_processing::compute_vertex_normal(v, *mesh);
-		Point_3 p = mesh->point(v);
-		FT tz = n.z();
-
-		// FT iz = interp(0, 360, tz);
-		CGAL::Color c;
-		if(tz <= 0.5) c = grey;
-		else if (tz > 0.5 & tz <= 0.85){
-				if ((p.z() / 55) < 0.05) c = giallastra;
-		 		else c = darkgreen;
-			}
-		else if (tz > 0.85 & tz <= 1){
-		 		if ((p.z() / 55) < 0.05) c = giallastra;
-		 		else c = green;
-		 	}
-
-		auto result = c.to_rgb();
-		c.set_rgb(result[0], result[1], result[2]);
-
-		color[v] = c;
-
-	}
-	logger.log(logtg::Level::INFO, "Mesh colored.");
-}
-
-// void tgen::Mesher::texturing(){
-// 	halfedge_descriptor bhd = CGAL::Polygon_mesh_processing::longest_border(*mesh).first;
-
-// 	typedef Mesh::Property_map<vertex_descriptor, Point_2> UV_pmap;
-// 	UV_pmap uvmap = mesh->add_property_map<vertex_descriptor, Point_2>("v:uv").first;
-
-// 	CGAL::Surface_mesh_parameterization::parameterize(*mesh, bhd, uvmap);
-// }
