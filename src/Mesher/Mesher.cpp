@@ -83,6 +83,15 @@ void tgen::Mesher::triangulate(Matrix<FT> &map, Matrix<FT> &humidity, Matrix<FT>
 
 	int count=0;
 
+	Mesh tree_mesh;
+
+	Mesh tree_map;
+
+	std::ifstream input(path_tree);
+	if (!input || !CGAL::IO::read_OBJ(input, tree_mesh)) {
+		std::cerr << "Errore nella lettura del file obj" << std::endl;
+	}
+
 	// triangolo le facce
 	for(int x0 = 0, x1 = 1; x1 < width; x0++, x1++) {
 		for(int y0 = 0, y1 = 1; y1 < height; y0++, y1++) {
@@ -118,7 +127,7 @@ void tgen::Mesher::triangulate(Matrix<FT> &map, Matrix<FT> &humidity, Matrix<FT>
 			auto normal1 = CGAL::Polygon_mesh_processing::compute_face_normal(f1, *mesh);
 			auto normal2 = CGAL::Polygon_mesh_processing::compute_face_normal(f2, *mesh);
 
-			if(count<20){
+			if(1){
 				if (normal1.z()>=0.7 && normal1.z() <=1){
 					
 					//generazione di numeri casuali tra 0 e 1
@@ -132,7 +141,16 @@ void tgen::Mesher::triangulate(Matrix<FT> &map, Matrix<FT> &humidity, Matrix<FT>
 						//random che deve essere maggiore di 0.5
 						if (num_ran>=0.9)
 						{
-							pnt2tree.push_back(p0);
+							CGAL::Aff_transformation_3<Kernel> transformation(CGAL::TRANSLATION, Vector(p0.hx(), p0.hy(), p0.hz()));
+							
+							CGAL::Polygon_mesh_processing::transform(transformation, tree_mesh);
+
+							mesh->join(tree_mesh);
+
+							CGAL::Aff_transformation_3<Kernel> reset_transformation(CGAL::TRANSLATION, Vector(-p0.hx(), -p0.hy(), -p0.hz()));
+							
+							CGAL::Polygon_mesh_processing::transform(reset_transformation, tree_mesh);
+							//pnt2tree.push_back(p0);
 							count++;
 						}
 					}
@@ -141,7 +159,16 @@ void tgen::Mesher::triangulate(Matrix<FT> &map, Matrix<FT> &humidity, Matrix<FT>
 						//random che deve essere maggiore di 0.8
 						if (num_ran>=0.95)
 						{
-							pnt2tree.push_back(p0);
+							CGAL::Aff_transformation_3<Kernel> transformation(CGAL::TRANSLATION, Vector(p0.hx(), p0.hy(), p0.hz()));
+							
+							CGAL::Polygon_mesh_processing::transform(transformation, tree_mesh);
+
+							mesh->join(tree_mesh);
+
+							CGAL::Aff_transformation_3<Kernel> reset_transformation(CGAL::TRANSLATION, Vector(-p0.hx(), -p0.hy(), -p0.hz()));
+							
+							CGAL::Polygon_mesh_processing::transform(reset_transformation, tree_mesh);
+							//pnt2tree.push_back(p0);
 							count++;
 						}
 					}
@@ -160,7 +187,16 @@ void tgen::Mesher::triangulate(Matrix<FT> &map, Matrix<FT> &humidity, Matrix<FT>
 						//random che deve essere maggiore di 0.5
 						if (num_ran>=0.9)
 						{
-							pnt2tree.push_back(p0);
+							CGAL::Aff_transformation_3<Kernel> transformation(CGAL::TRANSLATION, Vector(p0.hx(), p0.hy(), p0.hz()));
+							
+							CGAL::Polygon_mesh_processing::transform(transformation, tree_mesh);
+
+							mesh->join(tree_mesh);
+
+							CGAL::Aff_transformation_3<Kernel> reset_transformation(CGAL::TRANSLATION, Vector(-p0.hx(), -p0.hy(), -p0.hz()));
+							
+							CGAL::Polygon_mesh_processing::transform(reset_transformation, tree_mesh);
+							//pnt2tree.push_back(p0);
 							count++;
 						}
 					}
@@ -169,7 +205,17 @@ void tgen::Mesher::triangulate(Matrix<FT> &map, Matrix<FT> &humidity, Matrix<FT>
 						//random che deve essere maggiore di 0.8
 						if (num_ran>=0.95)
 						{
-							pnt2tree.push_back(p0);
+							CGAL::Aff_transformation_3<Kernel> transformation(CGAL::TRANSLATION, Vector(p0.hx(), p0.hy(), p0.hz()));
+							
+							CGAL::Polygon_mesh_processing::transform(transformation, tree_mesh);
+
+							mesh->join(tree_mesh);
+
+							CGAL::Aff_transformation_3<Kernel> reset_transformation(CGAL::TRANSLATION, Vector(-p0.hx(), -p0.hy(), -p0.hz()));
+							
+							CGAL::Polygon_mesh_processing::transform(reset_transformation, tree_mesh);
+
+							//pnt2tree.push_back(p0);
 							count++;
 						}
 					}
@@ -179,42 +225,7 @@ void tgen::Mesher::triangulate(Matrix<FT> &map, Matrix<FT> &humidity, Matrix<FT>
 		}
 	}
 
-	// Crea un oggetto Polyhedron vuoto
-	Mesh tree_mesh;
 
-	Mesh tree_map;
-	
-	int count_gen=0;
-    // Itera sulla lista e stampa i suoi elementi
-	for (auto it : pnt2tree) {
-		if(count_gen>=20){break;}
-		//auto transf = CGAL::Translation(it);
-		//CGAL::Aff_transformation_3<Kernel>
-		/*CGAL::Aff_transformation_3<Kernel> translate(1, 0, 0, it.x(),
-													 0, 1, 0, it.y(),
-													 0, 0, 1, it.z(),
-													 0, 0, 0, 1);
-*/		// Leggi il file .obj
-		std::ifstream input(path_tree);
-		if (!input || !CGAL::IO::read_OBJ(input, tree_mesh)) {
-		std::cerr << "Errore nella lettura del file obj" << std::endl;
-		}
-		// Crea una trasformazione di oggetti che sposterà la mesh in un punto specifico
-		CGAL::Aff_transformation_3<Kernel> transformation(CGAL::TRANSLATION, Vector(it.x(), it.y(), it.z()));
-		
-		// Applica la trasformazione alla mesh
-		//mesh->transform(transformation);
-		
-		CGAL::Polygon_mesh_processing::transform(transformation, tree_mesh);
-
-		// Applica la trasformazione all'albero
-		//CGAL::Polygon_mesh_processing::transform(transf, tree_mesh);
-		//CGAL::make_surface_mesh(mesh, tree_mesh);
-		mesh->join(tree_mesh);
-		input.close();
-		std::cout << it << std::endl;
-		count_gen++;
-	}
 	logger.log(logtg::Level::INFO, "Mesh created.");
 	printSummary();
 }
