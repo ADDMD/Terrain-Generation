@@ -98,12 +98,10 @@ public:
 	 */
 	void triangulate(std::vector<Point_3> points);
 
-	Point_3 crossProduct(Point_3 a, Point_3 b);
-
-	Point_3 findNormal(Point_3 p1, Point_3 p2, Point_3 p3);
-
 	/// Triangola una mappa di rumore
 	void triangulate(Matrix<FT> &map, Matrix<FT> &humidity, Matrix<FT> &temperature);
+
+	void joinAndTrasformTreeMesh(Mesh &mesh, Mesh tree_mesh, Point_3 p0);
 
 	void coloring();
 

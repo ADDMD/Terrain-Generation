@@ -1,5 +1,5 @@
-width: 50
-height: 50
+width: 400
+height: 400
 # Perlin: 0; Simplex: 1; Open: 2; Cellular: 3; FBM: 4.
 # CONTINENTALNESS
 continentalness: 0
@@ -32,7 +32,7 @@ refine: 0
 logging.file: ../main.log 
 logging.level: INFO
 # assets
-assets.tree: ../assets/lp90S.obj
+assets.tree: ../assets/lp-90S.obj
 # ulteriori
 continentalness.amplitude: 1
 continentalness.octaves: 1

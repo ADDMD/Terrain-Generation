@@ -141,15 +141,7 @@ void tgen::Mesher::triangulate(Matrix<FT> &map, Matrix<FT> &humidity, Matrix<FT>
 						//random che deve essere maggiore di 0.5
 						if (num_ran>=0.9)
 						{
-							CGAL::Aff_transformation_3<Kernel> transformation(CGAL::TRANSLATION, Vector(p0.hx(), p0.hy(), p0.hz()));
-							
-							CGAL::Polygon_mesh_processing::transform(transformation, tree_mesh);
-
-							mesh->join(tree_mesh);
-
-							CGAL::Aff_transformation_3<Kernel> reset_transformation(CGAL::TRANSLATION, Vector(-p0.hx(), -p0.hy(), -p0.hz()));
-							
-							CGAL::Polygon_mesh_processing::transform(reset_transformation, tree_mesh);
+							joinAndTrasformTreeMesh(*mesh, tree_mesh, p0);
 							//pnt2tree.push_back(p0);
 							count++;
 						}
@@ -159,15 +151,7 @@ void tgen::Mesher::triangulate(Matrix<FT> &map, Matrix<FT> &humidity, Matrix<FT>
 						//random che deve essere maggiore di 0.8
 						if (num_ran>=0.95)
 						{
-							CGAL::Aff_transformation_3<Kernel> transformation(CGAL::TRANSLATION, Vector(p0.hx(), p0.hy(), p0.hz()));
-							
-							CGAL::Polygon_mesh_processing::transform(transformation, tree_mesh);
-
-							mesh->join(tree_mesh);
-
-							CGAL::Aff_transformation_3<Kernel> reset_transformation(CGAL::TRANSLATION, Vector(-p0.hx(), -p0.hy(), -p0.hz()));
-							
-							CGAL::Polygon_mesh_processing::transform(reset_transformation, tree_mesh);
+							joinAndTrasformTreeMesh(*mesh, tree_mesh, p0);
 							//pnt2tree.push_back(p0);
 							count++;
 						}
@@ -187,15 +171,7 @@ void tgen::Mesher::triangulate(Matrix<FT> &map, Matrix<FT> &humidity, Matrix<FT>
 						//random che deve essere maggiore di 0.5
 						if (num_ran>=0.9)
 						{
-							CGAL::Aff_transformation_3<Kernel> transformation(CGAL::TRANSLATION, Vector(p0.hx(), p0.hy(), p0.hz()));
-							
-							CGAL::Polygon_mesh_processing::transform(transformation, tree_mesh);
-
-							mesh->join(tree_mesh);
-
-							CGAL::Aff_transformation_3<Kernel> reset_transformation(CGAL::TRANSLATION, Vector(-p0.hx(), -p0.hy(), -p0.hz()));
-							
-							CGAL::Polygon_mesh_processing::transform(reset_transformation, tree_mesh);
+							joinAndTrasformTreeMesh(*mesh, tree_mesh, p0);
 							//pnt2tree.push_back(p0);
 							count++;
 						}
@@ -205,16 +181,7 @@ void tgen::Mesher::triangulate(Matrix<FT> &map, Matrix<FT> &humidity, Matrix<FT>
 						//random che deve essere maggiore di 0.8
 						if (num_ran>=0.95)
 						{
-							CGAL::Aff_transformation_3<Kernel> transformation(CGAL::TRANSLATION, Vector(p0.hx(), p0.hy(), p0.hz()));
-							
-							CGAL::Polygon_mesh_processing::transform(transformation, tree_mesh);
-
-							mesh->join(tree_mesh);
-
-							CGAL::Aff_transformation_3<Kernel> reset_transformation(CGAL::TRANSLATION, Vector(-p0.hx(), -p0.hy(), -p0.hz()));
-							
-							CGAL::Polygon_mesh_processing::transform(reset_transformation, tree_mesh);
-
+							joinAndTrasformTreeMesh(*mesh, tree_mesh, p0);
 							//pnt2tree.push_back(p0);
 							count++;
 						}
@@ -229,6 +196,20 @@ void tgen::Mesher::triangulate(Matrix<FT> &map, Matrix<FT> &humidity, Matrix<FT>
 	logger.log(logtg::Level::INFO, "Mesh created.");
 	printSummary();
 }
+
+void tgen::Mesher::joinAndTrasformTreeMesh(Mesh &mesh, Mesh tree_mesh, Point_3 p0){
+
+	CGAL::Aff_transformation_3<Kernel> transformation(CGAL::TRANSLATION, Vector(p0.hx(), p0.hy(), p0.hz()));
+	
+	CGAL::Polygon_mesh_processing::transform(transformation, tree_mesh);
+
+	mesh.join(tree_mesh);
+
+	CGAL::Aff_transformation_3<Kernel> reset_transformation(CGAL::TRANSLATION, Vector(-p0.hx(), -p0.hy(), -p0.hz()));
+	
+	CGAL::Polygon_mesh_processing::transform(reset_transformation, tree_mesh);
+}
+
 
 tgen::Mesh* tgen::Mesher::getMesh() {
 	return mesh;
