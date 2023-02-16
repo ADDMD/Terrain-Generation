@@ -4,5 +4,6 @@ height: 100
 #
 data.path: ../data/
 data.extension: ply
+data.withTexture: 1
 logging.file: ../main.log 
 logging.level: INFO
