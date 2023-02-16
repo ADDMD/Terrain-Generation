@@ -36,7 +36,6 @@ void tgen::Terrain::texturing(){
 	// Create the property map, called "v:uv", for vertices' (u,v) coordinates [vertex v -> (u,v)]
 	Mesh::Property_map<vertex_descriptor, Point_2> uvmap = this->mesh.add_property_map<vertex_descriptor, Point_2>("v:uv").first;
 
-	// int firstTen = 0;
 	// Associate (u,v) coordinates to each mesh's vertex
 	for(vertex_descriptor v : vertices(this->mesh)){
 		// Get vertex's 3D point
@@ -45,18 +44,10 @@ void tgen::Terrain::texturing(){
 		tgen::FT vertexTemperature = getTemperature(p.x(), p.y());
 		// v coordinate
 		tgen::FT vertexHumidity = getHumidity(p.x(), p.y());
-
-		// if(firstTen < 10) {
-		// 	fmt::print("Vertice idx={}, ({},{})\n", v, p.x(), p.y());
-		// 	fmt::print("Temperature (u coord) = {}\n", vertexTemperature);
-		// 	fmt::print("Humidity (v coord) = {}\n", vertexHumidity);
-		// }
 		
 		// Update vertex's (u,v) coordinate
 		uvmap[v] = Point_2(vertexTemperature, vertexHumidity);
-		
 		// put(uvmap, v, Point_2(vertexTemperature, vertexHumidity));
-		// firstTen++;
 	}
 }
 
