@@ -128,7 +128,7 @@ void tgen::Mesher::triangulate(Matrix<FT> &map, Matrix<FT> &humidity, Matrix<FT>
 			auto normal2 = CGAL::Polygon_mesh_processing::compute_face_normal(f2, *mesh);
 
 			if(1){
-				if (normal1.z()>=0.7 && normal1.z() <=1){
+				if (normal1.z()>=0.8 && normal1.z() <=1){
 					
 					//generazione di numeri casuali tra 0 e 1
 					std::mt19937 generator(std::random_device{}());
@@ -139,7 +139,7 @@ void tgen::Mesher::triangulate(Matrix<FT> &map, Matrix<FT> &humidity, Matrix<FT>
 					if (temperature[x0][y0] < 0.7 && humidity[x0][y0] > 0.5){
 						//creazione albero con alta probabilità grazie ad un numero
 						//random che deve essere maggiore di 0.5
-						if (num_ran>=0.9)
+						if (num_ran>=0.90 && p0.hz()>15)
 						{
 							joinAndTrasformTreeMesh(*mesh, tree_mesh, p0);
 							//pnt2tree.push_back(p0);
@@ -149,7 +149,7 @@ void tgen::Mesher::triangulate(Matrix<FT> &map, Matrix<FT> &humidity, Matrix<FT>
 					else{
 						//creazione albero con alta probabilità grazie ad un numero
 						//random che deve essere maggiore di 0.8
-						if (num_ran>=0.95)
+						if (num_ran>=0.95 && p0.hz()>15)
 						{
 							joinAndTrasformTreeMesh(*mesh, tree_mesh, p0);
 							//pnt2tree.push_back(p0);
@@ -158,7 +158,7 @@ void tgen::Mesher::triangulate(Matrix<FT> &map, Matrix<FT> &humidity, Matrix<FT>
 					}
 				}
 
-				if (normal2.z()>=0.7 && normal2.z() <=1){
+				if (normal2.z()>=0.8 && normal2.z() <=1){
 
 					//generazione di numeri casuali tra 0 e 1
 					std::mt19937 generator(std::random_device{}());
@@ -169,7 +169,7 @@ void tgen::Mesher::triangulate(Matrix<FT> &map, Matrix<FT> &humidity, Matrix<FT>
 					if (temperature[x0][y0] < 0.7 && humidity[x0][y0] > 0.5){
 						//creazione albero con alta probabilità grazie ad un numero
 						//random che deve essere maggiore di 0.5
-						if (num_ran>=0.9)
+						if (num_ran>=0.90 && p0.hz()>15)
 						{
 							joinAndTrasformTreeMesh(*mesh, tree_mesh, p0);
 							//pnt2tree.push_back(p0);
@@ -179,7 +179,7 @@ void tgen::Mesher::triangulate(Matrix<FT> &map, Matrix<FT> &humidity, Matrix<FT>
 					else{
 						//creazione albero con alta probabilità grazie ad un numero
 						//random che deve essere maggiore di 0.8
-						if (num_ran>=0.95)
+						if (num_ran>=0.95 && p0.hz()>15)
 						{
 							joinAndTrasformTreeMesh(*mesh, tree_mesh, p0);
 							//pnt2tree.push_back(p0);
