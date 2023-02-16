@@ -1,40 +1,8 @@
-width: 400
-height: 400
-biome.size: 10000
+width: 100
+height: 100
 # Perlin: 0; Simplex: 1; Open: 2; Cellular: 3; FBM: 4.
-# # CONTINENTALNESS
-# continentalness.noise: 4
-# continentalness.amplitude: 10
-# continentalness.octaves: 2
-# continentalness.frequency: .01
-# continentalness.elevation: 1
-# # PICK AND VALLEY
-# pickNvalley.noise: 4
-# pickNvalley.amplitude: 50
-# pickNvalley.octaves: 6
-# pickNvalley.frequency: .015
-# pickNvalley.elevation: 2.5
-# # EROSION
-# erosion.noise: 4
-# erosion.amplitude: 5
-# erosion.octaves: 2
-# erosion.frequency: .01
-# erosion.elevation: 1
-# TEMPERATURE
-temperature.noise: 4
-temperature.amplitude: 1
-temperature.octaves: 1
-temperature.frequency: .005
-temperature.elevation: 1
-# HUMIDITY
-humidity.noise: 4
-humidity.amplitude: 1
-humidity.octaves: 1
-humidity.frequency: .005
-humidity.elevation: 1
 #
 data.path: ../data/
 data.extension: ply
-refine: 0
 logging.file: ../main.log 
 logging.level: INFO

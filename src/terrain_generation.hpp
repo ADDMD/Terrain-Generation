@@ -8,6 +8,17 @@
 #include "./Utility/Config.hpp"
 
 namespace tgen {
+	// colori utili per la stampa della mappa
+	static CGAL::Color green = CGAL::Color(115,169,102);
+	static CGAL::Color darkgreen = CGAL::Color(72,111,56);
+	static CGAL::Color grey = CGAL::Color(150,145,142);
+	static CGAL::Color white = CGAL::Color(255,255,255);
+	static CGAL::Color blue = CGAL::Color(68,68,122,255);
+	static CGAL::Color giallastra = CGAL::Color(247,218,158,255);
+	static CGAL::Color snow = CGAL::Color(255,250,250);
+	static CGAL::Color mountain = CGAL::Color(151,124,83);
+	static CGAL::Color grass = CGAL::Color(126, 200, 80);
+
 	/// kernel
 	typedef CGAL::Cartesian<double> Kernel;
 

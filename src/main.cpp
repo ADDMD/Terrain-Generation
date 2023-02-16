@@ -9,7 +9,6 @@
 #include <string>
 
 #include <fmt/format.h>
-
 #include <CGAL/IO/OBJ.h>
 
 int main(int argc, char const *argv[])

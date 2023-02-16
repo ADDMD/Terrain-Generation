@@ -14,43 +14,29 @@ tgen::Terrain tgen::TerrainGenerator::generateTerrain(unsigned int seed){
 
 	std::map<std::string, Matrix<FT>> biomeMaps = generateMaps(width, height, seed);
 	std::map<std::string, Matrix<FT>> humNtemp = generateHumNTemp(width, height, seed);
-	auto map = generateMatrix<FT>(width, height);
+
+	auto finalMap = generateMatrix<FT>(width, height);
 
 	for(int i = 0; i < width; i++){
 		for(int j = 0; j < height; j++){
-			std::string biomeName = getBiomeName(assignBiomeType(humNtemp["humidity"][i][j], humNtemp["temperature"][i][j]));
-			map[i][j] = biomeMaps[biomeName][i][j];
+			auto biome = assignBiomeType(humNtemp["humidity"][i][j], humNtemp["temperature"][i][j]);
+			finalMap[i][j] = biomeMaps[getBiomeName(biome)][i][j];
+			double hum = humNtemp["humidity"][i][j];
+			double tem = humNtemp["temperature"][i][j];
+			finalMap[i][j] =  biomeMaps["montagne"][i][j] * computeDistanceFromBiome(Mountains, hum, tem) +
+							  biomeMaps["deserto"][i][j] * computeDistanceFromBiome(Desert, hum, tem) +
+							  biomeMaps["colline"][i][j] * computeDistanceFromBiome(Hills, hum, tem) +
+							  biomeMaps["pianura"][i][j] * computeDistanceFromBiome(Plains, hum, tem);
 		}
-	}
-	for(int i = 0; i < width; i++){
-		for(int j = 0; j < height; j++){
-			double interpValue = 1;
-			int window = 20;
-			for(int x = - window / 2; x < window / 2; x++){
-				for(int y = - window / 2; y < window / 2; y++){
-					if(isInBound(i + x, j + y, width, height)){
-						double diff_heigth = map[i][j] - map[i + x][j + y];
-						// if(diff_heigth > 5)
-						if((abs(x) + abs(y)) != 0)
-							map[i][j] = interp(map[i][j], map[i + x][j + y], interpValue / (abs(x)+abs(y)));
-					}
-				}
-			}
-		}
+
 	}
 	tgen::Mesher mr;
-	mr.triangulate(map);
+	mr.triangulate(finalMap);
 
-	// // il refine allunga i tempi (circa 100s in più per una 100x100)
-	// if(std::stoi(conf["refine"]) == 1)
-	// 	mr.refine(); 
-
-	mr.coloring();
-	// mr.texturing();
-
+	// mr.refine();
 	tgen::Mesh mesh = *mr.getMesh();
 
-	this->terrain = Terrain(mesh, map, humNtemp["humidity"], humNtemp["temperature"]);
+	this->terrain = Terrain("Terreno finale", mesh, finalMap, humNtemp["humidity"], humNtemp["temperature"]);
 	return this->terrain;
 }
 
@@ -80,6 +66,35 @@ std::map<std::string, tgen::Matrix<tgen::FT>> tgen::TerrainGenerator::generateHu
 		fmt::print("Creato: {}\n", type);
 		maps.insert({type, map});
 	}
+
+	unsigned char image[height][width][BYTES_PER_PIXEL];
+    char* imageFileName = (char*) "bitmapImage.bmp";
+    char* mapFileName;
+    strcpy(mapFileName, fmt::format("{}{}{}", "../data/", seed, imageFileName).c_str());
+    int i, j;
+    for (i = 0; i < height; i++) {
+        for (j = 0; j < width; j++) {
+        	auto temp = maps["temperature"][i][j];
+        	auto hum = maps["humidity"][i][j];
+        	CGAL::Color c;
+        	if(hum < .5 &&  temp < .5) {
+				c = mountain;
+			} else if(hum >= .5 && temp < .5) {
+				c = darkgreen;
+			} else if(hum < .5 && temp >= .5) {
+				c = grey;
+			} else {
+				c = grass;
+			}
+			auto result = c.to_rgb();
+			c.set_rgb(result[0], result[1], result[2]);
+            image[i][j][2] = c.r(); ///red
+            image[i][j][1] = c.g(); ///green
+            image[i][j][0] = c.b(); ///blue
+        }
+    }
+
+    generateBitmapImage((unsigned char*) image, height, width, mapFileName);
 	return maps;
 }
 
@@ -118,73 +133,63 @@ std::map<std::string, tgen::Matrix<tgen::FT>> tgen::TerrainGenerator::generateMa
 				typeMap[i][j] = generativeMaps["continentalness"][i][j] + generativeMaps["picknvalley"][i][j] - generativeMaps["erosion"][i][j];
 			}
 		}
+	
 		fmt::print("Creato: {}\n", type);
 		maps.insert({type, typeMap});
 	}
 	return maps;
 }
 
-bool tgen::TerrainGenerator::isInBound(int x, int y, int sizeX, int sizeY) {
-	return 0 <= x && x < sizeX 
-		&& 0 <= y && y < sizeY;
-}
-
-tgen::Biome::BiomeType tgen::TerrainGenerator::assignBiomeType(FT humidityValue, FT temperatureValue) {
-	Biome::BiomeType result;
+tgen::TerrainGenerator::BiomeType tgen::TerrainGenerator::assignBiomeType(FT humidityValue, FT temperatureValue) {
+	BiomeType result;
 
 	if(humidityValue < .5 && temperatureValue < .5) {
-		result = Biome::BiomeType::Mountains;
+		result = BiomeType::Mountains;
 	} else if(humidityValue >= .5 && temperatureValue < .5) {
-		result = Biome::BiomeType::Desert;
+		result = BiomeType::Hills;
 	} else if(humidityValue < .5 && temperatureValue >= .5) {
-		result = Biome::BiomeType::Hills;
+		result = BiomeType::Desert;
 	} else {
-		result = Biome::BiomeType::Plains;
+		result = BiomeType::Plains;
 	}
 
 	return result;
 }
-std::string tgen::TerrainGenerator::getBiomeName(Biome::BiomeType biomeType){
+
+tgen::FT tgen::TerrainGenerator::computeDistanceFromBiome(BiomeType biomeType, FT hum, FT temp){
+	FT result;
+	switch (biomeType) {
+	case Mountains:
+		result = (hum * hum + temp * temp); 
+		break;
+	case Desert:
+		result = (hum * hum + (temp -1) * (temp - 1)); 
+		break;
+	case Hills:
+		result = ((hum - 1) * (hum - 1) + temp * temp); 
+		break;
+	case Plains:
+		result = ((hum - 1) * (hum - 1) + (temp -1) * (temp - 1)); 
+		break;
+	}
+	return 1 - (result / 2);
+}
+
+std::string tgen::TerrainGenerator::getBiomeName(BiomeType biomeType){
 	std::string result;
 	switch (biomeType) {
-	case Biome::Mountains:
+	case Mountains:
 		result = "montagne"; 
 		break;
-	case Biome::Desert:
+	case Desert:
 		result = "deserto"; 
 		break;
-	case Biome::Hills:
+	case Hills:
 		result = "colline"; 
 		break;
-	case Biome::Plains:
+	case Plains:
 		result = "pianura"; 
 		break;
 	}
 	return result;
 }
-
-std::tuple<tgen::FT, tgen::FT, tgen::FT> tgen::TerrainGenerator::getBiomeParam(Biome::BiomeType biomeType) {
-	std::tuple<FT, FT, FT> result(1, 1, 1);
-
-	switch (biomeType) {
-	case Biome::Mountains:
-		result = std::tuple<FT, FT, FT>(1, 5, 5); 
-		break;
-	case Biome::Desert:
-		result = std::tuple<FT, FT, FT>(1, 1, 5); 
-		break;
-	case Biome::Hills:
-		result = std::tuple<FT, FT, FT>(1, 5, 1); 
-		break;
-	case Biome::Plains:
-		result = std::tuple<FT, FT, FT>(1, 1, 1); 
-		break;
-	}
-	return result;
-}
-
-
-
-
-
-

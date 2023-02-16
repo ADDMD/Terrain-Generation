@@ -3,7 +3,6 @@
 #include "../Mesher/Mesher.hpp"
 #include "../Utility/Config.hpp"
 #include "./Terrain.hpp"
-#include "./Biome.hpp"
 
 #include <fstream>
 #include <fmt/format.h>
@@ -15,13 +14,17 @@
 
 class tgen::TerrainGenerator {
 
+	enum BiomeType {
+		Mountains = 0,
+		Hills,
+		Desert,
+		Plains
+	};
+	
 	tgen::Terrain terrain;
 
-	Biome::BiomeType assignBiomeType(FT humidityValue, FT temperatureValue);
+	BiomeType assignBiomeType(FT humidityValue, FT temperatureValue);
 
-	std::tuple<FT, FT, FT> getBiomeParam(Biome::BiomeType biomeType);
-
-	bool isInBound(int x, int y, int sizeX, int sizeY);
 
 public:
 	TerrainGenerator() {}
@@ -32,6 +35,7 @@ public:
 	}
 	std::map<std::string, Matrix<FT>> generateMaps(int width, int height, unsigned int seed);
 	std::map<std::string, Matrix<FT>> generateHumNTemp(int width, int height, unsigned int seed);
-	std::string getBiomeName(Biome::BiomeType biomeType);
+	FT computeDistanceFromBiome(BiomeType biomeType, FT hum, FT temp);
+	std::string getBiomeName(BiomeType biomeType);
 
 };
