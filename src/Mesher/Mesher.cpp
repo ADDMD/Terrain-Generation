@@ -3,14 +3,11 @@
 #include <map>
 
 #include <CGAL/Advancing_front_surface_reconstruction.h>
-#include <CGAL/Polygon_mesh_processing/remesh.h>
-#include <CGAL/Polygon_mesh_processing/refine.h>
-#include <CGAL/Polygon_mesh_processing/measure.h>
-#include <CGAL/marching_tetrahedra_3.h>
 #include <CGAL/Polygon_mesh_processing/measure.h>
 #include <CGAL/Polygon_mesh_processing/smooth_shape.h>
+#include <CGAL/Polygon_mesh_processing/refine.h>
+#include <CGAL/Polygon_mesh_processing/remesh.h>
 
-#include <CGAL/Surface_mesh_parameterization/parameterize.h>
 #include <fmt/format.h>
 
 // TODO: prendere spunti da https://www.youtube.com/watch?v=CSa5O6knuwI

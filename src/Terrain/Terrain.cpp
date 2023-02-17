@@ -1,4 +1,6 @@
 #include "./Terrain.hpp"
+#include <CGAL/Polygon_mesh_processing/compute_normal.h>
+#define _USE_MATH_DEFINES
 
 tgen::Terrain::Terrain(){}
 tgen::Terrain::Terrain(std::string name, tgen::Mesh mesh, Matrix<FT> terrainMap, Matrix<FT> humidity, Matrix<FT> temperature){
@@ -45,9 +47,16 @@ void tgen::Terrain::texturing(){
 		tgen::FT vertexTemperature = getTemperature(p.x(), p.y());
 		// v coordinate
 		tgen::FT vertexHumidity = getHumidity(p.x(), p.y());
+
+		auto normal = CGAL::Polygon_mesh_processing::compute_vertex_normal(v, mesh);
+
+		double radialX = (1 + cos((5/4 * M_PI) + 2 * M_PI * vertexTemperature) * (1 - normal.z())) / 2;
+		double radialY = (1 + sin((5/4 * M_PI) + 2 * M_PI * vertexHumidity) * (1 - normal.z())) / 2;
+
+		Point_2 uv = Point_2(radialX, radialY);
 		
 		// Update vertex's (u,v) coordinate
-		uvmap[v] = Point_2(vertexTemperature, vertexHumidity);
+		uvmap[v] = uv;
 		// put(uvmap, v, Point_2(vertexTemperature, vertexHumidity));
 	}
 }
