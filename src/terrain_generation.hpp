@@ -23,7 +23,7 @@ namespace tgen {
 	typedef CGAL::Cartesian<double> Kernel;
 
 	/// kernel per calcoli più precisi
-	// typedef CGAL::Exact_predicates_inexact_constructions_kernel Kernel;
+	//typedef CGAL::Exact_predicates_inexact_constructions_kernel Kernel;
 
 	/// punto 2D
 	typedef Kernel::Point_2 Point_2;

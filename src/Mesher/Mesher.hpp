@@ -3,9 +3,24 @@
 
 #include "../terrain_generation.hpp"
 
+#include <cmath>
+#include <random>
 #include <array>
+#include <map>
 
 #include <fmt/format.h>
+
+#include <CGAL/Polygon_mesh_processing/measure.h>
+#include <CGAL/Polygon_mesh_processing/smooth_shape.h>
+#include <CGAL/Polygon_mesh_processing/refine.h>
+
+#include <CGAL/Polygon_mesh_processing/remesh.h>
+
+//necessario per lettura di file .obj
+//#include <CGAL/Three/reader/OBJ.h>
+#include <CGAL/aff_transformation_tags.h>
+#include <CGAL/Aff_transformation_3.h>
+#include <CGAL/Polygon_mesh_processing/transform.h>
 
 
 /// Mesher
@@ -88,7 +103,9 @@ public:
 	void triangulate(std::vector<Point_3> points);
 
 	/// Triangola una mappa di rumore
-	void triangulate(Matrix<FT> map);
+	void triangulate(Matrix<FT> &map);
+
+	void joinAndTrasformTreeMesh(Mesh &mesh, Mesh tree_mesh, Point_3 p0);
 
 	void texturing();
 

@@ -1,17 +1,6 @@
 #include "Mesher.hpp"
 
-#include <map>
-
 #include <CGAL/Advancing_front_surface_reconstruction.h>
-#include <CGAL/Polygon_mesh_processing/measure.h>
-#include <CGAL/Polygon_mesh_processing/smooth_shape.h>
-#include <CGAL/Polygon_mesh_processing/refine.h>
-#include <CGAL/Polygon_mesh_processing/remesh.h>
-
-#include <fmt/format.h>
-
-// TODO: prendere spunti da https://www.youtube.com/watch?v=CSa5O6knuwI
-
 
 tgen::Mesher::Mesher() {}
 
@@ -38,13 +27,16 @@ void tgen::Mesher::triangulate(std::vector<Point_3> points) {
  *
  *	I vertici delle facce sono definiti in senso antiorario
  */
-void tgen::Mesher::triangulate(Matrix<FT> map) {
+void tgen::Mesher::triangulate(Matrix<FT> &map) {
+
 	unsigned int width = map.size();
 	unsigned int height = map[0].size();
 
 	mesh = new Mesh();
 	
 	std::map<Point_3, Mesh::vertex_index> pnt2idx;
+	// Crea una Point_3 per i punti in cui verrà aggiunto un albero
+  	std::list<Point_3> pnt2tree;
 	auto points = generateMatrix<Point_3>(width, height);
 	// aggiungo tutti i punti alla mesh come vertici
 	for(int x = 0; x < width; x++) {
@@ -75,28 +67,37 @@ void tgen::Mesher::triangulate(Matrix<FT> map) {
 			// mesh->add_face(v0, v2, v3); // f2
 
 			// clockwise orientation
-			mesh->add_face(v0, v1, v3); // f1
-			mesh->add_face(v0, v3, v2); // f2
-
+			auto f1 = mesh->add_face(v0, v1, v3); // f1
+			auto f2 = mesh->add_face(v0, v3, v2); // f2
 		}
 	}
+
 	logger.log(logtg::Level::INFO, "Mesh created.");
 	printSummary();
 }
 
+void tgen::Mesher::joinAndTrasformTreeMesh(Mesh &mesh, Mesh tree_mesh, Point_3 p0){
+
+	CGAL::Aff_transformation_3<Kernel> transformation(CGAL::TRANSLATION, Vector(p0.hx(), p0.hy(), p0.hz()));
+	
+	CGAL::Polygon_mesh_processing::transform(transformation, tree_mesh);
+
+	mesh.join(tree_mesh);
+
+	CGAL::Aff_transformation_3<Kernel> reset_transformation(CGAL::TRANSLATION, Vector(-p0.hx(), -p0.hy(), -p0.hz()));
+	
+	CGAL::Polygon_mesh_processing::transform(reset_transformation, tree_mesh);
+}
 
 tgen::Mesh* tgen::Mesher::getMesh() {
 	return mesh;
 }
-
 
 void tgen::Mesher::printSummary() {
 	logger.log(logtg::Level::INFO, 
 		fmt::format("Mesh summary: Vertices: {}; Edges: {}; Faces: {}.",
 		mesh->number_of_vertices(), mesh->number_of_edges(), mesh->number_of_faces()));
 }
-
-
 
 void tgen::Mesher::refine() {
 	CGAL::Polygon_mesh_processing::split_long_edges(mesh->edges(), 1.5, *mesh);

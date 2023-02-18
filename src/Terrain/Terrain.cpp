@@ -3,47 +3,24 @@
 #define _USE_MATH_DEFINES
 
 tgen::Terrain::Terrain(){}
-tgen::Terrain::Terrain(std::string name, tgen::Mesh mesh, Matrix<FT> terrainMap, Matrix<FT> humidity, Matrix<FT> temperature){
+tgen::Terrain::Terrain(std::string name, tgen::Mesh terrainMesh, tgen::Mesh treeMesh, Matrix<FT> terrainMap, Matrix<FT> humidity, Matrix<FT> temperature){
 	this->name = name;
-	this->mesh = mesh;
+	this->terrainMesh = terrainMesh;
+	this->treeMesh = treeMesh;
 	this->terrainMap = terrainMap;
 	this->humidity = humidity;
 	this->temperature = temperature;
 }
 
-tgen::Mesh tgen::Terrain::getMesh(){
-	return this->mesh;
-}
-
-tgen::FT tgen::Terrain::getHeigth(int x, int y){
-	return this->terrainMap[x][y];
-}
-
-tgen::Matrix<tgen::FT> tgen::Terrain::getHumidity(){
-	return this->humidity;
-}
-
-tgen::FT tgen::Terrain::getHumidity(int x, int y){
-	return this->humidity[x][y];
-}
-
-tgen::Matrix<tgen::FT> tgen::Terrain::getTemperature(){
-	return this->temperature;
-}
-
-tgen::FT tgen::Terrain::getTemperature(int x, int y){
-	return this->temperature[x][y];
-}
-
 void tgen::Terrain::texturing(){
 	// Create the property map, called "v:uv", for vertices' (u,v) coordinates [vertex v -> (u,v)]
-	Mesh::Property_map<vertex_descriptor, Point_2> uvmap = this->mesh.add_property_map<vertex_descriptor, Point_2>("v:uv").first;
+	Mesh::Property_map<vertex_descriptor, Point_2> uvmap = this->terrainMesh.add_property_map<vertex_descriptor, Point_2>("v:uv").first;
 
-	// Associate (u,v) coordinates to each mesh's vertex
-	for(vertex_descriptor vert : vertices(this->mesh)){
+	// Associate (u,v) coordinates to each terrainMesh's vertex
+	for(vertex_descriptor vert : vertices(this->terrainMesh)){
 		// Get vertex's 3D point
-		Point_3 p = this->mesh.point(vert);
-		auto normal = CGAL::Polygon_mesh_processing::compute_vertex_normal(vert, mesh);
+		Point_3 p = this->terrainMesh.point(vert);
+		auto normal = CGAL::Polygon_mesh_processing::compute_vertex_normal(vert, this->terrainMesh);
 
 
 		// Calcoli effettuati grazie al grandioso contributo di
@@ -75,16 +52,19 @@ void tgen::Terrain::save(std::string filePath){
 
 	std::ofstream out(final_path);
 	if(ext == "ply")
-		CGAL::IO::write_PLY(out, mesh);			// formato .ply
+		CGAL::IO::write_PLY(out, this->terrainMesh);			// formato .ply
 	else if (ext == "obj")
-		CGAL::IO::write_OBJ(out, mesh);			// formato .obj
+		CGAL::IO::write_OBJ(out, this->terrainMesh);			// formato .obj
 	else if(ext == "off")
-		out << mesh; 							// formato .off
+		out << this->terrainMesh; 							// formato .off
 
 	out.close();	
 }
 
 void tgen::Terrain::saveWithTexture(std::string filePath, std::string materialFileName){
-	std::ofstream out(filePath);
-	write_OBJ_MTL(out, mesh, materialFileName, CGAL::parameters::vertex_texture_map(mesh.property_map<vertex_descriptor, Point_2>("v:uv").first));
+	std::ofstream terrainOut(filePath);
+	int position=filePath.find_last_of(".");
+	std::ofstream treeOut(fmt::format("{}_tree.{}", filePath.substr(0, position-1), filePath.substr(position+1)));
+	write_OBJ_MTL(terrainOut, this->terrainMesh, materialFileName, CGAL::parameters::vertex_texture_map(this->terrainMesh.property_map<vertex_descriptor, Point_2>("v:uv").first));
+	CGAL::IO::write_OBJ(treeOut, this->treeMesh);
 }

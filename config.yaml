@@ -6,5 +6,6 @@ data.path: ../data/
 data.extension: ply
 data.withTexture: 1
 data.mtl: ../data/biomi.mtl
+assets.tree: ../assets/trees_placeholder90.obj
 logging.file: ../main.log 
 logging.level: INFO

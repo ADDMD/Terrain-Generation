@@ -5,7 +5,7 @@
 *.slo
 *.lo
 *.o
-*.obj
+#*.obj
 
 # Precompiled Headers
 *.gch
@@ -51,7 +51,7 @@ test/data/*
 #
 *.jpg
 *.jpeg
-*.obj
+#*.obj
 *.ply
 *.sublime-workspace
 *.off

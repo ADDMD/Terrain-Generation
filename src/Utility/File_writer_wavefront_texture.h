@@ -59,7 +59,7 @@ public:
   void write_footer() const { out() << "\n# End of Wavefront obj format #" << std::endl; }
 
   void write_vertex(const double x, const double y, const double z) {
-    out() << "v " << CGAL::IO::oformat(-x) << ' ' << CGAL::IO::oformat(y) << ' ' << CGAL::IO::oformat(z) << '\n';
+    out() << "v " << CGAL::IO::oformat(x) << ' ' << CGAL::IO::oformat(y) << ' ' << CGAL::IO::oformat(z) << '\n';
   }
 
   void write_vertex_normal(const double x, const double y, const double z) {

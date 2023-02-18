@@ -16,24 +16,75 @@ tgen::Terrain tgen::TerrainGenerator::generateTerrain(unsigned int seed){
 	std::map<std::string, Matrix<FT>> humNtemp = generateHumNTemp(width, height, seed);
 
 	auto finalMap = generateMatrix<FT>(width, height);
+	auto humidity = humNtemp["humidity"];
+	auto temperature = humNtemp["temperature"];
 
 	for(int i = 0; i < width; i++){
 		for(int j = 0; j < height; j++){
-			double hum = humNtemp["humidity"][i][j];
-			double tem = humNtemp["temperature"][i][j];
+			double hum = humidity[i][j];
+			double tem = temperature[i][j];
 			std::vector<BiomeType> biomes = {Mountains, Desert, Hills, Plains};
 			for(auto biome: biomes){
 				finalMap[i][j] += biomeMaps[getBiomeName(biome)][i][j] * computeDistanceFromBiome(biome, hum, tem);
 			}
 		}
 	}
+
 	tgen::Mesher mr;
 	mr.triangulate(finalMap);
 
 	// mr.refine();
 	tgen::Mesh mesh = *mr.getMesh();
 
-	this->terrain = Terrain("Terreno finale", mesh, finalMap, humNtemp["humidity"], humNtemp["temperature"]);
+	std::string path_tree = conf["assets.tree"];
+	std::ifstream input(path_tree);
+	Mesh treeMesh;
+
+	Mesh treeMapMesh;
+
+	if (!input || !CGAL::IO::read_OBJ(input, treeMesh)) {
+		std::cerr << "Errore nella lettura del file obj" << std::endl;
+	}
+
+	for(auto v : mesh.vertices()){
+			auto normal = CGAL::Polygon_mesh_processing::compute_vertex_normal(v, mesh);
+
+			if (normal.z() >= 0.8){
+				
+				//generazione di numeri casuali tra 0 e 1
+				std::mt19937 generator(std::random_device{}());
+				std::uniform_real_distribution<double> distribution(0, 1);
+				//generazione numero casuale
+				auto num_ran = distribution(generator);
+
+				Point_3 point = mesh.point(v);
+				auto x = point.x();
+				auto y = point.y();
+				double spawningThreshold;
+				switch (assignBiomeType(humidity[x][y], temperature[x][y])) {
+				case Mountains: 
+					if(point.z() > 30) spawningThreshold = 0.98;
+					else spawningThreshold = 0.95;
+					break;
+				case Hills:
+					if(point.z() > 20) spawningThreshold = 0.95;
+					else spawningThreshold = 0.90;
+					break;
+				case Plains:
+					spawningThreshold = 0.85;
+					break;
+				case Desert:
+					spawningThreshold = 1;
+					break;
+				}
+				if (num_ran > spawningThreshold)
+					{
+						mr.joinAndTrasformTreeMesh(treeMapMesh, treeMesh, point);
+					}
+			}
+	}
+
+	this->terrain = Terrain("Terreno finale", mesh, treeMapMesh, finalMap, humNtemp["humidity"], humNtemp["temperature"]);
 	this->terrain.texturing();
 	return this->terrain;
 }

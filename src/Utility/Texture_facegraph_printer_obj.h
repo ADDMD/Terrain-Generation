@@ -140,8 +140,8 @@ public:
                           has_face_colors || has_vertex_colors,
                           has_vertex_normals                  ,
                           has_vertex_textures                 );
-
-    m_writer.write_mtllib(materialFileName);
+    if(has_vertex_textures)
+      m_writer.write_mtllib(materialFileName);
 
     vertices_size_type id = 0;
 
@@ -167,8 +167,8 @@ public:
       if(has_vertex_textures)
         tw(m_writer, v);
     }
-
-    m_writer.write_usemtl();
+    if(has_vertex_textures)
+      m_writer.write_usemtl();
 
     m_writer.write_facet_header();
     for(const face_descriptor f : faces(g))

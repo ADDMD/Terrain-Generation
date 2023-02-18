@@ -1,9 +1,12 @@
 #include "../terrain_generation.hpp"
 #include "../Utility/OBJ.h"
+#include <CGAL/Polygon_mesh_processing/measure.h>
+#include <CGAL/Surface_mesh_parameterization/parameterize.h>
 
 class tgen::Terrain{
 
-	Mesh mesh;
+	Mesh terrainMesh;
+	Mesh treeMesh;
 	std::string name;
 
 	Matrix<FT> terrainMap;
@@ -12,14 +15,35 @@ class tgen::Terrain{
 
 public:
 	Terrain();
-	Terrain(std::string name, Mesh mesh, Matrix<FT> terrainMap, Matrix<FT> humidity, Matrix<FT> temperature);
+	Terrain(std::string name, Mesh terrainMesh, Mesh treeMesh, Matrix<FT> terrainMap, Matrix<FT> humidity, Matrix<FT> temperature);
 
-	Mesh getMesh();
-	FT getHeigth(int x, int y);
-	Matrix<FT> getHumidity();
-	FT getHumidity(int x, int y);
-	Matrix<FT> getTemperature();
-	FT getTemperature(int x, int y);
+	Mesh getTerrainMesh(){
+		return this->terrainMesh;
+	}
+
+	Mesh getTreeMesh(){
+		return this->treeMesh;
+	}
+
+	FT getHeigth(int x, int y){
+		return this->terrainMap[x][y];
+	}
+
+	Matrix<FT> getHumidity(){
+		return this->humidity;
+	}
+
+	FT getHumidity(int x, int y){
+		return this->humidity[x][y];
+	}
+
+	Matrix<FT> getTemperature(){
+		return this->temperature;
+	}
+
+	FT getTemperature(int x, int y){
+		return this->temperature[x][y];
+	}
 
 	/** Associate (u,v) coordinates to mesh vertices 
 	 * 
