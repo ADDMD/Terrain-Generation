@@ -19,16 +19,13 @@ tgen::Terrain tgen::TerrainGenerator::generateTerrain(unsigned int seed){
 
 	for(int i = 0; i < width; i++){
 		for(int j = 0; j < height; j++){
-			auto biome = assignBiomeType(humNtemp["humidity"][i][j], humNtemp["temperature"][i][j]);
-			finalMap[i][j] = biomeMaps[getBiomeName(biome)][i][j];
 			double hum = humNtemp["humidity"][i][j];
 			double tem = humNtemp["temperature"][i][j];
-			finalMap[i][j] =  biomeMaps["montagne"][i][j] * computeDistanceFromBiome(Mountains, hum, tem) +
-							  biomeMaps["deserto"][i][j] * computeDistanceFromBiome(Desert, hum, tem) +
-							  biomeMaps["colline"][i][j] * computeDistanceFromBiome(Hills, hum, tem) +
-							  biomeMaps["pianura"][i][j] * computeDistanceFromBiome(Plains, hum, tem);
+			std::vector<BiomeType> biomes = {Mountains, Desert, Hills, Plains};
+			for(auto biome: biomes){
+				finalMap[i][j] += biomeMaps[getBiomeName(biome)][i][j] * computeDistanceFromBiome(biome, hum, tem);
+			}
 		}
-
 	}
 	tgen::Mesher mr;
 	mr.triangulate(finalMap);
@@ -68,13 +65,13 @@ std::map<std::string, tgen::Matrix<tgen::FT>> tgen::TerrainGenerator::generateHu
 		maps.insert({type, map});
 	}
 
-	unsigned char image[height][width][BYTES_PER_PIXEL];
+	unsigned char image[width][height][BYTES_PER_PIXEL];
     char* imageFileName = (char*) "bitmapImage.bmp";
     char* mapFileName;
     strcpy(mapFileName, fmt::format("{}{}{}", "../data/", seed, imageFileName).c_str());
     int i, j;
-    for (i = 0; i < height; i++) {
-        for (j = 0; j < width; j++) {
+    for (i = 0; i < width; i++) {
+        for (j = 0; j < height; j++) {
         	auto temp = maps["temperature"][i][j];
         	auto hum = maps["humidity"][i][j];
         	CGAL::Color c;
@@ -87,6 +84,7 @@ std::map<std::string, tgen::Matrix<tgen::FT>> tgen::TerrainGenerator::generateHu
 			} else {
 				c = grass;
 			}
+
 			auto result = c.to_rgb();
 			c.set_rgb(result[0], result[1], result[2]);
             image[i][j][2] = c.r(); ///red
@@ -173,7 +171,7 @@ tgen::FT tgen::TerrainGenerator::computeDistanceFromBiome(BiomeType biomeType, F
 		result = ((hum - 1) * (hum - 1) + (temp -1) * (temp - 1)); 
 		break;
 	}
-	return 1 - (result / 2);
+	return 1 - (result * result * result / 8);
 }
 
 std::string tgen::TerrainGenerator::getBiomeName(BiomeType biomeType){

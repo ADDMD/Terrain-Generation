@@ -40,23 +40,26 @@ void tgen::Terrain::texturing(){
 	Mesh::Property_map<vertex_descriptor, Point_2> uvmap = this->mesh.add_property_map<vertex_descriptor, Point_2>("v:uv").first;
 
 	// Associate (u,v) coordinates to each mesh's vertex
-	for(vertex_descriptor v : vertices(this->mesh)){
+	for(vertex_descriptor vert : vertices(this->mesh)){
 		// Get vertex's 3D point
-		Point_3 p = this->mesh.point(v);
+		Point_3 p = this->mesh.point(vert);
+		auto normal = CGAL::Polygon_mesh_processing::compute_vertex_normal(vert, mesh);
+
+
+		// Calcoli effettuati grazie al grandioso contributo di
+		// https://math.stackexchange.com/questions/2049179/mapping-from-a-unit-square-to-a-unit-circle-and-more-generally-to-an-ellipse
+		
 		// u coordinate
-		tgen::FT vertexTemperature = getTemperature(p.x(), p.y());
+		tgen::FT u = getTemperature(p.x(), p.y()) - 0.5;
 		// v coordinate
-		tgen::FT vertexHumidity = getHumidity(p.x(), p.y());
-
-		auto normal = CGAL::Polygon_mesh_processing::compute_vertex_normal(v, mesh);
-
-		double radialX = (1 + cos((5/4 * M_PI) + 2 * M_PI * vertexTemperature) * (1 - normal.z())) / 2;
-		double radialY = (1 + sin((5/4 * M_PI) + 2 * M_PI * vertexHumidity) * (1 - normal.z())) / 2;
-
+		tgen::FT v = getHumidity(p.x(), p.y()) - 0.5;
+		double s = 2 * sqrt(u*u + v*v);
+		double radialX = u * ((1-normal.z())*0.95 + 0.05)/ s + .5;
+		double radialY = v * ((1-normal.z())*0.95 + 0.05)/ s + .5;
 		Point_2 uv = Point_2(radialX, radialY);
 		
 		// Update vertex's (u,v) coordinate
-		uvmap[v] = uv;
+		uvmap[vert] = uv;
 		// put(uvmap, v, Point_2(vertexTemperature, vertexHumidity));
 	}
 }

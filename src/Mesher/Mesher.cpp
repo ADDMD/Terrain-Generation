@@ -46,7 +46,6 @@ void tgen::Mesher::triangulate(Matrix<FT> map) {
 	
 	std::map<Point_3, Mesh::vertex_index> pnt2idx;
 	auto points = generateMatrix<Point_3>(width, height);
-
 	// aggiungo tutti i punti alla mesh come vertici
 	for(int x = 0; x < width; x++) {
 		for(int y = 0; y < height; y++) {
