@@ -1,0 +1,12 @@
+{
+	"fields": ["noise", "amplitude", "octaves", "frequency", "elevation"],
+	"maps": "base",
+	"type": ["humidity", "temperature"],
+
+	"humidity": {
+		"base": [1, 1, 1, 0.003, 1]
+	},
+	"temperature": {
+		"base": [1, 1, 1, 0.003, 1]
+	}
+}

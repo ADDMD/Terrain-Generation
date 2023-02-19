@@ -7,7 +7,7 @@
 #include <fstream>
 #include <fmt/format.h>
 
-namespace log {
+namespace logtg {
 	enum class Level{
 		TRACE = 0,
 		DEBUG,
