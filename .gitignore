@@ -60,3 +60,5 @@ test/data/*
 *.sublime-workspace
 .DS_Store
 config.yaml
+
+Blender/*.blend*
