@@ -60,18 +60,18 @@ tgen::Terrain tgen::TerrainGenerator::generateTerrain(unsigned int seed){
 				Point_3 point = mesh.point(v);
 				auto x = point.x();
 				auto y = point.y();
-				double spawningThreshold;
+				double spawningThreshold = 1;
 				switch (assignBiomeType(humidity[x][y], temperature[x][y])) {
 				case Mountains: 
-					if(point.z() > 30) spawningThreshold = 0.98;
-					else spawningThreshold = 0.95;
+					if(point.z() > 30) spawningThreshold = 0.97;
+					else if(point.z() > 10) spawningThreshold = 0.88;
 					break;
 				case Hills:
-					if(point.z() > 20) spawningThreshold = 0.95;
-					else spawningThreshold = 0.90;
+					if(point.z() > 20) spawningThreshold = 0.97;
+					else if(point.z() > 10) spawningThreshold = 0.88;
 					break;
 				case Plains:
-					spawningThreshold = 0.85;
+					if(point.z() > 10) spawningThreshold = 0.88;
 					break;
 				case Desert:
 					spawningThreshold = 1;
