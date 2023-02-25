@@ -1,0 +1,5 @@
+# Blender 3.4.1
+# www.blender.org
+mtllib tree_placeholder_point.mtl
+o Plane
+v 0.000000 0.000000 0.000000

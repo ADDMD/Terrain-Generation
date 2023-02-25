@@ -5,22 +5,22 @@
 
 	"deserto": {
 		"continentalness": [4, 0, 2, 0.01, 1],
-		"picknvalley": [4, 30, 2, 0.01, 4],
-		"erosion": [4, 30, 2, 0.01, 1]
+		"picknvalley": [4, 20, 2, 0.01, 4],
+		"erosion": [4, 5, 2, 0.01, 1]
 	},
 	"pianura": {
 		"continentalness": [4, 5, 2, 0.01, 1],
 		"picknvalley": [4, 5, 2, 0.01, 10],
-		"erosion": [4,5, 2, 0.01, 7]
+		"erosion": [4,5, 1, 0.01, 7]
 	},
 	"colline": {
 		"continentalness": [0, 10, 2, 0.01, 1],
-		"picknvalley": [0, 30, 2, 0.01, 3],
-		"erosion": [0, 30, 2, 0.01, 1]
+		"picknvalley": [0, 20, 2, 0.01, 3],
+		"erosion": [0, 5, 2, 0.01, 1]
 	},
 	"montagne": {
-		"continentalness": [4, 5, 4, 0.02, 1],
-		"picknvalley": [4, 90, 6, 0.02, 5],
-		"erosion": [4, 5, 4, 0.02, 1]
+		"continentalness": [4, 5, 4, 0.05, 1],
+		"picknvalley": [4, 125, 6, 0.05, 5],
+		"erosion": [4, 5, 4, 0.04, 1]
 	}
 }
