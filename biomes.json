@@ -4,9 +4,9 @@
 	"type": ["humidity", "temperature"],
 
 	"humidity": {
-		"base": [1, 1, 1, 0.001, 1]
+		"base": [1, 1, 1, 0.00075, 1]
 	},
 	"temperature": {
-		"base": [1, 1, 1, 0.001, 1]
+		"base": [1, 1, 1, 0.00075, 1]
 	}
 }
