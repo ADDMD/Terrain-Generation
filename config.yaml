@@ -1,5 +1,5 @@
-width: 1500
-height: 1500
+width: 1600
+height: 1600
 # Perlin: 0; Simplex: 1; Open: 2; Cellular: 3; FBM: 4.
 #
 data.path: ../data/
