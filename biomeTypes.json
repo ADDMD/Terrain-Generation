@@ -2,25 +2,25 @@
 	"fields": ["noise", "amplitude", "octaves", "frequency", "elevation"],
 	"maps": ["continentalness", "picknvalley", "erosion"],
 	"type": ["deserto", "pianura", "colline", "montagne"],
-
+	
 	"deserto": {
-		"continentalness": [4, 0, 2, 0.01, 1],
-		"picknvalley": [4, 20, 2, 0.01, 4],
-		"erosion": [4, 5, 2, 0.01, 1]
+		"continentalness": [0, 10, 1, 0.01, 1],
+		"picknvalley": [0, 45, 1, 0.01, 1],
+		"erosion": [0, 25, 1, 0.01, 1]
 	},
 	"pianura": {
-		"continentalness": [4, 5, 2, 0.01, 1],
-		"picknvalley": [4, 5, 2, 0.01, 10],
-		"erosion": [4,5, 1, 0.01, 7]
+		"continentalness": [4, 10, 1, 0.025, 1],
+		"picknvalley": [4, 1, 1, 0.025, 1],
+		"erosion": [4, 1, 1, 0.025 , 1]
 	},
 	"colline": {
-		"continentalness": [0, 10, 2, 0.01, 1],
-		"picknvalley": [0, 20, 2, 0.01, 3],
-		"erosion": [0, 5, 2, 0.01, 1]
+		"continentalness": [0, 10, 1, 0.01, 1],
+		"picknvalley": [0, 45, 1, 0.01, 1],
+		"erosion": [0, 25, 1, 0.01, 1]
 	},
 	"montagne": {
-		"continentalness": [4, 5, 4, 0.05, 1],
-		"picknvalley": [4, 125, 6, 0.05, 5],
-		"erosion": [4, 5, 4, 0.04, 1]
+		"continentalness": [4, 10, 4, 0.015, 3],
+		"picknvalley": [4, 200, 6, 0.015, 3],
+		"erosion": [4, 40, 4, 0.015, 3]
 	}
 }

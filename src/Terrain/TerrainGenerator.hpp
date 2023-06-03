@@ -10,8 +10,6 @@
 #include <map>
 
 
-#include <CGAL/IO/OBJ.h>
-
 class tgen::TerrainGenerator {
 
 	enum BiomeType {

@@ -3,6 +3,8 @@
 #include "../Utility/Json.hpp"
 #include <fstream>
 
+
+
 tgen::Terrain tgen::TerrainGenerator::generateTerrain(unsigned int seed){
 	Config conf("../config.yaml");
 	std::string w = conf["width"];
@@ -63,15 +65,15 @@ tgen::Terrain tgen::TerrainGenerator::generateTerrain(unsigned int seed){
 				double spawningThreshold = 1;
 				switch (assignBiomeType(humidity[x][y], temperature[x][y])) {
 				case Mountains: 
-					if(point.z() > 30) spawningThreshold = 0.97;
-					else if(point.z() > 10) spawningThreshold = 0.88;
+					if(point.z() > 30) spawningThreshold = 0.99;
+					else if(point.z() > -44) spawningThreshold = 0.98;
 					break;
 				case Hills:
-					if(point.z() > 20) spawningThreshold = 0.97;
-					else if(point.z() > 10) spawningThreshold = 0.88;
+					if(point.z() > 20) spawningThreshold = 0.98;
+					else if(point.z() > -44) spawningThreshold = 0.97;
 					break;
 				case Plains:
-					if(point.z() > 10) spawningThreshold = 0.88;
+					if(point.z() > -44) spawningThreshold = 0.96;
 					break;
 				case Desert:
 					spawningThreshold = 1;
@@ -83,7 +85,19 @@ tgen::Terrain tgen::TerrainGenerator::generateTerrain(unsigned int seed){
 					}
 			}
 	}
+	for(auto biome: biomeMaps){
+		Mesher biomeMesher;
+		biomeMesher.triangulate(biome.second);
+		auto biomeMesh = biomeMesher.getMesh();
+		std::string final_path = fmt::format("{}{}_{}.{}","../data/", biome.first, seed, "obj");
 
+		std::ofstream out(final_path);
+		CGAL::IO::write_OBJ(out, *biomeMesh);
+
+		out.close();	
+
+	}
+	
 	this->terrain = Terrain("Terreno finale", mesh, treeMapMesh, finalMap, humNtemp["humidity"], humNtemp["temperature"]);
 	this->terrain.texturing();
 	return this->terrain;
@@ -222,7 +236,7 @@ tgen::FT tgen::TerrainGenerator::computeDistanceFromBiome(BiomeType biomeType, F
 		result = ((hum - 1) * (hum - 1) + (temp -1) * (temp - 1)); 
 		break;
 	}
-	return 1 - (result * result * result / 8);
+	return 1 - (std::sqrt(result / 2));
 }
 
 std::string tgen::TerrainGenerator::getBiomeName(BiomeType biomeType){
